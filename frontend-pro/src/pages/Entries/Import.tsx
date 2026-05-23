@@ -43,7 +43,7 @@ const ImportPage = () => {
             maxCount={1}
             customRequest={async ({ file, onSuccess, onError }) => {
               try {
-                await importExcel(file as File, mode);
+                await importExcel(file as File, mode, productId || undefined);
                 message.success('导入成功');
                 onSuccess?.({}, new XMLHttpRequest());
               } catch (error) {

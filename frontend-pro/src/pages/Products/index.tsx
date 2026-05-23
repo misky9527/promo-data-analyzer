@@ -3,6 +3,7 @@ import {
   ModalForm,
   PageContainer,
   ProForm,
+  ProFormDatePicker,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
@@ -23,6 +24,7 @@ import {
   getProduct,
   getProducts,
   getRegions,
+  getSites,
   lookupAppleApp,
   updateProduct,
 } from '@/services/api';
@@ -49,15 +51,17 @@ const ProductsPage = () => {
   const [productOptions, setProductOptions] = useState<{ label: string; value: number }[]>([]);
   const [channelOptions, setChannelOptions] = useState<{ label: string; value: number }[]>([]);
   const [regionOptions, setRegionOptions] = useState<{ label: string; value: number }[]>([]);
+  const [siteOptions, setSiteOptions] = useState<{ label: string; value: number }[]>([]);
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [detailData, setDetailData] = useState<any>(null);
   const { message } = App.useApp();
 
   useEffect(() => {
-    void Promise.all([getProducts({ pageSize: 999 }), getChannels({ pageSize: 999 }), getRegions({ pageSize: 999 })]).then(([products, channels, regions]) => {
+    void Promise.all([getProducts({ pageSize: 999 }), getChannels({ pageSize: 999 }), getRegions({ pageSize: 999 }), getSites({ pageSize: 999 })]).then(([products, channels, regions, sites]) => {
       setProductOptions((products.list || []).map((item: any) => ({ label: item.appName || item.appId, value: item.id })));
       setChannelOptions((channels.list || []).map((item: any) => ({ label: item.name, value: item.id })));
       setRegionOptions((regions.list || []).map((item: any) => ({ label: item.name, value: item.id })));
+      setSiteOptions((sites.list || []).map((item: any) => ({ label: item.name, value: item.id })));
     });
   }, [open]);
 
@@ -112,7 +116,19 @@ const ProductsPage = () => {
         0: { text: '禁用', status: 'Default' },
       },
     },
-    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', search: false },
+    {
+      title: '推广开始',
+      dataIndex: 'startDate',
+      search: false,
+      render: (_, row) => row.startDate || '-',
+    },
+    {
+      title: '推广结束',
+      dataIndex: 'endDate',
+      search: false,
+      render: (_, row) => row.endDate || '-',
+    },
+    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },
     {
       title: '操作',
       valueType: 'option',
@@ -243,6 +259,11 @@ const ProductsPage = () => {
           <ProFormSelect name="regionIds" label="关联地区" fieldProps={{ mode: 'multiple' }} options={regionOptions} colProps={{ span: 12 }} />
           <ProFormSelect name="channelIds" label="关联渠道" fieldProps={{ mode: 'multiple' }} options={channelOptions} colProps={{ span: 12 }} />
         </ProForm.Group>
+        <ProForm.Group>
+          <ProFormDatePicker name="startDate" label="推广开始" colProps={{ span: 12 }} />
+          <ProFormDatePicker name="endDate" label="推广结束" colProps={{ span: 12 }} />
+        </ProForm.Group>
+        <ProFormSelect name="siteId" label="所属站点" options={siteOptions} colProps={{ span: 12 }} />
         <ProFormTextArea name="remark" label="备注" />
       </ModalForm>
 

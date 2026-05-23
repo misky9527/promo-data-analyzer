@@ -37,7 +37,7 @@ const ProductDetailPage = () => {
   }), [productId, range, channelId, regionId]);
 
   const columns: ProColumns<any>[] = [
-    { title: '日期', dataIndex: 'date', fixed: 'left' },
+    { title: '日期', dataIndex: 'date', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, fixed: 'left' },
     { title: '渠道', dataIndex: ['channel', 'name'], fixed: 'left' },
     { title: '地区', dataIndex: ['region', 'name'], fixed: 'left' },
     { title: renderMetricTitle('impressions'), dataIndex: 'impressions' },

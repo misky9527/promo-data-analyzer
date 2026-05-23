@@ -103,10 +103,13 @@ export const updateEntry = (id: number, data: Partial<EntryPayload>) =>
     body: JSON.stringify(data),
   });
 export const deleteEntry = (id: number) => request<any>(`/data-entries/${id}`, { method: 'DELETE' });
-export const importExcel = async (file: File, mode: string) => {
+export const importExcel = async (file: File, mode: string, productId?: number) => {
   const formData = new FormData();
   formData.append('file', file);
-  return request<any>(`/data-entries/import${toQuery({ mode })}`, {
+  const params = new URLSearchParams();
+  params.set('mode', mode);
+  if (productId) params.set('productId', String(productId));
+  return request<any>(`/data-entries/import?${params.toString()}`, {
     method: 'POST',
     body: formData,
   });
@@ -127,6 +130,10 @@ export const getRegionSummary = (params: Record<string, unknown>) =>
   request<any>(`/reports/region-summary${toQuery(params)}`);
 export const getRegionDaily = (params: Record<string, unknown>) =>
   request<any>(`/reports/region-daily${toQuery(params)}`);
+export const getSiteSummary = (params: Record<string, unknown>) =>
+  request<any>(`/reports/site-summary${toQuery(params)}`);
+export const getSiteDaily = (params: Record<string, unknown>) =>
+  request<any>(`/reports/site-daily${toQuery(params)}`);
 export const exportReport = () => request<Blob>('/reports/export');
 
 export const generateSummary = (data: Record<string, unknown>) =>
@@ -242,3 +249,25 @@ export const updateModelConfig = (id: number, data: Record<string, unknown>) =>
     body: JSON.stringify(data),
   });
 export const deleteModelConfig = (id: number) => request<any>(`/model-configs/${id}`, { method: 'DELETE' });
+
+// === 站点 ===
+export const getSites = (params: Record<string, unknown>) => request<any>(`/sites${toQuery(params)}`);
+export const getSite = (id: number) => request<any>(`/sites/${id}`);
+export const createSite = (data: any) => request<any>('/sites', { method: 'POST', data });
+export const updateSite = (id: number, data: any) => request<any>(`/sites/${id}`, { method: 'PATCH', data });
+export const deleteSite = (id: number) => request<any>(`/sites/${id}`, { method: 'DELETE' });
+
+// === 站点日数据 ===
+export const getSiteDailyData = (params: Record<string, unknown>) => request<any>(`/site-daily-data${toQuery(params)}`);
+export const createSiteDailyData = (data: any) => request<any>('/site-daily-data', { method: 'POST', data });
+export const updateSiteDailyData = (id: number, data: any) => request<any>(`/site-daily-data/${id}`, { method: 'PATCH', data });
+export const deleteSiteDailyData = (id: number) => request<any>(`/site-daily-data/${id}`, { method: 'DELETE' });
+export const importSiteDailyExcel = (file: File, mode: string, siteId: number) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const params = new URLSearchParams();
+  params.set('mode', mode);
+  params.set('siteId', String(siteId));
+  return request<any>(`/site-daily-data/import?${params.toString()}`, { method: 'POST', body: formData });
+};
+export const downloadSiteDailyTemplate = () => request<Blob>('/sites/daily/template');

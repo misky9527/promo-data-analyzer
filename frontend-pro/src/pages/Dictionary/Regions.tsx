@@ -19,7 +19,7 @@ const RegionsPage = () => {
     { title: '编码', dataIndex: 'code' },
     { title: '状态', dataIndex: 'status', valueType: 'switch', search: false },
     { title: '备注', dataIndex: 'remark', search: false },
-    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', search: false },
+    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },
     {
       title: '操作',
       valueType: 'option',

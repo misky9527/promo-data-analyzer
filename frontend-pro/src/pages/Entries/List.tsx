@@ -32,7 +32,7 @@ const ListPage = () => {
   }, []);
 
   const columns: ProColumns<any>[] = [
-    { title: '日期', dataIndex: 'date', valueType: 'date', search: false },
+    { title: '日期', dataIndex: 'date', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },
     {
       title: '产品',
       dataIndex: 'productId',

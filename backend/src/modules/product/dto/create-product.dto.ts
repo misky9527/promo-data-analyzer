@@ -30,8 +30,23 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(10)
+  startDate?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  endDate?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(500)
   remark?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  siteId?: number;
 
   // ─── 关联 ───
 

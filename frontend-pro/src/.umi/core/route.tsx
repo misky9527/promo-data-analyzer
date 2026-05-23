@@ -4,7 +4,7 @@
 import React from 'react';
 
 export async function getRoutes() {
-  const routes = {"1":{"path":"/login","layout":false,"id":"1"},"2":{"path":"/core","name":"核心业务","icon":"dashboard","parentId":"ant-design-pro-layout","id":"2"},"3":{"path":"dashboard","name":"首页仪表盘","parentId":"2","id":"3"},"4":{"path":"products","name":"产品中心","parentId":"2","id":"4"},"5":{"path":"entries/list","name":"数据列表","parentId":"2","id":"5"},"6":{"path":"entries/manual","name":"手动录入","parentId":"2","id":"6"},"7":{"path":"entries/import","name":"Excel 导入","parentId":"2","id":"7"},"8":{"path":"/reports","name":"分析报表","icon":"barChart","parentId":"ant-design-pro-layout","id":"8"},"9":{"path":"overview","name":"数据概览","parentId":"8","id":"9"},"10":{"path":"cross","name":"交叉分析","parentId":"8","id":"10"},"11":{"path":"products","name":"产品分析","parentId":"8","id":"11"},"12":{"path":"products/:id","name":"产品明细","hideInMenu":true,"parentId":"8","id":"12"},"13":{"path":"/ai","name":"AI 总结","icon":"robot","parentId":"ant-design-pro-layout","id":"13"},"14":{"path":"generate","name":"生成总结","parentId":"13","id":"14"},"15":{"path":"history","name":"历史记录","parentId":"13","id":"15"},"16":{"path":"model-config","name":"模型管理","parentId":"13","id":"16"},"17":{"path":"/dict","name":"字典管理","icon":"book","parentId":"ant-design-pro-layout","id":"17"},"18":{"path":"channels","name":"推广渠道","parentId":"17","id":"18"},"19":{"path":"regions","name":"推广地区","parentId":"17","id":"19"},"20":{"path":"/","redirect":"/core/dashboard","parentId":"ant-design-pro-layout","id":"20"},"21":{"path":"/*","layout":false,"id":"21"},"ant-design-pro-layout":{"id":"ant-design-pro-layout","path":"/","isLayout":true}} as const;
+  const routes = {"1":{"path":"/login","layout":false,"id":"1"},"2":{"path":"/core","name":"核心业务","icon":"dashboard","parentId":"ant-design-pro-layout","id":"2"},"3":{"path":"dashboard","name":"首页仪表盘","parentId":"2","id":"3"},"4":{"path":"products","name":"产品中心","parentId":"2","id":"4"},"5":{"path":"sites","name":"站点管理","parentId":"2","id":"5"},"6":{"path":"sites/:id/daily","name":"站点日数据","hideInMenu":true,"parentId":"2","id":"6"},"7":{"path":"entries/list","name":"数据列表","parentId":"2","id":"7"},"8":{"path":"entries/manual","name":"手动录入","parentId":"2","id":"8"},"9":{"path":"entries/import","name":"Excel 导入","parentId":"2","id":"9"},"10":{"path":"/reports","name":"分析报表","icon":"barChart","parentId":"ant-design-pro-layout","id":"10"},"11":{"path":"overview","name":"数据概览","parentId":"10","id":"11"},"12":{"path":"cross","name":"交叉分析","parentId":"10","id":"12"},"13":{"path":"products","name":"产品分析","parentId":"10","id":"13"},"14":{"path":"products/:id","name":"产品明细","hideInMenu":true,"parentId":"10","id":"14"},"15":{"path":"/ai","name":"AI 总结","icon":"robot","parentId":"ant-design-pro-layout","id":"15"},"16":{"path":"generate","name":"生成总结","parentId":"15","id":"16"},"17":{"path":"history","name":"历史记录","parentId":"15","id":"17"},"18":{"path":"model-config","name":"模型管理","parentId":"15","id":"18"},"19":{"path":"/dict","name":"字典管理","icon":"book","parentId":"ant-design-pro-layout","id":"19"},"20":{"path":"channels","name":"推广渠道","parentId":"19","id":"20"},"21":{"path":"regions","name":"推广地区","parentId":"19","id":"21"},"22":{"path":"/","redirect":"/core/dashboard","parentId":"ant-design-pro-layout","id":"22"},"23":{"path":"/*","layout":false,"id":"23"},"ant-design-pro-layout":{"id":"ant-design-pro-layout","path":"/","isLayout":true}} as const;
   return {
     routes,
     routeComponents: {
@@ -12,23 +12,25 @@ export async function getRoutes() {
 '2': React.lazy(() => import('./EmptyRoute')),
 '3': React.lazy(() => import(/* webpackChunkName: "p__Dashboard__index" */'@/pages/Dashboard/index.tsx')),
 '4': React.lazy(() => import(/* webpackChunkName: "p__Products__index" */'@/pages/Products/index.tsx')),
-'5': React.lazy(() => import(/* webpackChunkName: "p__Entries__List" */'@/pages/Entries/List.tsx')),
-'6': React.lazy(() => import(/* webpackChunkName: "p__Entries__Manual" */'@/pages/Entries/Manual.tsx')),
-'7': React.lazy(() => import(/* webpackChunkName: "p__Entries__Import" */'@/pages/Entries/Import.tsx')),
-'8': React.lazy(() => import('./EmptyRoute')),
-'9': React.lazy(() => import(/* webpackChunkName: "p__Reports__Overview" */'@/pages/Reports/Overview.tsx')),
-'10': React.lazy(() => import(/* webpackChunkName: "p__Reports__Cross" */'@/pages/Reports/Cross.tsx')),
-'11': React.lazy(() => import(/* webpackChunkName: "p__Reports__ProductAnalysis" */'@/pages/Reports/ProductAnalysis.tsx')),
-'12': React.lazy(() => import(/* webpackChunkName: "p__Reports__ProductDetail" */'@/pages/Reports/ProductDetail.tsx')),
-'13': React.lazy(() => import('./EmptyRoute')),
-'14': React.lazy(() => import(/* webpackChunkName: "p__AI__Generate" */'@/pages/AI/Generate.tsx')),
-'15': React.lazy(() => import(/* webpackChunkName: "p__AI__History" */'@/pages/AI/History.tsx')),
-'16': React.lazy(() => import(/* webpackChunkName: "p__AI__ModelConfig" */'@/pages/AI/ModelConfig.tsx')),
-'17': React.lazy(() => import('./EmptyRoute')),
-'18': React.lazy(() => import(/* webpackChunkName: "p__Dictionary__Channels" */'@/pages/Dictionary/Channels.tsx')),
-'19': React.lazy(() => import(/* webpackChunkName: "p__Dictionary__Regions" */'@/pages/Dictionary/Regions.tsx')),
-'20': React.lazy(() => import('./EmptyRoute')),
-'21': React.lazy(() => import(/* webpackChunkName: "p__exception__404" */'@/pages/exception/404.tsx')),
+'5': React.lazy(() => import(/* webpackChunkName: "p__Sites__index" */'@/pages/Sites/index.tsx')),
+'6': React.lazy(() => import(/* webpackChunkName: "p__Sites__DailyData" */'@/pages/Sites/DailyData.tsx')),
+'7': React.lazy(() => import(/* webpackChunkName: "p__Entries__List" */'@/pages/Entries/List.tsx')),
+'8': React.lazy(() => import(/* webpackChunkName: "p__Entries__Manual" */'@/pages/Entries/Manual.tsx')),
+'9': React.lazy(() => import(/* webpackChunkName: "p__Entries__Import" */'@/pages/Entries/Import.tsx')),
+'10': React.lazy(() => import('./EmptyRoute')),
+'11': React.lazy(() => import(/* webpackChunkName: "p__Reports__Overview" */'@/pages/Reports/Overview.tsx')),
+'12': React.lazy(() => import(/* webpackChunkName: "p__Reports__Cross" */'@/pages/Reports/Cross.tsx')),
+'13': React.lazy(() => import(/* webpackChunkName: "p__Reports__ProductAnalysis" */'@/pages/Reports/ProductAnalysis.tsx')),
+'14': React.lazy(() => import(/* webpackChunkName: "p__Reports__ProductDetail" */'@/pages/Reports/ProductDetail.tsx')),
+'15': React.lazy(() => import('./EmptyRoute')),
+'16': React.lazy(() => import(/* webpackChunkName: "p__AI__Generate" */'@/pages/AI/Generate.tsx')),
+'17': React.lazy(() => import(/* webpackChunkName: "p__AI__History" */'@/pages/AI/History.tsx')),
+'18': React.lazy(() => import(/* webpackChunkName: "p__AI__ModelConfig" */'@/pages/AI/ModelConfig.tsx')),
+'19': React.lazy(() => import('./EmptyRoute')),
+'20': React.lazy(() => import(/* webpackChunkName: "p__Dictionary__Channels" */'@/pages/Dictionary/Channels.tsx')),
+'21': React.lazy(() => import(/* webpackChunkName: "p__Dictionary__Regions" */'@/pages/Dictionary/Regions.tsx')),
+'22': React.lazy(() => import('./EmptyRoute')),
+'23': React.lazy(() => import(/* webpackChunkName: "p__exception__404" */'@/pages/exception/404.tsx')),
 'ant-design-pro-layout': React.lazy(() => import(/* webpackChunkName: "umi__plugin-layout__Layout" */'/root/.openclaw/workspace-vest/promo-data-analyzer/frontend-pro/src/.umi/plugin-layout/Layout.tsx')),
 },
   };

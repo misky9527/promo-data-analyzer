@@ -13,12 +13,14 @@ import {
   getRegionDaily,
   getRegionSummary,
   getRegions,
+  getSiteDaily,
+  getSiteSummary,
 } from '@/services/api';
 import { renderMetricTitle } from '@/utils/metrics';
 
 const { RangePicker } = DatePicker;
 
-type TabKey = 'products' | 'channel' | 'region';
+type TabKey = 'products' | 'channel' | 'region' | 'site';
 type SummaryDimension = 'channel' | 'region';
 
 type SummaryRow = {
@@ -43,7 +45,7 @@ type SummaryRow = {
 };
 
 const buildSummaryColumns = (dimension: SummaryDimension, onClick: (row: SummaryRow) => void): ProColumns<SummaryRow>[] => {
-  const title = dimension === 'channel' ? '渠道' : '推广地区';
+  const title = dimension === 'channel' ? '渠道' : dimension === 'region' ? '推广地区' : '站点';
   return [
     {
       title,
@@ -75,9 +77,9 @@ const buildSummaryColumns = (dimension: SummaryDimension, onClick: (row: Summary
 };
 
 const buildDailyColumns = (dimension: SummaryDimension): ProColumns<any>[] => {
-  const title = dimension === 'channel' ? '渠道' : '推广地区';
+  const title = dimension === 'channel' ? '渠道' : dimension === 'region' ? '推广地区' : '站点';
   return [
-    { title: '日期', dataIndex: 'date', fixed: 'left' },
+    { title: '日期', dataIndex: 'date', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, fixed: 'left' },
     { title, dataIndex: [dimension, 'name'], fixed: 'left' },
     { title: renderMetricTitle('impressions'), dataIndex: 'impressions' },
     { title: renderMetricTitle('clicks'), dataIndex: 'clicks' },
@@ -146,12 +148,27 @@ const productSummaryColumns: ProColumns<any>[] = [
   { title: renderMetricTitle('retentionD7Rate'), dataIndex: 'retentionD7Rate', search: false },
 ];
 
+const siteDailyColumns: ProColumns<any>[] = [
+  { title: '日期', dataIndex: 'date', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, fixed: 'left' },
+  { title: '站点', dataIndex: ['site', 'name'], fixed: 'left' },
+  { title: '注册人数', dataIndex: 'registrations', search: false },
+  { title: '充值人数', dataIndex: 'payingUsers', search: false },
+  { title: '首冲人数', dataIndex: 'firstChargeUsers', search: false },
+  { title: '娱乐流水', dataIndex: 'entertainmentRevenue', search: false },
+  { title: '娱乐人数', dataIndex: 'entertainmentUsers', search: false },
+  { title: '充值金币', dataIndex: 'rechargeGold', search: false },
+  { title: '兑换金额', dataIndex: 'exchangeAmount', search: false },
+  { title: '兑换人数', dataIndex: 'exchangeUsers', search: false },
+];
+
 const ProductAnalysisPage = () => {
   const productActionRef = useRef<ActionType>();
   const channelSummaryActionRef = useRef<ActionType>();
   const regionSummaryActionRef = useRef<ActionType>();
   const channelDailyActionRef = useRef<ActionType>();
   const regionDailyActionRef = useRef<ActionType>();
+  const siteSummaryActionRef = useRef<ActionType>();
+  const siteDailyActionRef = useRef<ActionType>();
   const [activeTab, setActiveTab] = useState<TabKey>('products');
   const [range, setRange] = useState<[dayjs.Dayjs, dayjs.Dayjs]>([
     dayjs().subtract(29, 'day'),
@@ -163,6 +180,7 @@ const ProductAnalysisPage = () => {
   const [regionOptions, setRegionOptions] = useState<any[]>([]);
   const [activeChannel, setActiveChannel] = useState<{ id: number; name: string } | undefined>();
   const [activeRegion, setActiveRegion] = useState<{ id: number; name: string } | undefined>();
+  const [activeSite, setActiveSite] = useState<{ id: number; name: string } | undefined>();
 
   useEffect(() => {
     void Promise.all([getChannels({ pageSize: 999 }), getRegions({ pageSize: 999 })]).then(
@@ -203,6 +221,33 @@ const ProductAnalysisPage = () => {
     [],
   );
 
+  const siteSummaryColumns = useMemo<ProColumns<any>[]>(
+    () => [
+      {
+        title: '站点',
+        dataIndex: ['dimension', 'name'],
+        width: 180,
+        fixed: 'left',
+        render: (_, row) => (
+          <a onClick={() => {
+            if (!row.dimension?.id || !row.dimension?.name) return;
+            setActiveSite({ id: row.dimension.id, name: row.dimension.name });
+            setTimeout(() => siteDailyActionRef.current?.reload(), 0);
+          }}>{row.dimension?.name || '-'}</a>
+        ),
+      },
+      { title: '注册人数', dataIndex: 'registrations', search: false },
+      { title: '充值人数', dataIndex: 'payingUsers', search: false },
+      { title: '首冲人数', dataIndex: 'firstChargeUsers', search: false },
+      { title: '娱乐流水', dataIndex: 'entertainmentRevenue', search: false },
+      { title: '娱乐人数', dataIndex: 'entertainmentUsers', search: false },
+      { title: '充值金币', dataIndex: 'rechargeGold', search: false },
+      { title: '兑换金额', dataIndex: 'exchangeAmount', search: false },
+      { title: '兑换人数', dataIndex: 'exchangeUsers', search: false },
+    ],
+    [],
+  );
+
   const reloadActiveTab = () => {
     if (activeTab === 'products') {
       productActionRef.current?.reload();
@@ -215,9 +260,16 @@ const ProductAnalysisPage = () => {
       }
       return;
     }
-    regionSummaryActionRef.current?.reload();
-    if (activeRegion) {
-      regionDailyActionRef.current?.reload();
+    if (activeTab === 'region') {
+      regionSummaryActionRef.current?.reload();
+      if (activeRegion) {
+        regionDailyActionRef.current?.reload();
+      }
+      return;
+    }
+    siteSummaryActionRef.current?.reload();
+    if (activeSite) {
+      siteDailyActionRef.current?.reload();
     }
   };
 
@@ -234,6 +286,7 @@ const ProductAnalysisPage = () => {
         </Button>
       </Space>
 
+      {activeTab !== 'site' && (
       <Space wrap size={12} style={{ marginBottom: 16 }}>
         <Select
           value={channelId}
@@ -260,6 +313,7 @@ const ProductAnalysisPage = () => {
           style={{ width: 180 }}
         />
       </Space>
+      )}
 
       <Tabs
         activeKey={activeTab}
@@ -273,10 +327,15 @@ const ProductAnalysisPage = () => {
               if (activeChannel) {
                 channelDailyActionRef.current?.reload();
               }
-            } else {
+            } else if (key === 'region') {
               regionSummaryActionRef.current?.reload();
               if (activeRegion) {
                 regionDailyActionRef.current?.reload();
+              }
+            } else {
+              siteSummaryActionRef.current?.reload();
+              if (activeSite) {
+                siteDailyActionRef.current?.reload();
               }
             }
           }, 0);
@@ -400,6 +459,60 @@ const ProductAnalysisPage = () => {
                         const result = await getRegionDaily({
                           ...params,
                           regionId: activeRegion.id,
+                        });
+                        return {
+                          data: result.rows || [],
+                          success: true,
+                        };
+                      }}
+                    />
+                  </Space>
+                ) : null}
+              </Space>
+            ),
+          },
+          {
+            key: 'site',
+            label: '按站点',
+            children: (
+              <Space direction="vertical" size={16} style={{ width: '100%' }}>
+                <ProTable<SummaryRow>
+                  rowKey={(row) => String(row.dimension?.id || row.dimension?.name)}
+                  actionRef={siteSummaryActionRef}
+                  search={false}
+                  options={{ density: true, setting: true }}
+                  pagination={false}
+                  columns={siteSummaryColumns}
+                  scroll={{ x: 'max-content' }}
+                  request={async () => {
+                    const result = await getSiteSummary({
+                      ...params,
+                      productId: undefined,
+                    });
+                    return {
+                      data: result.rows || [],
+                      success: true,
+                    };
+                  }}
+                />
+
+                {activeSite ? (
+                  <Space direction="vertical" size={12} style={{ width: '100%' }}>
+                    <Typography.Title level={5} style={{ margin: 0 }}>
+                      {`站点明细：${activeSite.name}`}
+                    </Typography.Title>
+                    <ProTable<any>
+                      rowKey={(row) => `${row.date}-${row.site?.id ?? row.site?.name}`}
+                      actionRef={siteDailyActionRef}
+                      search={false}
+                      options={{ density: true, setting: true }}
+                      pagination={false}
+                      columns={siteDailyColumns}
+                      scroll={{ x: 'max-content' }}
+                      request={async () => {
+                        const result = await getSiteDaily({
+                          ...params,
+                          siteId: activeSite.id,
                         });
                         return {
                           data: result.rows || [],

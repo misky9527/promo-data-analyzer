@@ -24,4 +24,9 @@ export class SummaryDimensionDto {
   @Transform(({ value }) => (value ? Number(value) : undefined))
   @IsNumber()
   productId?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => (value ? Number(value) : undefined))
+  @IsNumber()
+  siteId?: number;
 }

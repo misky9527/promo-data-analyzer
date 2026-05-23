@@ -68,6 +68,18 @@ export class ReportController {
     return this.reportService.getDailyByDimension('region', dto);
   }
 
+  /** 站点汇总 */
+  @Get('site-summary')
+  getSiteSummary(@Query() dto: SummaryDimensionDto) {
+    return this.reportService.getSummaryByDimension('site', dto);
+  }
+
+  /** 按站点日维度 */
+  @Get('site-daily')
+  getSiteDaily(@Query() dto: DailyDimensionDto) {
+    return this.reportService.getDailyByDimension('site', dto);
+  }
+
   /** Excel 导出 */
   @Get('export')
   async exportData(

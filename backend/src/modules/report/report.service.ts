@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as ExcelJS from 'exceljs';
 import { PromoData } from '../data-entry/entities/promo-data.entity';
+import { SiteDailyData } from '../site/entities/site-daily-data.entity';
 import {
   MetricsCalculator,
   AggregatedRow,
@@ -77,6 +78,8 @@ export class ReportService {
   constructor(
     @InjectRepository(PromoData)
     private readonly repo: Repository<PromoData>,
+    @InjectRepository(SiteDailyData)
+    private readonly siteDailyRepo: Repository<SiteDailyData>,
     private readonly calc: MetricsCalculator,
   ) {}
 
@@ -254,9 +257,11 @@ export class ReportService {
   }
 
   async getSummaryByDimension(
-    dimension: 'channel' | 'region',
+    dimension: 'channel' | 'region' | 'site',
     dto: SummaryDimensionDto,
   ) {
+    if (dimension === 'site') return this.getSiteSummary(dto);
+
     const endDate = dto.endDate || new Date().toISOString().slice(0, 10);
     const startDate = dto.startDate || new Date(Date.now() - 29 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -290,9 +295,11 @@ export class ReportService {
   }
 
   async getDailyByDimension(
-    dimension: 'channel' | 'region',
+    dimension: 'channel' | 'region' | 'site',
     dto: DailyDimensionDto,
   ) {
+    if (dimension === 'site') return this.getSiteDaily(dto);
+
     const endDate = dto.endDate || new Date().toISOString().slice(0, 10);
     const startDate = dto.startDate || new Date(Date.now() - 29 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -538,6 +545,87 @@ export class ReportService {
         storeIcon: product.storeIcon,
       },
       rows,
+    };
+  }
+
+  // ═══════════════════════════════════════
+  // 按站点维度（数据源：site_daily_data）
+  // ═══════════════════════════════════════
+
+  private async getSiteSummary(dto: SummaryDimensionDto) {
+    const endDate = dto.endDate || new Date().toISOString().slice(0, 10);
+    const startDate = dto.startDate || new Date(Date.now() - 29 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+    const qb = this.siteDailyRepo.createQueryBuilder('sd')
+      .innerJoin('sd.site', 's')
+      .select('s.id', 'dimensionId')
+      .addSelect('s.name', 'dimensionName')
+      .addSelect('SUM(sd.registrations)', 'registrations')
+      .addSelect('SUM(sd.payingUsers)', 'payingUsers')
+      .addSelect('SUM(sd.firstChargeUsers)', 'firstChargeUsers')
+      .addSelect('SUM(sd.entertainmentRevenue)', 'entertainmentRevenue')
+      .addSelect('SUM(sd.entertainmentUsers)', 'entertainmentUsers')
+      .addSelect('SUM(sd.rechargeGold)', 'rechargeGold')
+      .addSelect('SUM(sd.exchangeAmount)', 'exchangeAmount')
+      .addSelect('SUM(sd.exchangeUsers)', 'exchangeUsers')
+      .where('sd.date BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .groupBy('s.id').addGroupBy('s.name')
+      .orderBy('registrations', 'DESC');
+
+    if (dto.siteId) qb.andWhere('sd.site_id = :siteId', { siteId: dto.siteId });
+
+    const raw = await qb.getRawMany();
+    return {
+      rows: raw.map((r: any) => ({
+        dimension: { id: Number(r.dimensionId), name: r.dimensionName },
+        registrations: Number(r.registrations),
+        payingUsers: Number(r.payingUsers),
+        firstChargeUsers: Number(r.firstChargeUsers),
+        entertainmentRevenue: Number(r.entertainmentRevenue),
+        entertainmentUsers: Number(r.entertainmentUsers),
+        rechargeGold: Number(r.rechargeGold),
+        exchangeAmount: Number(r.exchangeAmount),
+        exchangeUsers: Number(r.exchangeUsers),
+      })),
+    };
+  }
+
+  private async getSiteDaily(dto: DailyDimensionDto) {
+    const endDate = dto.endDate || new Date().toISOString().slice(0, 10);
+    const startDate = dto.startDate || new Date(Date.now() - 29 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+    const qb = this.siteDailyRepo.createQueryBuilder('sd')
+      .innerJoin('sd.site', 's')
+      .select('sd.date', 'date')
+      .addSelect('s.id', 'siteId')
+      .addSelect('s.name', 'siteName')
+      .addSelect('sd.registrations', 'registrations')
+      .addSelect('sd.payingUsers', 'payingUsers')
+      .addSelect('sd.firstChargeUsers', 'firstChargeUsers')
+      .addSelect('sd.entertainmentRevenue', 'entertainmentRevenue')
+      .addSelect('sd.entertainmentUsers', 'entertainmentUsers')
+      .addSelect('sd.rechargeGold', 'rechargeGold')
+      .addSelect('sd.exchangeAmount', 'exchangeAmount')
+      .addSelect('sd.exchangeUsers', 'exchangeUsers')
+      .where('sd.date BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .orderBy('sd.date', 'DESC').addOrderBy('s.name', 'ASC');
+
+    if (dto.siteId) qb.andWhere('sd.site_id = :siteId', { siteId: dto.siteId });
+
+    const raw = await qb.getRawMany();
+    return {
+      rows: raw.map((r: any) => ({
+        date: typeof r.date === 'string' ? r.date.slice(0, 10) : r.date,
+        site: { id: Number(r.siteId), name: r.siteName },
+        registrations: Number(r.registrations),
+        payingUsers: Number(r.payingUsers),
+        firstChargeUsers: Number(r.firstChargeUsers),
+        entertainmentRevenue: Number(r.entertainmentRevenue),
+        entertainmentUsers: Number(r.entertainmentUsers),
+        rechargeGold: Number(r.rechargeGold),
+        exchangeAmount: Number(r.exchangeAmount),
+        exchangeUsers: Number(r.exchangeUsers),
+      })),
     };
   }
 
@@ -897,10 +985,12 @@ export class ReportService {
     channelId?: number;
     appId?: number;
     regionId?: number;
+    siteId?: number;
   }): void {
     if (filters.channelId) qb.andWhere('p.channel_id = :channelId', { channelId: filters.channelId });
     if (filters.appId) qb.andWhere('p.app_id = :appId', { appId: filters.appId });
     if (filters.regionId) qb.andWhere('p.region_id = :regionId', { regionId: filters.regionId });
+    if (filters.siteId) qb.andWhere('prod.site_id = :siteId', { siteId: filters.siteId });
   }
 
   /** 对指标结果四舍五入到 2 位小数 */

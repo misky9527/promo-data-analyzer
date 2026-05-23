@@ -27,15 +27,19 @@ async function parseResponse<T>(response: Response): Promise<T> {
   return (await response.blob()) as T;
 }
 
-export async function request<T>(input: string, init: RequestInit = {}): Promise<T> {
+export async function request<T>(input: string, init: RequestInit & { data?: any } = {}): Promise<T> {
   const headers = new Headers(init.headers || {});
   const token = getToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
 
-  const response = await fetch(`/api${input}`, {
-    ...init,
-    headers,
-  });
+  const { data, ...rest } = init as any;
+  const fetchInit: RequestInit = { ...rest, headers };
+  if (data !== undefined) {
+    headers.set('Content-Type', 'application/json');
+    fetchInit.body = JSON.stringify(data);
+  }
+
+  const response = await fetch(`/api${input}`, fetchInit);
 
   if (response.status === 401) {
     localStorage.removeItem('promo_token');

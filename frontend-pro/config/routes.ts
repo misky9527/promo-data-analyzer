@@ -13,6 +13,8 @@ export default [
     routes: [
       { path: 'dashboard', name: '首页仪表盘', component: './Dashboard' },
       { path: 'products', name: '产品中心', component: './Products' },
+      { path: 'sites', name: '站点管理', component: './Sites' },
+      { path: 'sites/:id/daily', name: '站点日数据', component: './Sites/DailyData', hideInMenu: true },
       { path: 'entries/list', name: '数据列表', component: './Entries/List' },
       { path: 'entries/manual', name: '手动录入', component: './Entries/Manual' },
       { path: 'entries/import', name: 'Excel 导入', component: './Entries/Import' },

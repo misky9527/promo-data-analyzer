@@ -11,7 +11,7 @@ const HistoryPage = () => {
 
   const columns: ProColumns<any>[] = [
     { title: '标题', dataIndex: 'title' },
-    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', search: false },
+    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },
     {
       title: '操作',
       valueType: 'option',

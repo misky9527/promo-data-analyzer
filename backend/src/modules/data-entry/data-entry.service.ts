@@ -261,6 +261,7 @@ export class DataEntryService {
   async importExcel(
     buffer: Buffer,
     mode: ImportMode,
+    productId?: number,
   ): Promise<{ success: number; failed: number; errors: string[] }> {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer as unknown as ExcelJS.Buffer);
@@ -279,8 +280,8 @@ export class DataEntryService {
     let successCount = 0;
     let failedCount = 0;
 
-    // 批量解析 FK
-    const codeMap = await this.resolveFkMap(rows);
+    // 批量解析 FK（如果 productId 已提供则跳过产品查询）
+    const codeMap = await this.resolveFkMap(rows, productId);
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
@@ -293,16 +294,22 @@ export class DataEntryService {
       }
 
       const channelId = codeMap.channel.get(row.channelCode);
-      const appId = codeMap.app.get(row.productAppId);
       const regionId = codeMap.region.get(row.regionCode);
+
+      let appId: number | undefined;
+      if (productId) {
+        appId = productId;
+      } else {
+        appId = codeMap.app.get(row.productAppId);
+        if (!appId) {
+          errors.push(`第${rowNum}行：未匹配到app，请选择app录入`);
+          failedCount++;
+          continue;
+        }
+      }
 
       if (!channelId) {
         errors.push(`第${rowNum}行：渠道编码 "${row.channelCode}" 不存在`);
-        failedCount++;
-        continue;
-      }
-      if (!appId) {
-        errors.push(`第${rowNum}行：产品 AppID "${row.productAppId}" 不存在`);
         failedCount++;
         continue;
       }
@@ -384,7 +391,10 @@ export class DataEntryService {
   }
 
   /** 根据 code 批量查找 FK id 映射 */
-  private async resolveFkMap(rows: ExcelRow[]): Promise<{
+  private async resolveFkMap(
+    rows: ExcelRow[],
+    productId?: number,
+  ): Promise<{
     channel: Map<string, number>;
     app: Map<string, number>;
     region: Map<string, number>;
@@ -397,9 +407,10 @@ export class DataEntryService {
       channelCodes.length > 0
         ? this.channelRepo.find({ where: channelCodes.map((c) => ({ code: c })) })
         : ([] as Channel[]),
-      productAppIds.length > 0
-        ? this.productRepo.find({ where: productAppIds.map((p) => ({ appId: p })) })
-        : ([] as Product[]),
+      // 如果已指定 productId，跳过产品查询
+      productId || productAppIds.length === 0
+        ? ([] as Product[])
+        : this.productRepo.find({ where: productAppIds.map((p) => ({ appId: p })) }),
       regionCodes.length > 0
         ? this.regionRepo.find({ where: regionCodes.map((c) => ({ code: c })) })
         : ([] as Region[]),

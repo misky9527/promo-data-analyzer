@@ -3,11 +3,14 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
+  ManyToOne,
+  JoinColumn,
   JoinTable,
 } from 'typeorm';
 import { BaseTimeEntity } from '../../../common/entities/base-time.entity';
 import { Channel } from '../../dictionary/entities/channel.entity';
 import { Region } from '../../dictionary/entities/region.entity';
+import { Site } from '../../site/entities/site.entity';
 
 @Entity('product')
 export class Product extends BaseTimeEntity {
@@ -42,9 +45,24 @@ export class Product extends BaseTimeEntity {
   @Column({ type: 'varchar', length: 10, name: 'default_country', nullable: true })
   defaultCountry: string | null;
 
+  @ManyToOne(() => Site, { nullable: true })
+  @JoinColumn({ name: 'site_id' })
+  site: Site | null;
+
+  @Column({ type: 'bigint', name: 'site_id', nullable: true })
+  siteId: number | null;
+
   /** 状态：1=启用 0=禁用 */
   @Column({ type: 'smallint', default: 1 })
   status: number;
+
+  /** 开始推广时间 */
+  @Column({ type: 'date', nullable: true, name: 'start_date' })
+  startDate: string | null;
+
+  /** 结束推广时间 */
+  @Column({ type: 'date', nullable: true, name: 'end_date' })
+  endDate: string | null;
 
   /** 备注 */
   @Column({ type: 'varchar', length: 500, nullable: true })

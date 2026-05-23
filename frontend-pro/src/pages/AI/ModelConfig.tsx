@@ -59,7 +59,7 @@ const ModelConfigPage = () => {
       search: false,
       render: (_, row) => (row.isActive ? <Tag color="green">启用</Tag> : <Tag>禁用</Tag>),
     },
-    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', search: false },
+    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },
     {
       title: '操作',
       valueType: 'option',

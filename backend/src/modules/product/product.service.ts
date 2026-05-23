@@ -119,7 +119,10 @@ export class ProductService {
       storeStatus: appleInfo ? 'available' : null,
       storeIcon: localIcon || appleInfo?.artworkUrl512 || null,
       defaultCountry: dto.defaultCountry || null,
+      startDate: dto.startDate || null,
+      endDate: dto.endDate || null,
       remark: dto.remark || null,
+      siteId: dto.siteId || null,
     });
 
     // 关联渠道 & 地区
@@ -147,7 +150,10 @@ export class ProductService {
     if (dto.bundleId !== undefined) entity.bundleId = dto.bundleId;
     if (dto.storeStatus !== undefined) entity.storeStatus = dto.storeStatus;
     if (dto.defaultCountry !== undefined) entity.defaultCountry = dto.defaultCountry;
+    if (dto.startDate !== undefined) entity.startDate = dto.startDate || null;
+    if (dto.endDate !== undefined) entity.endDate = dto.endDate || null;
     if (dto.remark !== undefined) entity.remark = dto.remark;
+    if (dto.siteId !== undefined) entity.siteId = dto.siteId || null;
 
     // 关联渠道
     if (dto.channelIds !== undefined) {

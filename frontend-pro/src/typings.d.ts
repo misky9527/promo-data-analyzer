@@ -72,6 +72,18 @@ declare namespace API {
     avgPeakOnline: number;
   }
 
+  interface EventHostSummaryRecord {
+    eventName: string;
+    liveDate: string;
+    host: string;
+    siteCount: number;
+    avgDuration: number;
+    totalComments: number;
+    avgStayVisit: number;
+    avgStayPerson: number;
+    avgPeakOnline: number;
+  }
+
   interface LiveSiteItem {
     id: number;
     code: string;

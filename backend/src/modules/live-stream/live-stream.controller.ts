@@ -17,6 +17,7 @@ import { QueryLiveDataDto } from './dto/query-live-data.dto';
 import { QueryDailySummaryDto } from './dto/query-daily-summary.dto';
 import { QueryEventSummaryDto } from './dto/query-event-summary.dto';
 import { QueryHostSummaryDto } from './dto/query-host-summary.dto';
+import { QueryEventHostSummaryDto } from './dto/query-event-host-summary.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('admin/live-stream')
@@ -74,6 +75,12 @@ export class LiveStreamController {
   @Get('host-summary')
   hostSummary(@Query() query: QueryHostSummaryDto) {
     return this.liveStreamService.hostSummary(query);
+  }
+
+  /** 赛事主播汇总（赛事+日期维度，按主播聚合） */
+  @Get('event-host-summary')
+  eventHostSummary(@Query() query: QueryEventHostSummaryDto) {
+    return this.liveStreamService.eventHostSummary(query);
   }
 
   /** 批量删除 */

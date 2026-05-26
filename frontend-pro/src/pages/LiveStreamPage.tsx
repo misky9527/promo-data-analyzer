@@ -1,8 +1,8 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin } from 'antd';
-import { UploadOutlined, InboxOutlined, SearchOutlined } from '@ant-design/icons';
+import { UploadOutlined, InboxOutlined, SearchOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import dayjs from 'dayjs';
 import type { ActionType, ProColumns, ProFormInstance } from '@ant-design/pro-components';
 import {
@@ -10,6 +10,7 @@ import {
   getDailySummary,
   getEventSummary,
   getHostSummary,
+  getEventHostSummary,
   deleteLiveStreamRecord,
   importLiveStreamData,
   batchDeleteLiveStreamRecords,
@@ -811,6 +812,11 @@ const LiveStreamPage = () => {
             ),
           },
           {
+            key: 'event-host-summary',
+            label: '赛事主播汇总',
+            children: <EventHostSummaryTab />,
+          },
+          {
             key: 'event-summary',
             label: '赛事汇总',
             children: (
@@ -924,6 +930,459 @@ const LiveStreamPage = () => {
         ]}
       />
     </PageContainer>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════
+// 赛事主播汇总 Tab（自包含组件）
+// ═══════════════════════════════════════════════════════════
+
+const EventHostSummaryTab = () => {
+  const { message: msg } = App.useApp();
+  const [rawData, setRawData] = useState<API.EventHostSummaryRecord[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+
+  const loadData = useCallback(async (eventName?: string) => {
+    setLoading(true);
+    try {
+      const params: Record<string, unknown> = {};
+      if (eventName) params.eventName = eventName;
+      const res = await getEventHostSummary(params);
+      setRawData(Array.isArray(res) ? res : res.list || []);
+    } catch {
+      msg.error('加载赛事主播汇总失败');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleSearch = useCallback((value: string) => {
+    setSearchText(value);
+    loadData(value || undefined);
+    setCollapsedGroups(new Set());
+  }, [loadData]);
+
+  // 按 eventName + liveDate 分组
+  const groups = useMemo(() => {
+    const map = new Map<string, {
+      eventName: string;
+      liveDate: string;
+      hosts: API.EventHostSummaryRecord[];
+    }>();
+    rawData.forEach((r) => {
+      const key = `${r.eventName}|${r.liveDate}`;
+      if (!map.has(key)) {
+        map.set(key, { eventName: r.eventName, liveDate: r.liveDate, hosts: [] });
+      }
+      map.get(key)!.hosts.push(r);
+    });
+    return Array.from(map.values());
+  }, [rawData]);
+
+  const toggleGroup = useCallback((key: string) => {
+    setCollapsedGroups((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
+
+  // 全局总计
+  const globalTotals = useMemo(() => {
+    if (rawData.length === 0) return null;
+    const siteCountSet = new Set<string>();
+    let totalComments = 0;
+    let totalAvgStayVisit = 0;
+    let totalAvgStayPerson = 0;
+    let totalAvgPeakOnline = 0;
+    let hostCount = 0;
+    rawData.forEach((r) => {
+      siteCountSet.add(`${r.eventName}|${r.liveDate}|${r.host}`);
+      totalComments += r.totalComments;
+      totalAvgStayVisit += r.avgStayVisit;
+      totalAvgStayPerson += r.avgStayPerson;
+      totalAvgPeakOnline += r.avgPeakOnline;
+      hostCount++;
+    });
+    return {
+      totalComments,
+      avgStayVisit: hostCount ? Math.round(totalAvgStayVisit / hostCount) : 0,
+      avgStayPerson: hostCount ? Math.round(totalAvgStayPerson / hostCount) : 0,
+      avgPeakOnline: hostCount ? Math.round(totalAvgPeakOnline / hostCount) : 0,
+      hostCount,
+    };
+  }, [rawData]);
+
+  // Host expandable → L2 site detail
+  const [expandedHostKeys, setExpandedHostKeys] = useState<Set<string>>(new Set());
+  const [hostDetailCache, setHostDetailCache] = useState<Record<string, API.HostSummaryRecord[]>>({});
+  const [loadingHostDetail, setLoadingHostDetail] = useState<string | null>(null);
+
+  const toggleHostDetail = useCallback(async (hostKey: string, eventName: string, liveDate: string) => {
+    setExpandedHostKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(hostKey)) {
+        next.delete(hostKey);
+        return next;
+      }
+      return next;
+    });
+    if (expandedHostKeys.has(hostKey)) return;
+    if (hostDetailCache[hostKey]) {
+      setExpandedHostKeys((prev) => new Set([...prev, hostKey]));
+      return;
+    }
+    setLoadingHostDetail(hostKey);
+    try {
+      const data = await getHostSummary({ eventName, liveDate });
+      const list = Array.isArray(data) ? data : data.list || [];
+      // 过滤出该主播的数据
+      const hostDetail = list.filter((d: API.HostSummaryRecord) => d.host === hostKey.split('|').pop());
+      setHostDetailCache((prev) => ({ ...prev, [hostKey]: hostDetail }));
+      setExpandedHostKeys((prev) => new Set([...prev, hostKey]));
+    } catch {
+      msg.error('加载站点明细失败');
+    } finally {
+      setLoadingHostDetail(null);
+    }
+  }, [expandedHostKeys, hostDetailCache]);
+
+  const hostAggColumns = [
+    { title: '主播', dataIndex: 'host', width: 120 },
+    { title: '站点数', dataIndex: 'siteCount', width: 70 },
+    {
+      title: '平均直播时长',
+      dataIndex: 'avgDuration',
+      width: 120,
+      render: (_: any, r: any) => formatDuration(r.avgDuration),
+    },
+    {
+      title: '评论总数',
+      dataIndex: 'totalComments',
+      width: 100,
+      render: (_: any, r: any) => (r.totalComments ?? 0).toLocaleString(),
+    },
+    {
+      title: '平均次均停留',
+      dataIndex: 'avgStayVisit',
+      width: 130,
+      render: (_: any, r: any) => formatDuration(r.avgStayVisit),
+    },
+    {
+      title: '平均人均停留',
+      dataIndex: 'avgStayPerson',
+      width: 130,
+      render: (_: any, r: any) => formatDuration(r.avgStayPerson),
+    },
+    {
+      title: '平均峰值在线',
+      dataIndex: 'avgPeakOnline',
+      width: 130,
+      render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString(),
+    },
+  ];
+
+  const hostDetailColumns = [
+    { title: '主播', dataIndex: 'host', key: 'host', width: 120 },
+    { title: '站点', dataIndex: 'siteName', key: 'siteName', width: 120 },
+    {
+      title: '直播时长',
+      dataIndex: 'duration',
+      key: 'duration',
+      width: 110,
+      render: (_: any, r: any) => formatDuration(r.duration),
+    },
+    {
+      title: '评论数',
+      dataIndex: 'commentCount',
+      key: 'commentCount',
+      width: 90,
+      render: (_: any, r: any) => (r.commentCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '次均停留',
+      dataIndex: 'avgStayVisit',
+      key: 'avgStayVisit',
+      width: 100,
+      render: (_: any, r: any) => formatDuration(r.avgStayVisit),
+    },
+    {
+      title: '人均停留',
+      dataIndex: 'avgStayPerson',
+      key: 'avgStayPerson',
+      width: 100,
+      render: (_: any, r: any) => formatDuration(r.avgStayPerson),
+    },
+    {
+      title: '峰值在线',
+      dataIndex: 'avgPeakOnline',
+      key: 'avgPeakOnline',
+      width: 90,
+      render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString(),
+    },
+  ];
+
+  // 构建分组数据源
+  const groupDataSource = useMemo(() => {
+    const rows: any[] = [];
+    groups.forEach((g, gi) => {
+      const gKey = `${g.eventName}|${g.liveDate}`;
+      const isCollapsed = collapsedGroups.has(gKey);
+
+      // 计算分组小计
+      const subTotal = g.hosts.reduce(
+        (acc: any, h: any) => {
+          acc.totalComments += h.totalComments || 0;
+          acc.avgStayVisit += h.avgStayVisit || 0;
+          acc.avgStayPerson += h.avgStayPerson || 0;
+          acc.avgPeakOnline += h.avgPeakOnline || 0;
+          acc.totalDuration += (h.siteCount || 0) * (h.avgDuration || 0);
+          acc.totalSiteCount += h.siteCount || 0;
+          return acc;
+        },
+        { totalComments: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, totalDuration: 0, totalSiteCount: 0 },
+      );
+      const hostCount = g.hosts.length;
+
+      // 分组行
+      rows.push({
+        _type: 'group',
+        _key: `g-${gi}`,
+        eventName: g.eventName,
+        liveDate: g.liveDate,
+        isCollapsed,
+        toggleKey: gKey,
+        hostCount,
+        subTotalComments: subTotal.totalComments,
+        subAvgStayVisit: hostCount ? Math.round(subTotal.avgStayVisit / hostCount) : 0,
+        subAvgStayPerson: hostCount ? Math.round(subTotal.avgStayPerson / hostCount) : 0,
+        subAvgPeakOnline: hostCount ? Math.round(subTotal.avgPeakOnline / hostCount) : 0,
+        subAvgDuration: subTotal.totalSiteCount ? Math.round(subTotal.totalDuration / subTotal.totalSiteCount) : 0,
+        totalSiteCount: subTotal.totalSiteCount,
+      });
+
+      // 主播行（仅展开时）
+      if (!isCollapsed) {
+        g.hosts.forEach((h, hi) => {
+          const hostKey = `${g.eventName}|${g.liveDate}|${h.host}`;
+          rows.push({
+            _type: 'host',
+            _key: `h-${gi}-${hi}`,
+            ...h,
+            hostKey,
+            groupEventName: g.eventName,
+            groupLiveDate: g.liveDate,
+          });
+        });
+      }
+    });
+    return rows;
+  }, [groups, collapsedGroups]);
+
+  const eventHostColumns: any[] = [
+    {
+      title: '赛事',
+      dataIndex: 'eventName',
+      key: 'eventName',
+      width: 200,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') {
+          const icon = row.isCollapsed ? (
+            <CaretRightOutlined style={{ marginRight: 6 }} />
+          ) : (
+            <CaretDownOutlined style={{ marginRight: 6 }} />
+          );
+          return (
+            <span
+              style={{ cursor: 'pointer', fontWeight: 600, fontSize: 14 }}
+              onClick={() => toggleGroup(row.toggleKey)}
+            >
+              {icon}
+              {row.eventName}
+              <span style={{ fontWeight: 400, marginLeft: 12, fontSize: 12, color: '#888' }}>
+                {dayjs(row.liveDate).format('YYYY-MM-DD')}
+              </span>
+              <span style={{ fontWeight: 400, marginLeft: 8, fontSize: 12, color: '#1890ff' }}>
+                ({row.hostCount}位主播)
+              </span>
+            </span>
+          );
+        }
+        return <span style={{ paddingLeft: 8 }}>{row.host}</span>;
+      },
+    },
+    {
+      title: '站点数',
+      dataIndex: 'siteCount',
+      key: 'siteCount',
+      width: 80,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') return <span style={{ fontWeight: 600 }}>{row.totalSiteCount}</span>;
+        return row.siteCount;
+      },
+    },
+    {
+      title: '平均直播时长',
+      dataIndex: 'avgDuration',
+      key: 'avgDuration',
+      width: 120,
+      render: (_: any, row: any) => {
+        if (row._type === 'group')
+          return <span style={{ fontWeight: 600 }}>{formatDuration(row.subAvgDuration)}</span>;
+        return formatDuration(row.avgDuration);
+      },
+    },
+    {
+      title: '评论总数',
+      dataIndex: 'totalComments',
+      key: 'totalComments',
+      width: 100,
+      render: (_: any, row: any) => {
+        if (row._type === 'group')
+          return <span style={{ fontWeight: 600 }}>{row.subTotalComments.toLocaleString()}</span>;
+        return (row.totalComments ?? 0).toLocaleString();
+      },
+    },
+    {
+      title: '平均次均停留',
+      dataIndex: 'avgStayVisit',
+      key: 'avgStayVisit',
+      width: 130,
+      render: (_: any, row: any) => {
+        if (row._type === 'group')
+          return <span style={{ fontWeight: 600 }}>{formatDuration(row.subAvgStayVisit)}</span>;
+        return formatDuration(row.avgStayVisit);
+      },
+    },
+    {
+      title: '平均人均停留',
+      dataIndex: 'avgStayPerson',
+      key: 'avgStayPerson',
+      width: 130,
+      render: (_: any, row: any) => {
+        if (row._type === 'group')
+          return <span style={{ fontWeight: 600 }}>{formatDuration(row.subAvgStayPerson)}</span>;
+        return formatDuration(row.avgStayPerson);
+      },
+    },
+    {
+      title: '平均峰值在线',
+      dataIndex: 'avgPeakOnline',
+      key: 'avgPeakOnline',
+      width: 130,
+      render: (_: any, row: any) => {
+        if (row._type === 'group')
+          return <span style={{ fontWeight: 600 }}>{row.subAvgPeakOnline.toLocaleString()}</span>;
+        return (row.avgPeakOnline ?? 0).toLocaleString();
+      },
+    },
+  ];
+
+  return (
+    <div>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h4 style={{ margin: 0 }}>赛事主播汇总</h4>
+        <Input.Search
+          placeholder="搜索赛事名"
+          allowClear
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onSearch={handleSearch}
+          style={{ width: 300 }}
+        />
+      </div>
+      <Table
+        dataSource={groupDataSource}
+        columns={eventHostColumns}
+        rowKey="_key"
+        loading={loading}
+        pagination={false}
+        size="middle"
+        expandable={{
+          rowExpandable: (row: any) => row._type === 'host',
+          expandedRowKeys: [...expandedHostKeys],
+          onExpand: (expanded: boolean, row: any) => {
+            if (expanded) {
+              toggleHostDetail(row.hostKey, row.groupEventName, row.groupLiveDate);
+            } else {
+              setExpandedHostKeys((prev) => {
+                const next = new Set(prev);
+                next.delete(row.hostKey);
+                return next;
+              });
+            }
+          },
+          expandedRowRender: (row: any) => {
+            if (row._type !== 'host') return null;
+            if (loadingHostDetail === row.hostKey) {
+              return (
+                <div style={{ textAlign: 'center', padding: 16 }}>
+                  <Spin />
+                </div>
+              );
+            }
+            const detail = hostDetailCache[row.hostKey] || [];
+            if (detail.length === 0) {
+              return (
+                <div style={{ padding: 8, color: '#999' }}>暂无站点数据</div>
+              );
+            }
+            return (
+              <Table
+                dataSource={detail}
+                columns={hostDetailColumns}
+                rowKey={(r: any) => `${r.host}-${r.siteCode}`}
+                pagination={false}
+                size="small"
+                style={{ margin: '4px 0 4px 32px' }}
+              />
+            );
+          },
+        }}
+        onRow={(record: any) => {
+          if (record._type === 'group') {
+            return {
+              style: {
+                backgroundColor: '#f0f5ff',
+                fontWeight: 600,
+              },
+            };
+          }
+          return {};
+        }}
+        summary={() => {
+          if (!globalTotals || rawData.length === 0) return null;
+          return (
+            <Table.Summary.Row style={{ backgroundColor: '#fafafa', fontWeight: 700 }}>
+              <Table.Summary.Cell index={0}>
+                <strong>全局总计</strong>
+              </Table.Summary.Cell>
+              <Table.Summary.Cell index={1} />
+              <Table.Summary.Cell index={2} />
+              <Table.Summary.Cell index={3}>
+                {globalTotals.totalComments.toLocaleString()}
+              </Table.Summary.Cell>
+              <Table.Summary.Cell index={4}>
+                {formatDuration(globalTotals.avgStayVisit)}
+              </Table.Summary.Cell>
+              <Table.Summary.Cell index={5}>
+                {formatDuration(globalTotals.avgStayPerson)}
+              </Table.Summary.Cell>
+              <Table.Summary.Cell index={6}>
+                {globalTotals.avgPeakOnline.toLocaleString()}
+              </Table.Summary.Cell>
+            </Table.Summary.Row>
+          );
+        }}
+      />
+    </div>
   );
 };
 

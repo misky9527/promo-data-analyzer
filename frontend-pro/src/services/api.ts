@@ -299,5 +299,7 @@ export const getEventSummary = (params: Record<string, unknown>) =>
   request<any>(`/admin/live-stream/event-summary${toQuery(params)}`);
 export const getHostSummary = (params: Record<string, unknown>) =>
   request<any>(`/admin/live-stream/host-summary${toQuery(params)}`);
+export const getEventHostSummary = (params: Record<string, unknown>) =>
+  request<any>(`/admin/live-stream/event-host-summary${toQuery(params)}`);
 export const batchDeleteLiveStreamRecords = (ids: number[]) =>
   request<any>('/admin/live-stream/batch-delete', { method: 'POST', data: { ids } });

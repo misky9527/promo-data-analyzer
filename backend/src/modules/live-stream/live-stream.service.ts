@@ -8,6 +8,7 @@ import { QueryLiveDataDto } from './dto/query-live-data.dto';
 import { QueryDailySummaryDto } from './dto/query-daily-summary.dto';
 import { QueryEventSummaryDto } from './dto/query-event-summary.dto';
 import { QueryHostSummaryDto } from './dto/query-host-summary.dto';
+import { QueryEventHostSummaryDto } from './dto/query-event-host-summary.dto';
 import * as XLSX from 'xlsx';
 
 export interface FileImportResult {
@@ -261,6 +262,57 @@ export class LiveStreamService {
       siteName: r.siteName ?? r.siteCode,
       duration: r.totalDuration ? parseInt(r.totalDuration, 10) : 0,
       commentCount: r.totalComments ? parseInt(r.totalComments, 10) : 0,
+      avgStayVisit: r.avgStayVisit ? Math.round(parseFloat(r.avgStayVisit)) : 0,
+      avgStayPerson: r.avgStayPerson ? Math.round(parseFloat(r.avgStayPerson)) : 0,
+      avgPeakOnline: r.avgPeakOnline ? Math.round(parseFloat(r.avgPeakOnline)) : 0,
+    }));
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // 赛事主播汇总（赛事+日期维度，按主播聚合）
+  // ═══════════════════════════════════════════════════════════
+
+  async eventHostSummary(query: QueryEventHostSummaryDto) {
+    const { eventName } = query;
+
+    const qb = this.repo
+      .createQueryBuilder('ls')
+      .select('ls.eventName', 'eventName')
+      .addSelect('ls.liveDate', 'liveDate')
+      .addSelect('ls.host', 'host')
+      .addSelect('COUNT(DISTINCT ls.siteCode)', 'siteCount')
+      .addSelect(
+        'CAST(SUM(ls.duration) / COUNT(DISTINCT ls.siteCode) AS INTEGER)',
+        'avgDuration',
+      )
+      .addSelect('SUM(ls.commentCount)', 'totalComments')
+      .addSelect('AVG(ls.avgStayVisit)', 'avgStayVisit')
+      .addSelect('AVG(ls.avgStayPerson)', 'avgStayPerson')
+      .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
+      .where('ls.eventName IS NOT NULL')
+      .andWhere("ls.eventName != ''")
+      .groupBy('ls.eventName')
+      .addGroupBy('ls.liveDate')
+      .addGroupBy('ls.host')
+      .orderBy('ls.eventName', 'ASC')
+      .addOrderBy('ls.liveDate', 'DESC')
+      .addOrderBy('ls.host', 'ASC');
+
+    if (eventName) {
+      qb.andWhere('ls.eventName ILIKE :eventName', {
+        eventName: `%${eventName}%`,
+      });
+    }
+
+    const rawList: any[] = await qb.getRawMany();
+
+    return rawList.map((r) => ({
+      eventName: r.eventName,
+      liveDate: r.liveDate,
+      host: r.host,
+      siteCount: parseInt(r.siteCount, 10),
+      avgDuration: r.avgDuration ? parseInt(r.avgDuration, 10) : 0,
+      totalComments: r.totalComments ? parseInt(r.totalComments, 10) : 0,
       avgStayVisit: r.avgStayVisit ? Math.round(parseFloat(r.avgStayVisit)) : 0,
       avgStayPerson: r.avgStayPerson ? Math.round(parseFloat(r.avgStayPerson)) : 0,
       avgPeakOnline: r.avgPeakOnline ? Math.round(parseFloat(r.avgPeakOnline)) : 0,

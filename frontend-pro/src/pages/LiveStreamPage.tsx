@@ -997,10 +997,8 @@ const EventHostSummaryTab = () => {
     return rows;
   }, [rawData]);
 
-  // antd sorter：一级按分组保序，二级按目标字段排
+  // antd sorter：按字段值排序
   const makeSorter = (field: string) => (a: any, b: any) => {
-    const cmp = a._groupKey.localeCompare(b._groupKey);
-    if (cmp !== 0) return cmp;
     return (a[field] ?? 0) - (b[field] ?? 0);
   };
 
@@ -1035,13 +1033,17 @@ const EventHostSummaryTab = () => {
           style={{ width: 300 }}
         />
       </div>
-      <Table
+      <ProTable
         dataSource={dataSource}
         columns={columns}
         rowKey="_key"
         loading={loading}
         pagination={false}
-        size="middle"
+        search={false}
+        options={{ reload: false, density: false, setting: true }}
+        columnsState={{
+          persistenceKey: 'event-host-summary-columns',
+        }}
       />
     </div>
   );

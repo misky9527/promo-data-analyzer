@@ -52,7 +52,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -65,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -109,7 +109,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            2
+            9
           ]
         },
         "register": 2
@@ -156,7 +156,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            16
+            36
           ]
         },
         "register": 22
@@ -189,7 +189,7 @@
             0
           ],
           "onCheck": [
-            1
+            0
           ]
         },
         "register": 1
@@ -206,10 +206,10 @@
       "time": {
         "hooks": {
           "onCheck": [
-            0
+            1
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -239,7 +239,7 @@
             0
           ]
         },
-        "register": 4
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -1121,7 +1121,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 96
+        "register": 113
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 27
+        "register": 29
       },
       "enableBy": "config"
     },
@@ -1174,7 +1174,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            0
+            1
           ]
         },
         "register": 0
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 32
+        "register": 34
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1280,7 +1280,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
         "register": 1
@@ -1295,7 +1295,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1308,7 +1308,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1321,7 +1321,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -1386,7 +1386,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1398,7 +1398,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -1411,7 +1411,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1424,7 +1424,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 4
       },
       "enableBy": "register"
     },
@@ -1437,7 +1437,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 3
       },
       "enableBy": "config"
     },
@@ -1450,7 +1450,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1463,7 +1463,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 5
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1475,7 +1475,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 21
+        "register": 24
       },
       "enableBy": "config"
     },
@@ -1604,7 +1604,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 31
+        "register": 32
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 39
+        "register": 42
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 17
+        "register": 22
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1731,7 +1731,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1744,7 +1744,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1757,7 +1757,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1822,7 +1822,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1913,7 +1913,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 22
+        "register": 33
       },
       "enableBy": "register"
     },
@@ -1993,16 +1993,16 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            2
           ],
           "modifyAppData": [
-            1
+            0
           ],
           "onCheck": [
             0
           ]
         },
-        "register": 6
+        "register": 7
       }
     },
     "./node_modules/@umijs/plugins/dist/dva": {
@@ -2046,7 +2046,7 @@
             0
           ],
           "addLayouts": [
-            1
+            0
           ],
           "modifyAppData": [
             0
@@ -2091,7 +2091,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -2117,7 +2117,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2142,7 +2142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/plugins/dist/react-query": {
@@ -2167,7 +2167,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2180,7 +2180,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2426,6 +2426,11 @@
             "path": "regions",
             "name": "推广地区",
             "component": "./Dictionary/Regions"
+          },
+          {
+            "path": "users",
+            "name": "用户管理",
+            "component": "./Admin/UserManagement"
           }
         ]
       },
@@ -2658,6 +2663,11 @@
             "path": "regions",
             "name": "推广地区",
             "component": "./Dictionary/Regions"
+          },
+          {
+            "path": "users",
+            "name": "用户管理",
+            "component": "./Admin/UserManagement"
           }
         ]
       },
@@ -3897,17 +3907,28 @@
       "__absFile": "/root/.openclaw/workspace-vest/promo-data-analyzer/frontend-pro/src/pages/Dictionary/Regions.tsx"
     },
     "27": {
+      "path": "users",
+      "name": "用户管理",
+      "file": "@/pages/Admin/UserManagement.tsx",
+      "parentId": "24",
+      "id": "27",
+      "absPath": "/dict/users",
+      "__content": "import {\n  ModalForm,\n  PageContainer,\n  ProFormSelect,\n  ProFormSwitch,\n  ProFormText,\n  ProTable,\n} from '@ant-design/pro-components';\nimport { Tag, Button, Popconfirm, message } from 'antd';\nimport { useRef, useState } from 'react';\nimport type { ActionType, ProColumns } from '@ant-design/pro-components';\nimport {\n  fetchAdminUserList,\n  createAdminUser,\n  updateAdminUser,\n  deleteAdminUser,\n  resetAdminUserPassword,\n} from '@/services/api';\n\nconst roleOptions = [\n  { label: '超级管理员', value: 'super_admin' },\n  { label: '管理员', value: 'admin' },\n];\n\nconst ROLE_LABELS: Record<string, string> = {\n  super_admin: '超级管理员',\n  admin: '管理员',\n};\n\nconst ROLE_COLORS: Record<string, string> = {\n  super_admin: 'blue',\n  admin: 'green',\n};\n\nconst UserManagementPage = () => {\n  const actionRef = useRef<ActionType>();\n  const [editing, setEditing] = useState<any>();\n\n  const columns: ProColumns<API.AdminUserRecord>[] = [\n    { title: '用户名', dataIndex: 'username' },\n    {\n      title: '角色',\n      dataIndex: 'roleType',\n      valueType: 'select',\n      valueEnum: {\n        super_admin: { text: '超级管理员' },\n        admin: { text: '管理员' },\n      },\n      render: (_, row) => (\n        <Tag color={ROLE_COLORS[row.roleType] || 'default'}>\n          {ROLE_LABELS[row.roleType] || row.roleType}\n        </Tag>\n      ),\n    },\n    {\n      title: '状态',\n      dataIndex: 'status',\n      valueType: 'select',\n      valueEnum: {\n        1: { text: '启用' },\n        0: { text: '禁用' },\n      },\n      render: (_, row) => (\n        <Tag color={row.status === 1 ? 'green' : 'red'}>\n          {row.status === 1 ? '启用' : '禁用'}\n        </Tag>\n      ),\n    },\n    {\n      title: '最后登录',\n      dataIndex: 'lastLoginAt',\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '创建时间',\n      dataIndex: 'createdAt',\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => {\n        const isSuperAdmin = row.roleType === 'super_admin';\n        return [\n          <a key=\"edit\" onClick={() => setEditing(row)}>\n            编辑\n          </a>,\n          <Popconfirm\n            key=\"reset-pwd\"\n            title={`确认重置 ${row.username} 的密码为 admin123？`}\n            onConfirm={async () => {\n              await resetAdminUserPassword(row.id);\n              message.success('密码已重置');\n            }}\n          >\n            <a>重置密码</a>\n          </Popconfirm>,\n          !isSuperAdmin && (\n            <Popconfirm\n              key=\"delete\"\n              title={`确认删除用户 ${row.username}？`}\n              onConfirm={async () => {\n                await deleteAdminUser(row.id);\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: 'red' }}>删除</a>\n            </Popconfirm>\n          ),\n        ];\n      },\n    },\n  ];\n\n  return (\n    <PageContainer header={{ title: false }}>\n      <ProTable<API.AdminUserRecord>\n        rowKey=\"id\"\n        actionRef={actionRef}\n        columns={columns}\n        request={async (params) => {\n          const result = await fetchAdminUserList({\n            page: params.current,\n            pageSize: params.pageSize,\n            username: params.username,\n            roleType: params.roleType,\n          });\n          return {\n            data: result.list || [],\n            success: true,\n            total: result.total || 0,\n          };\n        }}\n        toolBarRender={() => [\n          <Button key=\"add\" type=\"primary\" onClick={() => setEditing({})}>\n            新建用户\n          </Button>,\n        ]}\n      />\n      <ModalForm\n        title={editing?.id ? '编辑用户' : '新建用户'}\n        open={editing !== undefined}\n        initialValues={editing}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}\n        onFinish={async (values) => {\n          if (editing?.id) {\n            await updateAdminUser(editing.id, {\n              roleType: values.roleType,\n              status: values.status ? 1 : 0,\n            });\n          } else {\n            await createAdminUser({\n              username: values.username,\n              password: values.password,\n              roleType: values.roleType,\n              status: values.status ? 1 : 0,\n            });\n          }\n          setEditing(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText\n          name=\"username\"\n          label=\"用户名\"\n          rules={[{ required: true, message: '请输入用户名' }]}\n          disabled={!!editing?.id}\n          placeholder=\"请输入用户名\"\n        />\n        {!editing?.id && (\n          <ProFormText.Password\n            name=\"password\"\n            label=\"密码\"\n            rules={[{ required: true, message: '请输入密码' }]}\n            placeholder=\"请输入密码\"\n          />\n        )}\n        <ProFormSelect\n          name=\"roleType\"\n          label=\"角色\"\n          options={roleOptions}\n          rules={[{ required: true, message: '请选择角色' }]}\n        />\n        <ProFormSwitch name=\"status\" label=\"启用\" />\n      </ModalForm>\n    </PageContainer>\n  );\n};\n\nexport default UserManagementPage;\n",
+      "__isJSFile": true,
+      "__absFile": "/root/.openclaw/workspace-vest/promo-data-analyzer/frontend-pro/src/pages/Admin/UserManagement.tsx"
+    },
+    "28": {
       "path": "/",
       "redirect": "/dashboard",
       "parentId": "ant-design-pro-layout",
-      "id": "27",
+      "id": "28",
       "absPath": "/"
     },
-    "28": {
+    "29": {
       "path": "/*",
       "layout": false,
       "file": "@/pages/exception/404.tsx",
-      "id": "28",
+      "id": "29",
       "absPath": "/*",
       "__content": "const NotFoundPage = () => <div style={{ padding: 48, textAlign: 'center' }}>404 - 页面不存在</div>;\n\nexport default NotFoundPage;\n",
       "__isJSFile": true,

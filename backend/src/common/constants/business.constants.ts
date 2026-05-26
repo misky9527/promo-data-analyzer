@@ -1,6 +1,11 @@
 export const ROLE_SUPER_ADMIN = 'super_admin';
 export const ROLES_KEY = 'roles';
 
+export enum RoleType {
+  SUPER_ADMIN = 'super_admin',
+  ADMIN = 'admin',
+}
+
 export enum DictStatus {
   ACTIVE = 1,
   INACTIVE = 0,

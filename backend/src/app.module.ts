@@ -13,6 +13,7 @@ import { ModelConfigModule } from './modules/model-config/model-config.module';
 import { SiteModule } from './modules/site/site.module';
 import { LiveStreamModule } from './modules/live-stream/live-stream.module';
 import { LiveSiteModule } from './modules/live-site/live-site.module';
+import { AdminUserModule } from './modules/admin-user/admin-user.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AuthService } from './modules/auth/auth.service';
@@ -60,6 +61,7 @@ import { AdminUser } from './modules/auth/entities/admin-user.entity';
     SiteModule,
     LiveStreamModule,
     LiveSiteModule,
+    AdminUserModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

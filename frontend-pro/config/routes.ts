@@ -80,6 +80,7 @@ export default [
     routes: [
       { path: 'channels', name: '推广渠道', component: './Dictionary/Channels' },
       { path: 'regions', name: '推广地区', component: './Dictionary/Regions' },
+      { path: 'users', name: '用户管理', component: './Admin/UserManagement' },
     ],
   },
 

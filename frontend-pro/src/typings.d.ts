@@ -89,4 +89,15 @@ declare namespace API {
     code: string;
     name: string;
   }
+
+  interface AdminUserRecord {
+    id: number;
+    username: string;
+    roleType: 'super_admin' | 'admin';
+    status: number;
+    jwtVersion: number;
+    lastLoginAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+  }
 }

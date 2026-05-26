@@ -303,3 +303,15 @@ export const getEventHostSummary = (params: Record<string, unknown>) =>
   request<any>(`/admin/live-stream/event-host-summary${toQuery(params)}`);
 export const batchDeleteLiveStreamRecords = (ids: number[]) =>
   request<any>('/admin/live-stream/batch-delete', { method: 'POST', data: { ids } });
+
+// === 管理员用户管理 ===
+export const fetchAdminUserList = (params: Record<string, unknown>) =>
+  request<API.PageResult<API.AdminUserRecord>>(`/admin/admin-user/list${toQuery(params)}`);
+export const createAdminUser = (data: Record<string, unknown>) =>
+  request('/admin/admin-user', { method: 'POST', data });
+export const updateAdminUser = (id: number, data: Record<string, unknown>) =>
+  request(`/admin/admin-user/${id}`, { method: 'PUT', data });
+export const deleteAdminUser = (id: number) =>
+  request(`/admin/admin-user/${id}`, { method: 'DELETE' });
+export const resetAdminUserPassword = (id: number) =>
+  request(`/admin/admin-user/${id}/reset-password`, { method: 'POST' });

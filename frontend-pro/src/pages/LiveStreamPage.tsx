@@ -943,9 +943,6 @@ const EventHostSummaryTab = () => {
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<'ascend' | 'descend' | null>(null);
-
   const loadData = useCallback(async (eventName?: string) => {
     setLoading(true);
     try {
@@ -969,27 +966,7 @@ const EventHostSummaryTab = () => {
     loadData(value || undefined);
   }, [loadData]);
 
-  const makeSortTitle = (label: string, field: string) => {
-    const active = sortField === field;
-    return (
-      <span
-        style={{ cursor: 'pointer', userSelect: 'none' }}
-        onClick={() => {
-          if (active) {
-            if (sortOrder === 'ascend') { setSortField(field); setSortOrder('descend'); }
-            else if (sortOrder === 'descend') { setSortField(null); setSortOrder(null); }
-          } else {
-            setSortField(field); setSortOrder('ascend');
-          }
-        }}
-      >
-        {label}
-        {active && (sortOrder === 'ascend' ? ' ▲' : sortOrder === 'descend' ? ' ▼' : '')}
-      </span>
-    );
-  };
-
-  // 扁平数据源：group → hosts（组内排序）→ 下一组
+  // 全 host 行：仅首行显示日期/赛事
   const dataSource = useMemo(() => {
     const rows: any[] = [];
     const map = new Map<string, API.EventHostSummaryRecord[]>();
@@ -1000,75 +977,49 @@ const EventHostSummaryTab = () => {
     });
     map.forEach((hosts, key) => {
       const [eventName, liveDate] = key.split('|');
-      // 组内排序
-      if (sortField && sortOrder) {
-        hosts.sort((a: any, b: any) => {
-          const av = a[sortField] ?? 0;
-          const bv = b[sortField] ?? 0;
-          return sortOrder === 'ascend' ? av - bv : bv - av;
+      hosts.forEach((h, i) => {
+        rows.push({
+          _key: `h-${key}-${h.host}`,
+          _groupKey: key,
+          _isFirst: i === 0,
+          eventName,
+          liveDate: dayjs(liveDate).format('YYYY-MM-DD'),
+          host: h.host,
+          siteCount: h.siteCount,
+          avgDuration: h.avgDuration,
+          totalComments: h.totalComments,
+          avgStayVisit: h.avgStayVisit,
+          avgStayPerson: h.avgStayPerson,
+          avgPeakOnline: h.avgPeakOnline,
         });
-      }
-      rows.push({ _key: `g-${key}`, _type: 'group', eventName, liveDate });
-      hosts.forEach((h) => rows.push({ _key: `h-${key}-${h.host}`, _type: 'host', ...h }));
+      });
     });
     return rows;
-  }, [rawData, sortField, sortOrder]);
+  }, [rawData]);
+
+  // antd sorter：一级按分组保序，二级按目标字段排
+  const makeSorter = (field: string) => (a: any, b: any) => {
+    const cmp = a._groupKey.localeCompare(b._groupKey);
+    if (cmp !== 0) return cmp;
+    return (a[field] ?? 0) - (b[field] ?? 0);
+  };
 
   const columns: any[] = [
     {
-      title: '主播', dataIndex: 'host', width: 260,
-      render: (_: any, row: any) => {
-        if (row._type === 'group') {
-          return {
-            children: <strong>{row.eventName} · {dayjs(row.liveDate).format('YYYY-MM-DD')}</strong>,
-            props: { colSpan: 7, style: { textAlign: 'center' as const } },
-          };
-        }
-        return <span style={{ paddingLeft: 16 }}>{row.host}</span>;
-      },
+      title: '日期', dataIndex: 'liveDate', width: 110,
+      render: (_: any, row: any) => row._isFirst ? row.liveDate : null,
     },
     {
-      title: '站点数', dataIndex: 'siteCount', width: 80,
-      render: (_: any, row: any) => {
-        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
-        return row.siteCount;
-      },
+      title: '赛事', dataIndex: 'eventName', width: 200, ellipsis: true,
+      render: (_: any, row: any) => row._isFirst ? row.eventName : null,
     },
-    {
-      title: '均时长', dataIndex: 'avgDuration', width: 120,
-      render: (_: any, row: any) => {
-        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
-        return formatDuration(row.avgDuration);
-      },
-    },
-    {
-      title: makeSortTitle('评论', 'totalComments'), dataIndex: 'totalComments', width: 100,
-      render: (_: any, row: any) => {
-        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
-        return (row.totalComments ?? 0).toLocaleString();
-      },
-    },
-    {
-      title: makeSortTitle('均次均', 'avgStayVisit'), dataIndex: 'avgStayVisit', width: 120,
-      render: (_: any, row: any) => {
-        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
-        return formatDuration(row.avgStayVisit);
-      },
-    },
-    {
-      title: makeSortTitle('均人均', 'avgStayPerson'), dataIndex: 'avgStayPerson', width: 120,
-      render: (_: any, row: any) => {
-        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
-        return formatDuration(row.avgStayPerson);
-      },
-    },
-    {
-      title: makeSortTitle('均峰值', 'avgPeakOnline'), dataIndex: 'avgPeakOnline', width: 90,
-      render: (_: any, row: any) => {
-        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
-        return (row.avgPeakOnline ?? 0).toLocaleString();
-      },
-    },
+    { title: '主播', dataIndex: 'host', width: 120 },
+    { title: '站点数', dataIndex: 'siteCount', width: 80 },
+    { title: '均时长', dataIndex: 'avgDuration', width: 100, render: (_: any, r: any) => formatDuration(r.avgDuration) },
+    { title: '评论', dataIndex: 'totalComments', width: 80, sorter: makeSorter('totalComments'), render: (_: any, r: any) => (r.totalComments ?? 0).toLocaleString() },
+    { title: '均次均', dataIndex: 'avgStayVisit', width: 110, sorter: makeSorter('avgStayVisit'), render: (_: any, r: any) => formatDuration(r.avgStayVisit) },
+    { title: '均人均', dataIndex: 'avgStayPerson', width: 110, sorter: makeSorter('avgStayPerson'), render: (_: any, r: any) => formatDuration(r.avgStayPerson) },
+    { title: '均峰值', dataIndex: 'avgPeakOnline', width: 80, sorter: makeSorter('avgPeakOnline'), render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString() },
   ];
 
   return (

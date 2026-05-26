@@ -990,7 +990,7 @@ const EventHostSummaryTab = () => {
         if (row._type === 'group') {
           return {
             children: <strong>{row.eventName} · {dayjs(row.liveDate).format('YYYY-MM-DD')}</strong>,
-            props: { colSpan: 7 },
+            props: { colSpan: 7, style: { textAlign: 'center' as const } },
           };
         }
         return <span style={{ paddingLeft: 16 }}>{row.host}</span>;

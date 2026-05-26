@@ -966,57 +966,112 @@ const EventHostSummaryTab = () => {
     loadData(value || undefined);
   }, [loadData]);
 
-  const groups = useMemo(() => {
-    const map = new Map<string, {
-      eventName: string;
-      liveDate: string;
-      hosts: API.EventHostSummaryRecord[];
-    }>();
+  // 扁平数据源：group → hosts → subtotal → 下一组
+  const dataSource = useMemo(() => {
+    const rows: any[] = [];
+    const map = new Map<string, API.EventHostSummaryRecord[]>();
     rawData.forEach((r) => {
       const key = `${r.eventName}|${r.liveDate}`;
-      if (!map.has(key)) {
-        map.set(key, { eventName: r.eventName, liveDate: r.liveDate, hosts: [] });
-      }
-      map.get(key)!.hosts.push(r);
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(r);
     });
-    return Array.from(map.values());
+    map.forEach((hosts, key) => {
+      const [eventName, liveDate] = key.split('|');
+      const subTotal = hosts.reduce((acc: any, h: any) => {
+        acc.totalComments += h.totalComments || 0;
+        acc.totalDuration += (h.siteCount || 0) * (h.avgDuration || 0);
+        acc.totalSiteCount += h.siteCount || 0;
+        return acc;
+      }, { totalComments: 0, totalDuration: 0, totalSiteCount: 0 });
+      rows.push({ _key: `g-${key}`, _type: 'group', eventName, liveDate, hostCount: hosts.length });
+      hosts.forEach((h) => rows.push({ _key: `h-${key}-${h.host}`, _type: 'host', ...h }));
+      rows.push({
+        _key: `s-${key}`, _type: 'subtotal',
+        hostCount: hosts.length,
+        siteCount: subTotal.totalSiteCount,
+        avgDuration: subTotal.totalSiteCount ? Math.round(subTotal.totalDuration / subTotal.totalSiteCount) : 0,
+        totalComments: subTotal.totalComments,
+        avgStayVisit: hosts.length ? Math.round(hosts.reduce((s, h) => s + (h.avgStayVisit || 0), 0) / hosts.length) : 0,
+        avgStayPerson: hosts.length ? Math.round(hosts.reduce((s, h) => s + (h.avgStayPerson || 0), 0) / hosts.length) : 0,
+        avgPeakOnline: hosts.length ? Math.round(hosts.reduce((s, h) => s + (h.avgPeakOnline || 0), 0) / hosts.length) : 0,
+      });
+    });
+    return rows;
   }, [rawData]);
 
-  const globalTotals = useMemo(() => {
-    if (rawData.length === 0) return null;
-    let totalComments = 0;
-    let totalAvgStayVisit = 0;
-    let totalAvgStayPerson = 0;
-    let totalAvgPeakOnline = 0;
-    let totalSiteCount = 0;
-    let hostCount = 0;
-    rawData.forEach((r) => {
-      totalComments += r.totalComments;
-      totalAvgStayVisit += r.avgStayVisit;
-      totalAvgStayPerson += r.avgStayPerson;
-      totalAvgPeakOnline += r.avgPeakOnline;
-      totalSiteCount += r.siteCount;
-      hostCount++;
-    });
-    return {
-      totalComments,
-      totalSiteCount,
-      avgStayVisit: hostCount ? Math.round(totalAvgStayVisit / hostCount) : 0,
-      avgStayPerson: hostCount ? Math.round(totalAvgStayPerson / hostCount) : 0,
-      avgPeakOnline: hostCount ? Math.round(totalAvgPeakOnline / hostCount) : 0,
-      hostCount,
-    };
-  }, [rawData]);
-
-  const columns = [
-    { title: '主播', dataIndex: 'host', width: 120 },
-    { title: '站点数', dataIndex: 'siteCount', width: 80 },
-    { title: '平均直播时长', dataIndex: 'avgDuration', width: 120, render: (_: any, r: any) => formatDuration(r.avgDuration) },
-    { title: '评论总数', dataIndex: 'totalComments', width: 100, render: (_: any, r: any) => (r.totalComments ?? 0).toLocaleString() },
-    { title: '平均次均停留', dataIndex: 'avgStayVisit', width: 130, render: (_: any, r: any) => formatDuration(r.avgStayVisit) },
-    { title: '平均人均停留', dataIndex: 'avgStayPerson', width: 130, render: (_: any, r: any) => formatDuration(r.avgStayPerson) },
-    { title: '平均峰值在线', dataIndex: 'avgPeakOnline', width: 130, render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString() },
+  const columns: any[] = [
+    {
+      title: '主播', dataIndex: 'host', width: 260,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') {
+          return (
+            <span style={{ fontWeight: 700, fontSize: 13, color: '#0958d9' }}>
+              {row.eventName} · {dayjs(row.liveDate).format('YYYY-MM-DD')}
+            </span>
+          );
+        }
+        if (row._type === 'subtotal') return <span style={{ fontWeight: 600, color: '#d48806' }}>小计</span>;
+        return <span style={{ paddingLeft: 16 }}>{row.host}</span>;
+      },
+    },
+    {
+      title: '站点数', dataIndex: 'siteCount', width: 80,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') return null;
+        return row.siteCount;
+      },
+    },
+    {
+      title: '均时长', dataIndex: 'avgDuration', width: 120,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') return null;
+        return formatDuration(row.avgDuration);
+      },
+    },
+    {
+      title: '评论', dataIndex: 'totalComments', width: 100,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') return null;
+        return (row.totalComments ?? 0).toLocaleString();
+      },
+    },
+    {
+      title: '均次均', dataIndex: 'avgStayVisit', width: 120,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') return null;
+        return formatDuration(row.avgStayVisit);
+      },
+    },
+    {
+      title: '均人均', dataIndex: 'avgStayPerson', width: 120,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') return null;
+        return formatDuration(row.avgStayPerson);
+      },
+    },
+    {
+      title: '均峰值', dataIndex: 'avgPeakOnline', width: 90,
+      render: (_: any, row: any) => {
+        if (row._type === 'group') return null;
+        return (row.avgPeakOnline ?? 0).toLocaleString();
+      },
+    },
   ];
+
+  const grandTotal = useMemo(() => {
+    const hostRows = dataSource.filter((r) => r._type === 'host');
+    if (hostRows.length === 0) return null;
+    const c = hostRows.length;
+    const s = hostRows.reduce((acc: any, r: any) => {
+      acc.siteCount += r.siteCount || 0;
+      acc.totalComments += r.totalComments || 0;
+      acc.avgStayVisit += r.avgStayVisit || 0;
+      acc.avgStayPerson += r.avgStayPerson || 0;
+      acc.avgPeakOnline += r.avgPeakOnline || 0;
+      return acc;
+    }, { siteCount: 0, totalComments: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0 });
+    return { ...s, count: c };
+  }, [dataSource]);
 
   return (
     <div>
@@ -1031,65 +1086,37 @@ const EventHostSummaryTab = () => {
           style={{ width: 300 }}
         />
       </div>
-      {groups.map((g, gi) => {
-        const subTotal = g.hosts.reduce(
-          (acc: any, h: any) => {
-            acc.totalComments += h.totalComments || 0;
-            acc.avgStayVisit += h.avgStayVisit || 0;
-            acc.avgStayPerson += h.avgStayPerson || 0;
-            acc.avgPeakOnline += h.avgPeakOnline || 0;
-            acc.totalDuration += (h.siteCount || 0) * (h.avgDuration || 0);
-            acc.totalSiteCount += h.siteCount || 0;
-            return acc;
-          },
-          { totalComments: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, totalDuration: 0, totalSiteCount: 0 },
-        );
-        const hc = g.hosts.length;
-        return (
-          <div key={`${g.eventName}|${g.liveDate}`} style={{ marginBottom: gi < groups.length - 1 ? 24 : 8 }}>
-            <h5 style={{ margin: '0 0 8px', color: '#1677ff', fontSize: 14 }}>
-              🏆 {g.eventName} · {dayjs(g.liveDate).format('YYYY-MM-DD')}
-            </h5>
-            <Table
-              dataSource={g.hosts}
-              columns={columns}
-              rowKey={(r: any) => `${r.eventName}|${r.liveDate}|${r.host}`}
-              pagination={false}
-              size="small"
-              loading={loading}
-              summary={() => (
-                <Table.Summary.Row style={{ backgroundColor: '#fffbe6', fontWeight: 600 }}>
-                  <Table.Summary.Cell index={0}>小计</Table.Summary.Cell>
-                  <Table.Summary.Cell index={1}>{subTotal.totalSiteCount}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={2}>
-                    {formatDuration(subTotal.totalSiteCount ? Math.round(subTotal.totalDuration / subTotal.totalSiteCount) : 0)}
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={3}>{subTotal.totalComments.toLocaleString()}</Table.Summary.Cell>
-                  <Table.Summary.Cell index={4}>
-                    {formatDuration(hc ? Math.round(subTotal.avgStayVisit / hc) : 0)}
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={5}>
-                    {formatDuration(hc ? Math.round(subTotal.avgStayPerson / hc) : 0)}
-                  </Table.Summary.Cell>
-                  <Table.Summary.Cell index={6}>
-                    {(hc ? Math.round(subTotal.avgPeakOnline / hc) : 0).toLocaleString()}
-                  </Table.Summary.Cell>
-                </Table.Summary.Row>
-              )}
-            />
-          </div>
-        );
-      })}
-      {globalTotals && rawData.length > 0 && (
-        <div style={{ marginTop: 12, padding: '10px 16px', backgroundColor: '#e6f4ff', borderRadius: 6, fontWeight: 700, display: 'flex', gap: 32, fontSize: 13, flexWrap: 'wrap' }}>
-          <span>总计 · {globalTotals.hostCount}位主播</span>
-          <span>{globalTotals.totalSiteCount} 站点</span>
-          <span>评论 {globalTotals.totalComments.toLocaleString()}</span>
-          <span>均次均 {formatDuration(globalTotals.avgStayVisit)}</span>
-          <span>均人均 {formatDuration(globalTotals.avgStayPerson)}</span>
-          <span>均峰值 {globalTotals.avgPeakOnline.toLocaleString()}</span>
-        </div>
-      )}
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        rowKey="_key"
+        loading={loading}
+        pagination={false}
+        size="middle"
+        onRow={(row: any) => {
+          if (row._type === 'group') {
+            return { style: { backgroundColor: '#f0f5ff' } };
+          }
+          if (row._type === 'subtotal') {
+            return { style: { backgroundColor: '#fffbe6', fontWeight: 600, color: '#d48806' } };
+          }
+          return {};
+        }}
+        summary={() => {
+          if (!grandTotal) return null;
+          return (
+            <Table.Summary.Row style={{ backgroundColor: '#e6f4ff', fontWeight: 700 }}>
+              <Table.Summary.Cell index={0}>总计</Table.Summary.Cell>
+              <Table.Summary.Cell index={1}>{grandTotal.siteCount}</Table.Summary.Cell>
+              <Table.Summary.Cell index={2} />
+              <Table.Summary.Cell index={3}>{grandTotal.totalComments.toLocaleString()}</Table.Summary.Cell>
+              <Table.Summary.Cell index={4}>{formatDuration(Math.round(grandTotal.avgStayVisit / grandTotal.count))}</Table.Summary.Cell>
+              <Table.Summary.Cell index={5}>{formatDuration(Math.round(grandTotal.avgStayPerson / grandTotal.count))}</Table.Summary.Cell>
+              <Table.Summary.Cell index={6}>{Math.round(grandTotal.avgPeakOnline / grandTotal.count).toLocaleString()}</Table.Summary.Cell>
+            </Table.Summary.Row>
+          );
+        }}
+      />
     </div>
   );
 };

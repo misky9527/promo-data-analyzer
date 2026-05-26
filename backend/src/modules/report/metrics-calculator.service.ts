@@ -47,21 +47,8 @@ export class MetricsCalculator {
     return payingUsers > 0 ? spend / payingUsers : 0;
   }
 
-  retentionD1Rate(retentionD1: number, downloads: number): number {
-    return downloads > 0 ? (retentionD1 / downloads) * 100 : 0;
-  }
-
-  retentionD7Rate(retentionD7: number, downloads: number): number {
-    return downloads > 0 ? (retentionD7 / downloads) * 100 : 0;
-  }
-
-  retentionD30Rate(retentionD30: number, downloads: number): number {
-    return downloads > 0 ? (retentionD30 / downloads) * 100 : 0;
-  }
-
-  ltv(revenue: number, downloads: number, retentionD1: number): number {
-    const arpu = downloads > 0 ? revenue / downloads : 0;
-    return (arpu * this.retentionD1Rate(retentionD1, downloads)) / 100;
+  ltv(revenue: number, downloads: number): number {
+    return downloads > 0 ? revenue / downloads : 0;
   }
 
   /** 对聚合行一次性计算所有指标 */
@@ -77,10 +64,7 @@ export class MetricsCalculator {
       costPerPayingUser: this.costPerPayingUser(row.spend, row.payingUsers),
       payRate: this.payRate(row.payingUsers, row.downloads),
       registrationRate: this.registrationRate(row.registrations, row.downloads),
-      retentionD1Rate: this.retentionD1Rate(row.retentionD1, row.downloads),
-      retentionD7Rate: this.retentionD7Rate(row.retentionD7, row.downloads),
-      retentionD30Rate: this.retentionD30Rate(row.retentionD30, row.downloads),
-      ltv: this.ltv(row.revenue, row.downloads, row.retentionD1),
+      ltv: this.ltv(row.revenue, row.downloads),
     };
   }
 }
@@ -94,9 +78,6 @@ export interface AggregatedRow {
   revenue: number;
   registrations: number;
   payingUsers: number;
-  retentionD1: number;
-  retentionD7: number;
-  retentionD30: number;
 }
 
 /** 计算指标结果 */
@@ -111,8 +92,5 @@ export interface ComputedMetrics {
   costPerPayingUser: number;
   payRate: number;
   registrationRate: number;
-  retentionD1Rate: number;
-  retentionD7Rate: number;
-  retentionD30Rate: number;
   ltv: number;
 }

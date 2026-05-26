@@ -11,6 +11,8 @@ import { AiSummaryModule } from './modules/ai-summary/ai-summary.module';
 import { ProductModule } from './modules/product/product.module';
 import { ModelConfigModule } from './modules/model-config/model-config.module';
 import { SiteModule } from './modules/site/site.module';
+import { LiveStreamModule } from './modules/live-stream/live-stream.module';
+import { LiveSiteModule } from './modules/live-site/live-site.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AuthService } from './modules/auth/auth.service';
@@ -56,6 +58,8 @@ import { AdminUser } from './modules/auth/entities/admin-user.entity';
     ProductModule,
     ModelConfigModule,
     SiteModule,
+    LiveStreamModule,
+    LiveSiteModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

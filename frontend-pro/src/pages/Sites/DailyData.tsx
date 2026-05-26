@@ -39,6 +39,9 @@ const DailyDataPage = () => {
     { title: '充值金币', dataIndex: 'rechargeGold', search: false },
     { title: '兑换金额', dataIndex: 'exchangeAmount', search: false },
     { title: '兑换人数', dataIndex: 'exchangeUsers', search: false },
+    { title: '次留人数', dataIndex: 'retentionD1', search: false },
+    { title: '7留人数', dataIndex: 'retentionD7', search: false },
+    { title: '30留人数', dataIndex: 'retentionD30', search: false },
     {
       title: '操作',
       valueType: 'option',
@@ -168,6 +171,11 @@ const DailyDataPage = () => {
           <ProFormText name="rechargeGold" label="充值金币" colProps={{ span: 8 }} />
           <ProFormText name="exchangeAmount" label="兑换金额" colProps={{ span: 8 }} />
           <ProFormText name="exchangeUsers" label="兑换人数" colProps={{ span: 8 }} />
+        </ProFormGroup>
+        <ProFormGroup>
+          <ProFormText name="retentionD1" label="次留人数" colProps={{ span: 8 }} />
+          <ProFormText name="retentionD7" label="7留人数" colProps={{ span: 8 }} />
+          <ProFormText name="retentionD30" label="30留人数" colProps={{ span: 8 }} />
         </ProFormGroup>
       </ModalForm>
     </PageContainer>

@@ -29,9 +29,6 @@ export interface EntryPayload {
   chargeCount?: number;
   registrations?: number;
   payingUsers?: number;
-  retentionD1?: number;
-  retentionD7?: number;
-  retentionD30?: number;
 }
 
 export const login = (data: LoginPayload) =>
@@ -271,3 +268,36 @@ export const importSiteDailyExcel = (file: File, mode: string, siteId: number) =
   return request<any>(`/site-daily-data/import?${params.toString()}`, { method: 'POST', body: formData });
 };
 export const downloadSiteDailyTemplate = () => request<Blob>('/sites/daily/template');
+
+// === 直播站点 ===
+export const fetchLiveSiteList = () => request<API.LiveSiteItem[]>('/admin/live-site/list');
+export const createLiveSite = (data: { code: string; name: string }) =>
+  request<API.LiveSiteItem>('/admin/live-site', { method: 'POST', data });
+export const deleteLiveSite = (id: number) =>
+  request<any>(`/admin/live-site/${id}`, { method: 'DELETE' });
+
+// === 直播数据 ===
+export const importLiveStreamData = async (files: File[], dedupMode?: string) => {
+  const formData = new FormData();
+  files.forEach((f) => formData.append('files', f));
+  const url = dedupMode
+    ? `/admin/live-stream/import?dedupMode=${dedupMode}`
+    : '/admin/live-stream/import';
+  return request<{
+    files: { fileName: string; success: number; failed: number; error?: string; duplicates?: number }[];
+    totalSuccess: number;
+    totalFailed: number;
+  }>(url, {
+    method: 'POST',
+    body: formData,
+  });
+};
+export const getLiveStreamList = (params: Record<string, unknown>) => request<any>(`/admin/live-stream/list${toQuery(params)}`);
+export const getDailySummary = (params: Record<string, unknown>) => request<any>(`/admin/live-stream/daily-summary${toQuery(params)}`);
+export const deleteLiveStreamRecord = (id: number) => request<any>(`/admin/live-stream/${id}`, { method: 'DELETE' });
+export const getEventSummary = (params: Record<string, unknown>) =>
+  request<any>(`/admin/live-stream/event-summary${toQuery(params)}`);
+export const getHostSummary = (params: Record<string, unknown>) =>
+  request<any>(`/admin/live-stream/host-summary${toQuery(params)}`);
+export const batchDeleteLiveStreamRecords = (ids: number[]) =>
+  request<any>('/admin/live-stream/batch-delete', { method: 'POST', data: { ids } });

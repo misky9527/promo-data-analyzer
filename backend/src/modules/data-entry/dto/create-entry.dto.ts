@@ -5,7 +5,6 @@ import {
   IsNumber,
   IsPositive,
   Min,
-  Max,
   IsOptional,
   IsString,
   MaxLength,
@@ -79,27 +78,6 @@ export class CreateEntryDto {
   @IsInt()
   @Min(0)
   payingUsers?: number;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  @Max(100)
-  retentionD1?: number;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  @Max(100)
-  retentionD7?: number;
-
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(0)
-  @Max(100)
-  retentionD30?: number;
 
   @IsOptional()
   @IsString()

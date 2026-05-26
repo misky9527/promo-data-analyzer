@@ -40,8 +40,6 @@ type SummaryRow = {
   costPerPayingUser?: number;
   registrationRate?: number;
   payRate?: number;
-  retentionD1Rate?: number;
-  retentionD7Rate?: number;
 };
 
 const buildSummaryColumns = (dimension: SummaryDimension, onClick: (row: SummaryRow) => void): ProColumns<SummaryRow>[] => {
@@ -71,8 +69,6 @@ const buildSummaryColumns = (dimension: SummaryDimension, onClick: (row: Summary
     { title: renderMetricTitle('costPerPayingUser'), dataIndex: 'costPerPayingUser' },
     { title: renderMetricTitle('registrationRate'), dataIndex: 'registrationRate' },
     { title: renderMetricTitle('payRate'), dataIndex: 'payRate' },
-    { title: renderMetricTitle('retentionD1Rate'), dataIndex: 'retentionD1Rate' },
-    { title: renderMetricTitle('retentionD7Rate'), dataIndex: 'retentionD7Rate' },
   ];
 };
 
@@ -96,8 +92,6 @@ const buildDailyColumns = (dimension: SummaryDimension): ProColumns<any>[] => {
     { title: renderMetricTitle('costPerPayingUser'), dataIndex: 'costPerPayingUser' },
     { title: renderMetricTitle('registrationRate'), dataIndex: 'registrationRate' },
     { title: renderMetricTitle('payRate'), dataIndex: 'payRate' },
-    { title: renderMetricTitle('retentionD1Rate'), dataIndex: 'retentionD1Rate' },
-    { title: renderMetricTitle('retentionD7Rate'), dataIndex: 'retentionD7Rate' },
   ];
 };
 
@@ -144,8 +138,6 @@ const productSummaryColumns: ProColumns<any>[] = [
   { title: renderMetricTitle('costPerPayingUser'), dataIndex: 'costPerPayingUser', search: false },
   { title: renderMetricTitle('registrationRate'), dataIndex: 'registrationRate', search: false },
   { title: renderMetricTitle('payRate'), dataIndex: 'payRate', search: false },
-  { title: renderMetricTitle('retentionD1Rate'), dataIndex: 'retentionD1Rate', search: false },
-  { title: renderMetricTitle('retentionD7Rate'), dataIndex: 'retentionD7Rate', search: false },
 ];
 
 const siteDailyColumns: ProColumns<any>[] = [
@@ -159,6 +151,9 @@ const siteDailyColumns: ProColumns<any>[] = [
   { title: '充值金币', dataIndex: 'rechargeGold', search: false },
   { title: '兑换金额', dataIndex: 'exchangeAmount', search: false },
   { title: '兑换人数', dataIndex: 'exchangeUsers', search: false },
+  { title: '次留人数', dataIndex: 'retentionD1', search: false },
+  { title: '7留人数', dataIndex: 'retentionD7', search: false },
+  { title: '30留人数', dataIndex: 'retentionD30', search: false },
 ];
 
 const ProductAnalysisPage = () => {
@@ -244,6 +239,9 @@ const ProductAnalysisPage = () => {
       { title: '充值金币', dataIndex: 'rechargeGold', search: false },
       { title: '兑换金额', dataIndex: 'exchangeAmount', search: false },
       { title: '兑换人数', dataIndex: 'exchangeUsers', search: false },
+      { title: '次留率(%)', dataIndex: 'retentionD1Rate', search: false },
+      { title: '7日留存率(%)', dataIndex: 'retentionD7Rate', search: false },
+      { title: '30日留存率(%)', dataIndex: 'retentionD30Rate', search: false },
     ],
     [],
   );

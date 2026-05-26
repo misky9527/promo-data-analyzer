@@ -24,9 +24,6 @@ export const METRICS: Record<string, MetricDef> = {
   cpc: { label: 'CPC', description: '单次点击成本 = 消耗 ÷ 点击量（元）' },
   roas: { label: 'ROAS', description: '广告支出回报率 = 充值金额 ÷ 消耗 × 100%' },
   registrationRate: { label: '注册率', description: '注册人数 ÷ 下载量 × 100%' },
-  retentionD1Rate: { label: '次留率', description: '次日留存用户数 ÷ 下载量 × 100%' },
-  retentionD7Rate: { label: '7日留存率', description: '7日留存用户数 ÷ 下载量 × 100%' },
-  retentionD30Rate: { label: '30日留存率', description: '30日留存用户数 ÷ 下载量 × 100%' },
   ltv: { label: 'LTV', description: '用户生命周期价值 = 充值金额 ÷ 下载量（元）' },
 };
 

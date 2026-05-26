@@ -16,4 +16,7 @@ export class CreateDailyDataDto {
   @IsOptional() @IsNumber() rechargeGold?: number;
   @IsOptional() @IsNumber() exchangeAmount?: number;
   @IsOptional() @IsInt() exchangeUsers?: number;
+  @IsOptional() @IsInt() retentionD1?: number;
+  @IsOptional() @IsInt() retentionD7?: number;
+  @IsOptional() @IsInt() retentionD30?: number;
 }

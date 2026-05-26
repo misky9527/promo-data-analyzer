@@ -345,9 +345,6 @@ ${dto.context}
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -364,9 +361,6 @@ ${dto.context}
       revenue: Number(raw?.revenue ?? 0),
       registrations: Number(raw?.registrations ?? 0),
       payingUsers: Number(raw?.payingUsers ?? 0),
-      retentionD1: Number(raw?.retentionD1 ?? 0),
-      retentionD7: Number(raw?.retentionD7 ?? 0),
-      retentionD30: Number(raw?.retentionD30 ?? 0),
     };
   }
 
@@ -388,9 +382,6 @@ ${dto.context}
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -411,9 +402,6 @@ ${dto.context}
         revenue: Number(r.revenue),
         registrations: Number(r.registrations),
         payingUsers: Number(r.payingUsers),
-        retentionD1: Number(r.retentionD1),
-        retentionD7: Number(r.retentionD7),
-        retentionD30: Number(r.retentionD30),
       };
       return { dimension: r.dimension, raw: row, metrics: this.calc.computeAll(row) };
     });
@@ -436,9 +424,6 @@ ${dto.context}
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -459,9 +444,6 @@ ${dto.context}
         revenue: Number(r.revenue),
         registrations: Number(r.registrations),
         payingUsers: Number(r.payingUsers),
-        retentionD1: Number(r.retentionD1),
-        retentionD7: Number(r.retentionD7),
-        retentionD30: Number(r.retentionD30),
       },
     }));
   }
@@ -501,9 +483,6 @@ ${dto.context}
     prompt += `| 充值人数 | ${data.summary.payingUsers} |\n`;
     prompt += `| 付费率 | ${m.payRate.toFixed(2)}% |\n`;
     prompt += `| 注册率 | ${m.registrationRate.toFixed(2)}% |\n`;
-    prompt += `| 次留率 | ${m.retentionD1Rate.toFixed(2)}% |\n`;
-    prompt += `| 7日留存率 | ${m.retentionD7Rate.toFixed(2)}% |\n`;
-    prompt += `| 30日留存率 | ${m.retentionD30Rate.toFixed(2)}% |\n`;
     prompt += `| LTV | ${m.ltv.toFixed(2)} |\n\n`;
 
     if (data.byChannel.length > 0) {
@@ -531,7 +510,7 @@ ${dto.context}
     } else {
       prompt += `请输出一份详细、专业的 Markdown 格式分析报告，尽可能深入分析每个指标，包括：\n`;
       prompt += `1. **数据概览**：整体数据情况，所有关键数值\n`;
-      prompt += `2. **关键指标分析**：逐一解读 CTR/CVR/ROAS/LTV/CPI/CPM/CPC/注册成本/充值成本/注册率/付费率/留存率，标注正常或异常\n`;
+      prompt += `2. **关键指标分析**：逐一解读 CTR/CVR/ROAS/LTV/CPI/CPM/CPC/注册成本/充值成本/注册率/付费率，标注正常或异常\n`;
       prompt += `3. **渠道对比**：各渠道的表现差异和排名（如有）\n`;
       prompt += `4. **趋势分析**：按日数据的变化趋势和转折点\n`;
       prompt += `5. **优化建议**：基于以上分析，给出 3-5 条具体、可执行的优化建议\n`;

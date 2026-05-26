@@ -65,9 +65,6 @@ const ListPage = () => {
     { title: '充值次数', dataIndex: 'chargeCount', search: false },
     { title: '充值人数', dataIndex: 'payingUsers', search: false },
     { title: '注册人数', dataIndex: 'registrations', search: false },
-    { title: '次留率', dataIndex: 'retentionD1', search: false },
-    { title: '7日留存', dataIndex: 'retentionD7', search: false },
-    { title: '30日留存', dataIndex: 'retentionD30', search: false },
     {
       title: '操作',
       valueType: 'option',

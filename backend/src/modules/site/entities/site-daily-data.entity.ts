@@ -40,4 +40,13 @@ export class SiteDailyData {
 
   @Column({ type: 'int', default: 0, name: 'exchange_users' })
   exchangeUsers: number;
+
+  @Column({ type: 'int', default: 0, name: 'retention_d1' })
+  retentionD1: number;
+
+  @Column({ type: 'int', default: 0, name: 'retention_d7' })
+  retentionD7: number;
+
+  @Column({ type: 'int', default: 0, name: 'retention_d30' })
+  retentionD30: number;
 }

@@ -1,0 +1,835 @@
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin } from 'antd';
+import { UploadOutlined, InboxOutlined, SearchOutlined } from '@ant-design/icons';
+import type { UploadFile } from 'antd/es/upload/interface';
+import { useRef, useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import type { ActionType, ProColumns, ProFormInstance } from '@ant-design/pro-components';
+import {
+  getLiveStreamList,
+  getDailySummary,
+  getEventSummary,
+  getHostSummary,
+  deleteLiveStreamRecord,
+  importLiveStreamData,
+  batchDeleteLiveStreamRecords,
+  fetchLiveSiteList,
+} from '@/services/api';
+
+/** 秒数转为可读时长字符串 "X小时X分X秒" */
+function formatDuration(seconds: number | null | undefined): string {
+  if (seconds == null || seconds === 0) return '-';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  const parts: string[] = [];
+  if (h > 0) parts.push(`${h}小时`);
+  if (m > 0) parts.push(`${m}分`);
+  if (s > 0 || parts.length === 0) parts.push(`${s}秒`);
+  return parts.join('');
+}
+
+interface ImportResultItem {
+  fileName: string;
+  success: number;
+  failed: number;
+  error?: string;
+}
+
+const LiveStreamPage = () => {
+  const actionRef = useRef<ActionType>();
+  const detailFormRef = useRef<ProFormInstance>();
+  const summaryRef = useRef<ActionType>();
+  const [activeTab, setActiveTab] = useState('detail');
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [importing, setImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState({ current: 0, total: 0 });
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [resultModalOpen, setResultModalOpen] = useState(false);
+  const [importResults, setImportResults] = useState<ImportResultItem[]>([]);
+  const [siteOptions, setSiteOptions] = useState<{ label: string; value: string }[]>([]);
+  const { message: msg } = App.useApp();
+
+  /** 点击每日汇总「查看明细」时，切换到直播数据并预设筛选 */
+  const jumpToDetail = (siteCode: string, liveDate: any) => {
+    setActiveTab('detail');
+    // JSON序列化后 Date 变成 "2026-05-23T16:00:00.000Z"，需按本地时间解析
+    let dateStr: string;
+    if (liveDate?.$d instanceof Date) {
+      dateStr = dayjs(liveDate).format('YYYY-MM-DD');
+    } else if (liveDate instanceof Date) {
+      dateStr = `${liveDate.getFullYear()}-${String(liveDate.getMonth() + 1).padStart(2, '0')}-${String(liveDate.getDate()).padStart(2, '0')}`;
+    } else if (typeof liveDate === 'string') {
+      // JSON 序列化后的 ISO 字符串，用 dayjs 按本地时区解析
+      dateStr = dayjs(liveDate).format('YYYY-MM-DD');
+    } else {
+      dateStr = dayjs(liveDate).format('YYYY-MM-DD');
+    }
+    setTimeout(() => {
+      detailFormRef.current?.setFieldsValue({ siteCode, liveDate: dateStr });
+      detailFormRef.current?.submit();
+    }, 200);
+  };
+
+  // 加载站点列表（用于搜索下拉）
+  useEffect(() => {
+    fetchLiveSiteList()
+      .then((list: any) => {
+        setSiteOptions(
+          (list || []).map((s: any) => ({ label: `${s.name} (${s.code})`, value: s.code })),
+        );
+      })
+      .catch(() => {});
+  }, []);
+
+  const columns: ProColumns<API.LiveStreamRecord>[] = [
+    { title: 'ID', dataIndex: 'id', width: 80, search: false },
+    {
+      title: '站点',
+      dataIndex: 'siteCode',
+      width: 120,
+      ellipsis: true,
+      render: (_, r) => (r as any).siteName || r.siteCode,
+      valueType: 'select',
+      fieldProps: {
+        options: siteOptions,
+        allowClear: true,
+        placeholder: '全部站点',
+      },
+    },
+    {
+      title: '日期',
+      dataIndex: 'liveDate',
+      width: 110,
+      valueType: 'date',
+    },
+    { title: '直播间ID', dataIndex: 'roomId', width: 110, search: false },
+    {
+      title: '赛事时间',
+      dataIndex: 'eventTime',
+      width: 80,
+      search: false,
+      render: (_, row) => (row as any).eventTime || '-',
+    },
+    {
+      title: '联赛',
+      dataIndex: 'league',
+      width: 80,
+      fieldProps: { placeholder: '模糊搜索联赛' },
+      render: (_, row) => (row as any).league || '-',
+    },
+    {
+      title: '赛事',
+      dataIndex: 'eventName',
+      width: 160,
+      ellipsis: true,
+      fieldProps: { placeholder: '模糊搜索赛事' },
+      render: (_, row) => (row as any).eventName || (row as any).liveInfo || '-',
+    },
+    {
+      title: '类型',
+      dataIndex: 'category',
+      width: 100,
+      fieldProps: { placeholder: '模糊搜索类型' },
+    },
+    {
+      title: '主播',
+      dataIndex: 'host',
+      width: 100,
+      fieldProps: { allowClear: true, placeholder: '全部' },
+    },
+    {
+      title: '开播时间',
+      dataIndex: 'startTime',
+      width: 170,
+      valueType: 'dateTime',
+      search: false,
+    },
+    {
+      title: '直播时长',
+      dataIndex: 'duration',
+      width: 110,
+      search: false,
+      render: (_, row) => formatDuration(row.duration),
+    },
+    {
+      title: '评论数',
+      dataIndex: 'commentCount',
+      width: 90,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.commentCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '次均停留',
+      dataIndex: 'avgStayVisit',
+      width: 100,
+      sorter: true,
+      search: false,
+      render: (_, row) => formatDuration(row.avgStayVisit),
+    },
+    {
+      title: '人均停留',
+      dataIndex: 'avgStayPerson',
+      width: 100,
+      sorter: true,
+      search: false,
+      render: (_, row) => formatDuration(row.avgStayPerson),
+    },
+    {
+      title: '峰值在线',
+      dataIndex: 'peakOnline',
+      width: 90,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.peakOnline ?? 0).toLocaleString(),
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      width: 80,
+      render: (_, row) => [
+        <Popconfirm
+          key="delete"
+          title="确认删除？"
+          onConfirm={async () => {
+            await deleteLiveStreamRecord(row.id);
+            msg.success('已删除');
+            actionRef.current?.reload();
+          }}
+        >
+          <a>删除</a>
+        </Popconfirm>,
+      ],
+    },
+  ];
+
+  const summaryColumns: ProColumns<API.DailySummaryRecord>[] = [
+    {
+      title: '站点',
+      dataIndex: 'siteCode',
+      width: 150,
+      ellipsis: true,
+      render: (_, r) => r.siteName || r.siteCode,
+      valueType: 'select',
+      fieldProps: {
+        options: siteOptions,
+        allowClear: true,
+        placeholder: '全部站点',
+      },
+    },
+    {
+      title: '日期',
+      dataIndex: 'liveDate',
+      width: 120,
+      valueType: 'date',
+    },
+    {
+      title: '主播数',
+      dataIndex: 'hostCount',
+      width: 80,
+      search: false,
+    },
+    {
+      title: '评论总数',
+      dataIndex: 'totalComments',
+      width: 100,
+      search: false,
+      render: (_, r) => r.totalComments.toLocaleString(),
+    },
+    {
+      title: '次均停留总数',
+      dataIndex: 'totalStayVisit',
+      width: 120,
+      search: false,
+      render: (_, r) => formatDuration(r.totalStayVisit),
+    },
+    {
+      title: '人均停留总数',
+      dataIndex: 'totalStayPerson',
+      width: 120,
+      search: false,
+      render: (_, r) => formatDuration(r.totalStayPerson),
+    },
+    {
+      title: '平均峰值在线',
+      dataIndex: 'avgPeakOnline',
+      width: 120,
+      search: false,
+      render: (_, r) => r.avgPeakOnline.toLocaleString(),
+    },
+    {
+      title: '直播场次',
+      dataIndex: 'streamCount',
+      width: 90,
+      search: false,
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      width: 100,
+      render: (_, r) => [
+        <a
+          key="detail"
+          onClick={() => jumpToDetail(r.siteCode, r.liveDate)}
+        >
+          <SearchOutlined /> 查看明细
+        </a>,
+      ],
+    },
+  ];
+
+  const [sortField, setSortField] = useState<string | undefined>(undefined);
+  const [sortOrder, setSortOrder] = useState<string | undefined>(undefined);
+
+  const [eventSortField, setEventSortField] = useState<string | undefined>(undefined);
+  const [eventSortOrder, setEventSortOrder] = useState<string | undefined>(undefined);
+
+  // 赛事汇总内联展开
+  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
+  const [expandedDataCache, setExpandedDataCache] = useState<Record<string, API.HostSummaryRecord[]>>({});
+  const [expandingRow, setExpandingRow] = useState<string | null>(null);
+
+  const toggleEventDetail = async (rowKey: string, eventName: string, liveDate: any) => {
+    // 已展开 → 收起
+    if (expandedRowKeys.includes(rowKey)) {
+      setExpandedRowKeys((prev) => prev.filter((k) => k !== rowKey));
+      return;
+    }
+    // 已缓存 → 直接展开
+    if (expandedDataCache[rowKey]) {
+      setExpandedRowKeys((prev) => [...prev, rowKey]);
+      return;
+    }
+    // 请求数据后展开
+    const dateStr = dayjs(liveDate).format('YYYY-MM-DD');
+    setExpandingRow(rowKey);
+    try {
+      const data = await getHostSummary({ eventName, liveDate: dateStr });
+      const list = Array.isArray(data) ? data : data.list || [];
+      setExpandedDataCache((prev) => ({ ...prev, [rowKey]: list }));
+      setExpandedRowKeys((prev) => [...prev, rowKey]);
+    } catch {
+      msg.error('加载明细失败');
+    } finally {
+      setExpandingRow(null);
+    }
+  };
+
+  const hostDetailColumns = [
+    { title: '主播', dataIndex: 'host', key: 'host', width: 120 },
+    { title: '站点', dataIndex: 'siteName', key: 'siteName', width: 120 },
+    {
+      title: '直播时长',
+      dataIndex: 'duration',
+      key: 'duration',
+      width: 110,
+      render: (_: any, r: any) => formatDuration(r.duration),
+    },
+    {
+      title: '评论数',
+      dataIndex: 'commentCount',
+      key: 'commentCount',
+      width: 90,
+      render: (_: any, r: any) => (r.commentCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '次均停留',
+      dataIndex: 'avgStayVisit',
+      key: 'avgStayVisit',
+      width: 100,
+      render: (_: any, r: any) => formatDuration(r.avgStayVisit),
+    },
+    {
+      title: '人均停留',
+      dataIndex: 'avgStayPerson',
+      key: 'avgStayPerson',
+      width: 100,
+      render: (_: any, r: any) => formatDuration(r.avgStayPerson),
+    },
+    {
+      title: '峰值在线',
+      dataIndex: 'avgPeakOnline',
+      key: 'avgPeakOnline',
+      width: 90,
+      render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString(),
+    },
+  ];
+
+  const [dedupFiles, setDedupFiles] = useState<any[]>([]);
+  const [dedupModalOpen, setDedupModalOpen] = useState(false);
+  const [dedupCount, setDedupCount] = useState(0);
+
+  const doImport = async (files: File[], mode?: string) => {
+    const res: any = await importLiveStreamData(files, mode);
+    return res;
+  };
+
+  const handleImport = async () => {
+    if (fileList.length === 0) {
+      msg.warning('请先选择 CSV 文件');
+      return;
+    }
+    setImporting(true);
+    setImportProgress({ current: 0, total: fileList.length });
+
+    try {
+      const rawFiles = fileList
+        .filter((f) => f.originFileObj)
+        .map((f) => f.originFileObj as File);
+
+      const res: any = await doImport(rawFiles);
+
+      // 检测重复数据，弹窗让用户选择
+      const files = res.files || [];
+      const hasDupError = files.some((f: any) => f.duplicates > 0 && !f.error);
+      const hasRealDup = files.some((f: any) => f.duplicates > 0 && f.error);
+      if (hasRealDup || hasDupError) {
+        setDedupFiles(rawFiles);
+        setDedupCount(files.reduce((s: number, f: any) => s + (f.duplicates || 0), 0));
+        setDedupModalOpen(true);
+        setImporting(false);
+        return;
+      }
+
+      setImportResults(res.files || []);
+      setResultModalOpen(true);
+
+      const totalOk = res.totalSuccess || 0;
+      const totalFail = res.totalFailed || 0;
+      if (totalFail === 0) {
+        msg.success(`全部导入成功: ${totalOk} 条`);
+      } else {
+        msg.warning(`导入完成: 成功 ${totalOk} 条, 失败 ${totalFail} 条`);
+      }
+
+      setFileList([]);
+      setImportProgress({ current: fileList.length, total: fileList.length });
+      actionRef.current?.reload();
+    } catch (err: any) {
+      msg.error(err?.message || '导入失败');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleDedupChoice = async (mode: 'overwrite' | 'ignore') => {
+    setDedupModalOpen(false);
+    setImporting(true);
+    try {
+      const res: any = await doImport(dedupFiles, mode);
+      setImportResults(res.files || []);
+      setResultModalOpen(true);
+      msg.success(`导入完成 (${mode === 'overwrite' ? '已覆盖' : '已忽略'}重复数据)`);
+      setFileList([]);
+      actionRef.current?.reload();
+    } catch (err: any) {
+      msg.error(err?.message || '导入失败');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const eventSummaryColumns: ProColumns<API.EventSummaryRecord>[] = [
+    {
+      title: '赛事时间',
+      dataIndex: 'eventTime',
+      width: 80,
+      search: false,
+    },
+    {
+      title: '赛事',
+      dataIndex: 'eventName',
+      width: 180,
+      ellipsis: true,
+      fieldProps: { placeholder: '模糊搜索赛事' },
+    },
+    {
+      title: '日期',
+      dataIndex: 'liveDate',
+      width: 110,
+      valueType: 'date',
+      fieldProps: { placeholder: '选择日期' },
+    },
+    {
+      title: '直播间数',
+      dataIndex: 'roomCount',
+      width: 90,
+      search: false,
+    },
+    {
+      title: '联赛',
+      dataIndex: 'league',
+      width: 80,
+      search: false,
+    },
+    {
+      title: '类型',
+      dataIndex: 'category',
+      width: 80,
+      search: false,
+    },
+    {
+      title: '主播数',
+      dataIndex: 'hostCount',
+      width: 80,
+      search: false,
+    },
+    {
+      title: '评论总数',
+      dataIndex: 'totalComments',
+      width: 100,
+      sorter: true,
+      search: false,
+      render: (_, r) => r.totalComments.toLocaleString(),
+    },
+    {
+      title: '总人均停留',
+      dataIndex: 'totalStayPerson',
+      width: 110,
+      sorter: true,
+      search: false,
+      render: (_, r) => formatDuration(r.totalStayPerson),
+    },
+    {
+      title: '平均峰值在线',
+      dataIndex: 'avgPeakOnline',
+      width: 120,
+      sorter: true,
+      search: false,
+      render: (_, r) => r.avgPeakOnline.toLocaleString(),
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      width: 100,
+      render: (_, r) => {
+        const key = `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`;
+        return [
+          <a
+            key="hostDetail"
+            onClick={() => toggleEventDetail(key, r.eventName, r.liveDate)}
+          >
+            <SearchOutlined /> {expandedRowKeys.includes(key) ? '收起明细' : '查看明细'}
+          </a>,
+        ];
+      },
+    },
+  ];
+
+  const resultColumns = [
+    { title: '文件名', dataIndex: 'fileName', key: 'fileName' },
+    { title: '成功', dataIndex: 'success', key: 'success', width: 80 },
+    { title: '失败', dataIndex: 'failed', key: 'failed', width: 80 },
+    {
+      title: '错误信息',
+      dataIndex: 'error',
+      key: 'error',
+      ellipsis: true,
+      render: (text: string) => text || '-',
+    },
+  ];
+
+  return (
+    <PageContainer>
+      <div style={{ marginBottom: 24 }}>
+        <Upload.Dragger
+          accept=".csv,.xlsx"
+          multiple
+          fileList={fileList}
+          beforeUpload={(file) => {
+            const name = file.name.toLowerCase();
+            const isCSV = name.endsWith('.csv') || name.endsWith('.xlsx');
+            if (!isCSV) {
+              msg.error(`${file.name} 不是 CSV/XLSX 文件`);
+              return Upload.LIST_IGNORE;
+            }
+            setFileList((prev) => [...prev, { uid: file.name + Date.now(), name: file.name, originFileObj: file } as any]);
+            return false;
+          }}
+          onRemove={(file) => {
+            setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
+          }}
+          showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}
+          disabled={importing}
+          style={{ padding: '16px 0' }}
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">点击或拖拽 CSV 文件到此区域上传</p>
+          <p className="ant-upload-hint">支持批量上传，文件名格式: {"{code}-{date}.csv 或 .xlsx"}</p>
+        </Upload.Dragger>
+
+        {fileList.length > 0 && (
+          <div style={{ marginTop: 12, textAlign: 'right' }}>
+            <Button
+              type="primary"
+              icon={<UploadOutlined />}
+              loading={importing}
+              onClick={handleImport}
+            >
+              开始导入 ({fileList.length} 个文件)
+            </Button>
+            <Button
+              style={{ marginLeft: 8 }}
+              onClick={() => setFileList([])}
+              disabled={importing}
+            >
+              清空
+            </Button>
+          </div>
+        )}
+
+        {importing && importProgress.total > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <Progress
+              percent={Math.round((importProgress.current / importProgress.total) * 100)}
+              format={() => `${importProgress.current}/${importProgress.total}`}
+            />
+          </div>
+        )}
+      </div>
+
+      <Tabs
+        activeKey={activeTab}
+        onChange={setActiveTab}
+        items={[
+          {
+            key: 'detail',
+            label: '直播数据',
+            children: (
+              <div>
+                <ProTable<API.LiveStreamRecord>
+                  actionRef={actionRef}
+                  onChange={(_, __, sorter: any) => {
+                    if (sorter && !Array.isArray(sorter)) {
+                      const s = sorter as { field?: string; columnKey?: string; order?: string };
+                      const field = s.field || s.columnKey;
+                      if (field && s.order) {
+                        setSortField(field);
+                        setSortOrder(s.order);
+                      } else {
+                        setSortField(undefined);
+                        setSortOrder(undefined);
+                      }
+                    } else {
+                      setSortField(undefined);
+                      setSortOrder(undefined);
+                    }
+                  }}
+                  formRef={detailFormRef}
+                  headerTitle="直播数据"
+                  rowKey="id"
+                  search={{ labelWidth: 80 }}
+                  toolbar={{
+                    actions: [
+                      selectedRowKeys.length > 0 && (
+                        <Popconfirm
+                          key="batchDelete"
+                          title="确认批量删除？"
+                          onConfirm={async () => {
+                            await batchDeleteLiveStreamRecords(selectedRowKeys as number[]);
+                            msg.success('已批量删除');
+                            setSelectedRowKeys([]);
+                            actionRef.current?.reload();
+                          }}
+                        >
+                          <Button danger>批量删除 ({selectedRowKeys.length})</Button>
+                        </Popconfirm>
+                      ),
+                    ].filter(Boolean) as React.ReactNode[],
+                  }}
+                  rowSelection={{
+                    selectedRowKeys,
+                    onChange: setSelectedRowKeys,
+                  }}
+                  tableAlertRender={false}
+                  request={async (params: any) => {
+                    const { current, pageSize, siteCode, category, host, league, eventName, liveDate } = params;
+                    const res = await getLiveStreamList({ page: current, pageSize, siteCode, category, host, league, liveInfo: eventName, liveDate, sortField, sortOrder });
+                    return { data: res.list, total: res.total, success: true };
+                  }}
+                  columns={columns}
+                  pagination={{ defaultPageSize: 20 }}
+                />
+
+                <Modal
+                  title="导入结果"
+                  open={resultModalOpen}
+                  onCancel={() => setResultModalOpen(false)}
+                  footer={[
+                    <Button key="close" type="primary" onClick={() => setResultModalOpen(false)}>
+                      关闭
+                    </Button>,
+                  ]}
+                  width={700}
+                >
+                  <Table
+                    dataSource={importResults}
+                    columns={resultColumns}
+                    rowKey="fileName"
+                    pagination={false}
+                    size="small"
+                    summary={() => {
+                      const totalSuccess = importResults.reduce((s, r) => s + r.success, 0);
+                      const totalFailed = importResults.reduce((s, r) => s + r.failed, 0);
+                      return (
+                        <Table.Summary.Row>
+                          <Table.Summary.Cell index={0}>
+                            <strong>合计</strong>
+                          </Table.Summary.Cell>
+                          <Table.Summary.Cell index={1}>
+                            <strong style={{ color: '#52c41a' }}>{totalSuccess}</strong>
+                          </Table.Summary.Cell>
+                          <Table.Summary.Cell index={2}>
+                            <strong style={{ color: '#ff4d4f' }}>{totalFailed}</strong>
+                          </Table.Summary.Cell>
+                          <Table.Summary.Cell index={3}>-</Table.Summary.Cell>
+                        </Table.Summary.Row>
+                      );
+                    }}
+                  />
+                </Modal>
+
+                <Modal
+                  title="发现已有数据"
+                  open={dedupModalOpen}
+                  onCancel={() => setDedupModalOpen(false)}
+                  footer={[
+                    <Button key="cancel" onClick={() => setDedupModalOpen(false)}>
+                      取消
+                    </Button>,
+                    <Button key="overwrite" type="primary" danger onClick={() => handleDedupChoice('overwrite')}>
+                      覆盖该日期数据
+                    </Button>,
+                  ]}
+                >
+                  <p>当前日期已有 {dedupCount} 条导入数据。</p>
+                  <p><strong>覆盖：</strong>删除该站点+该日期的全部旧数据，写入新数据。</p>
+                  <p><strong>取消：</strong>跳过该文件，不导入。</p>
+                </Modal>
+              </div>
+            ),
+          },
+          {
+            key: 'summary',
+            label: '每日汇总',
+            children: (
+              <ProTable<API.DailySummaryRecord>
+                actionRef={summaryRef}
+                headerTitle="每日汇总"
+                rowKey={(r) => `${r.siteCode}-${r.liveDate}`}
+                search={{ labelWidth: 80 }}
+                request={async (params: any) => {
+                  const { current, pageSize, siteCode, liveDate } = params;
+                  const res = await getDailySummary({ page: current, pageSize, siteCode, liveDate });
+                  return { data: res.list, total: res.total, success: true };
+                }}
+                columns={summaryColumns}
+                pagination={{ defaultPageSize: 20 }}
+              />
+            ),
+          },
+          {
+            key: 'event-summary',
+            label: '赛事汇总',
+            children: (
+              <div>
+                <ProTable<API.EventSummaryRecord>
+                  headerTitle="赛事汇总"
+                  rowKey={(r) => `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`}
+                  search={{ labelWidth: 80 }}
+                  onChange={(_, __, sorter: any) => {
+                    if (sorter && !Array.isArray(sorter)) {
+                      const s = sorter as { field?: string; columnKey?: string; order?: string };
+                      const field = s.field || s.columnKey;
+                      if (field && s.order) {
+                        setEventSortField(field);
+                        setEventSortOrder(s.order);
+                      } else {
+                        setEventSortField(undefined);
+                        setEventSortOrder(undefined);
+                      }
+                    } else {
+                      setEventSortField(undefined);
+                      setEventSortOrder(undefined);
+                    }
+                  }}
+                  request={async (params: any) => {
+                    const { current, pageSize, liveDate, eventName } = params;
+                    const res = await getEventSummary({
+                      page: current,
+                      pageSize,
+                      liveDate,
+                      eventName,
+                      sortField: eventSortField,
+                      sortOrder: eventSortOrder,
+                    });
+                    return { data: res.list, total: res.total, success: true };
+                  }}
+                  columns={eventSummaryColumns}
+                  expandable={{
+                    expandedRowKeys,
+                    onExpandedRowsChange: (keys) => setExpandedRowKeys([...keys]),
+                    expandedRowRender: (record) => {
+                      const key = `${record.eventTime}-${record.eventName}-${record.liveDate}-${record.league}-${record.category}`;
+                      const data = expandedDataCache[key] || [];
+                      if (expandingRow === key) {
+                        return (
+                          <div style={{ textAlign: 'center', padding: 24 }}>
+                            <Spin />
+                          </div>
+                        );
+                      }
+                      if (data.length === 0) return null;
+                      return (
+                        <Table<API.HostSummaryRecord>
+                          dataSource={data}
+                          columns={hostDetailColumns}
+                          rowKey={(r: any) => `${r.host}-${r.siteCode}`}
+                          pagination={false}
+                          size="small"
+                          style={{ margin: '8px 0 8px 48px' }}
+                          summary={() => {
+                            const sum = data.reduce(
+                              (acc: any, r: any) => {
+                                acc.duration += r.duration || 0;
+                                acc.commentCount += r.commentCount || 0;
+                                acc.avgStayVisit += r.avgStayVisit || 0;
+                                acc.avgStayPerson += r.avgStayPerson || 0;
+                                acc.avgPeakOnline += r.avgPeakOnline || 0;
+                                acc.count++;
+                                return acc;
+                              },
+                              { duration: 0, commentCount: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, count: 0 },
+                            );
+                            return (
+                              <Table.Summary.Row>
+                                <Table.Summary.Cell index={0}><strong>合计</strong></Table.Summary.Cell>
+                                <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
+                                <Table.Summary.Cell index={2}>{formatDuration(sum.duration)}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={3}>{sum.commentCount.toLocaleString()}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={4}>{formatDuration(Math.round(sum.avgStayVisit / sum.count))}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={5}>{formatDuration(Math.round(sum.avgStayPerson / sum.count))}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={6}>{Math.round(sum.avgPeakOnline / sum.count).toLocaleString()}</Table.Summary.Cell>
+                              </Table.Summary.Row>
+                            );
+                          }}
+                        />
+                      );
+                    },
+                  }}
+                  pagination={{ defaultPageSize: 20 }}
+                />
+
+              </div>
+            ),
+          },
+        ]}
+      />
+    </PageContainer>
+  );
+};
+
+export default LiveStreamPage;

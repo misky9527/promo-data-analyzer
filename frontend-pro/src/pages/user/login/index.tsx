@@ -68,7 +68,7 @@ const LoginPage = () => {
               localStorage.setItem('promo_token', result.token);
               localStorage.setItem('promo_user', JSON.stringify(result.user));
               message.success('登录成功');
-              history.push('/core/dashboard');
+              history.push('/dashboard');
               return true;
             } catch {
               return false;

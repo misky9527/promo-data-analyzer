@@ -75,11 +75,7 @@ const EntryFormFields = ({
         <ProFormDigit name="registrations" label="注册人数" tooltip={METRICS.registrations.description} min={0} colProps={thirdCol} />
       </ProFormGroup>
 
-      <ProFormGroup rowProps={{ gutter: 16 }}>
-        <ProFormDigit name="retentionD1" label="次日留存(%)" tooltip="次日回访用户占比" min={0} fieldProps={{ precision: 2 }} colProps={thirdCol} />
-        <ProFormDigit name="retentionD7" label="7日留存(%)" tooltip="7日回访用户占比" min={0} fieldProps={{ precision: 2 }} colProps={thirdCol} />
-        <ProFormDigit name="retentionD30" label="30日留存(%)" tooltip="30日回访用户占比" min={0} fieldProps={{ precision: 2 }} colProps={thirdCol} />
-      </ProFormGroup>
+
     </>
   );
 };

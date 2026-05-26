@@ -1,8 +1,8 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { DatePicker, Select, Space } from 'antd';
+import { DatePicker, Select, Space, Empty } from 'antd';
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
-import type { ProColumns } from '@ant-design/pro-components';
+import { useMemo, useState, useCallback, useEffect, useRef } from 'react';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { getCrossAnalysis } from '@/services/api';
 import { getMetricLabel, renderMetricTitle } from '@/utils/metrics';
 
@@ -33,6 +33,8 @@ const CrossPage = () => {
   ]);
 
   const is2D = !!colDimension;
+  const actionRef = useRef<ActionType>();
+  const [dynamic2DColumns, setDynamic2DColumns] = useState<ProColumns<any>[]>([]);
 
   const params = useMemo(
     () => ({
@@ -66,29 +68,24 @@ const CrossPage = () => {
     return cols;
   }, [rowDimension, metrics]);
 
-  // 二维模式：根据后端返回的 col 值构建分组列
-  const build2DColumns = (respColumns: string[]): ProColumns<any>[] => {
-    const result: ProColumns<any>[] = [
-      {
+  // 二维模式下：动态列
+  const columns = useMemo((): ProColumns<any>[] => {
+    if (is2D) {
+      const base: ProColumns<any>[] = [{
         title: DIMENSION_LABEL[rowDimension] || '维度',
         dataIndex: 'dimension',
         fixed: 'left',
         width: 160,
-      },
-    ];
-    respColumns.forEach((col) => {
-      result.push({
-        title: col,
-        children: DISPLAY_2D_METRICS.map((m) => ({
-          title: renderMetricTitle(m),
-          dataIndex: `${col}_${m}`,
-          align: 'right' as const,
-          width: 100,
-        })),
-      });
-    });
-    return result;
-  };
+      }];
+      return base.concat(dynamic2DColumns);
+    }
+    return oneDColumns;
+  }, [is2D, dynamic2DColumns, oneDColumns, rowDimension]);
+
+  // 维度/指标/日期变化时自动刷新
+  useEffect(() => {
+    actionRef.current?.reload();
+  }, [params]);
 
   return (
     <PageContainer header={{ title: false }}>
@@ -129,9 +126,10 @@ const CrossPage = () => {
         />
       </Space>
       <ProTable<any>
+        actionRef={actionRef}
         rowKey="dimension"
         search={false}
-        columns={is2D ? [{ title: '维度', dataIndex: 'dimension', fixed: 'left' }] : oneDColumns}
+        columns={columns}
         scroll={{ x: 'max-content' }}
         request={async () => {
           const result = await getCrossAnalysis(params);
@@ -139,17 +137,22 @@ const CrossPage = () => {
           const respColumns: string[] = result.columns || [];
 
           if (is2D && respColumns.length > 0) {
-            return {
-              data: rows,
-              success: true,
-              columns: build2DColumns(respColumns),
-            } as any;
+            const cols: ProColumns<any>[] = [];
+            respColumns.forEach((col) => {
+              cols.push({
+                title: col,
+                children: DISPLAY_2D_METRICS.map((m) => ({
+                  title: renderMetricTitle(m),
+                  dataIndex: `${col}_${m}`,
+                  align: 'right' as const,
+                  width: 100,
+                })),
+              });
+            });
+            setDynamic2DColumns(cols);
           }
 
-          return {
-            data: rows,
-            success: true,
-          } as any;
+          return { data: rows, success: true };
         }}
       />
     </PageContainer>

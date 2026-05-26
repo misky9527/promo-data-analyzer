@@ -22,9 +22,6 @@ import { Region } from '../../dictionary/entities/region.entity';
 @Check('"charge_count" >= 0')
 @Check('"registrations" >= 0')
 @Check('"paying_users" >= 0')
-@Check('"retention_d1" >= 0')
-@Check('"retention_d7" >= 0')
-@Check('"retention_d30" >= 0')
 export class PromoData extends BaseTimeEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
@@ -80,17 +77,6 @@ export class PromoData extends BaseTimeEntity {
 
   @Column({ type: 'int', default: 0, name: 'paying_users' })
   payingUsers: number;
-
-  // ─── 留存字段 ───
-
-  @Column({ type: 'int', default: 0, name: 'retention_d1' })
-  retentionD1: number;
-
-  @Column({ type: 'int', default: 0, name: 'retention_d7' })
-  retentionD7: number;
-
-  @Column({ type: 'int', default: 0, name: 'retention_d30' })
-  retentionD30: number;
 
   // ─── 备注 ───
 

@@ -120,9 +120,6 @@ export class ReportService {
             spend: Number(summary.spend),
             revenue: Number(summary.revenue),
             registrations: Number(summary.registrations),
-            retentionD1: Number(summary.retentionD1),
-            retentionD7: Number(summary.retentionD7),
-            retentionD30: Number(summary.retentionD30),
             ...summaryMetrics,
           }
         : null,
@@ -200,14 +197,11 @@ export class ReportService {
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', { startDate, endDate })
-      .groupBy(`${rowJoin.alias}.name`)
-      .addGroupBy(`${colAlias}.name`)
-      .orderBy(`${rowJoin.alias}.name`)
-      .addOrderBy(`${colAlias}.name`);
+      .groupBy(`${rowJoin.alias}.${rowDimension === 'app' ? 'appName' : 'name'}`)
+      .addGroupBy(`${colAlias}.${colDimension === 'app' ? 'appName' : 'name'}`)
+      .orderBy(`${rowJoin.alias}.${rowDimension === 'app' ? 'appName' : 'name'}`)
+      .addOrderBy(`${colAlias}.${colDimension === 'app' ? 'appName' : 'name'}`);
 
     this.applyFilters(rawRows, filters);
 
@@ -240,9 +234,6 @@ export class ReportService {
         revenue: Number(r.revenue),
         registrations: Number(r.registrations),
         payingUsers: Number(r.payingUsers),
-        retentionD1: Number(r.retentionD1),
-        retentionD7: Number(r.retentionD7),
-        retentionD30: Number(r.retentionD30),
       };
       const subMetrics = this.calc.computeAll(subRow);
       obj[`${r.colDim}_ctr`] = subMetrics.ctr;
@@ -285,9 +276,6 @@ export class ReportService {
           revenue: row.revenue,
           registrations: row.registrations,
           payingUsers: row.payingUsers,
-          retentionD1: row.retentionD1,
-          retentionD7: row.retentionD7,
-          retentionD30: row.retentionD30,
           ...this.roundMetrics(metrics),
         };
       }),
@@ -327,9 +315,6 @@ export class ReportService {
           revenue: row.revenue,
           registrations: row.registrations,
           payingUsers: row.payingUsers,
-          retentionD1: row.retentionD1,
-          retentionD7: row.retentionD7,
-          retentionD30: row.retentionD30,
           ...this.roundMetrics(metrics),
         };
       }),
@@ -364,9 +349,6 @@ export class ReportService {
       .addSelect('SUM(p.charge_count)', 'chargeCount')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', { startDate, endDate })
       .groupBy('app.id')
       .addGroupBy('app.app_id')
@@ -405,9 +387,6 @@ export class ReportService {
         revenue: Number(row.revenue),
         registrations: Number(row.registrations),
         payingUsers: Number(row.payingUsers),
-        retentionD1: Number(row.retentionD1),
-        retentionD7: Number(row.retentionD7),
-        retentionD30: Number(row.retentionD30),
       };
       const metrics = this.calc.computeAll(aggregated);
 
@@ -435,9 +414,6 @@ export class ReportService {
         chargeCount: aggregated.chargeCount,
         registrations: aggregated.registrations,
         payingUsers: aggregated.payingUsers,
-        retentionD1: aggregated.retentionD1,
-        retentionD7: aggregated.retentionD7,
-        retentionD30: aggregated.retentionD30,
         ...this.roundMetrics(metrics),
       };
     });
@@ -480,9 +456,6 @@ export class ReportService {
       .addSelect('SUM(p.charge_count)', 'chargeCount')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.app_id = :productId', { productId: dto.productId })
       .andWhere('p.date BETWEEN :startDate AND :endDate', { startDate, endDate })
       .groupBy('p.date')
@@ -513,9 +486,6 @@ export class ReportService {
         chargeCount: Number(r.chargeCount),
         registrations: Number(r.registrations),
         payingUsers: Number(r.payingUsers),
-        retentionD1: Number(r.retentionD1),
-        retentionD7: Number(r.retentionD7),
-        retentionD30: Number(r.retentionD30),
       };
       const metrics = this.calc.computeAll(base);
       return {
@@ -530,9 +500,6 @@ export class ReportService {
         registrations: base.registrations,
         payingUsers: base.payingUsers,
         chargeCount: base.chargeCount,
-        retentionD1: base.retentionD1,
-        retentionD7: base.retentionD7,
-        retentionD30: base.retentionD30,
         ...this.roundMetrics(metrics),
       };
     });
@@ -568,6 +535,9 @@ export class ReportService {
       .addSelect('SUM(sd.rechargeGold)', 'rechargeGold')
       .addSelect('SUM(sd.exchangeAmount)', 'exchangeAmount')
       .addSelect('SUM(sd.exchangeUsers)', 'exchangeUsers')
+      .addSelect('SUM(sd.retentionD1)', 'retentionD1')
+      .addSelect('SUM(sd.retentionD7)', 'retentionD7')
+      .addSelect('SUM(sd.retentionD30)', 'retentionD30')
       .where('sd.date BETWEEN :startDate AND :endDate', { startDate, endDate })
       .groupBy('s.id').addGroupBy('s.name')
       .orderBy('registrations', 'DESC');
@@ -576,17 +546,29 @@ export class ReportService {
 
     const raw = await qb.getRawMany();
     return {
-      rows: raw.map((r: any) => ({
-        dimension: { id: Number(r.dimensionId), name: r.dimensionName },
-        registrations: Number(r.registrations),
-        payingUsers: Number(r.payingUsers),
-        firstChargeUsers: Number(r.firstChargeUsers),
-        entertainmentRevenue: Number(r.entertainmentRevenue),
-        entertainmentUsers: Number(r.entertainmentUsers),
-        rechargeGold: Number(r.rechargeGold),
-        exchangeAmount: Number(r.exchangeAmount),
-        exchangeUsers: Number(r.exchangeUsers),
-      })),
+      rows: raw.map((r: any) => {
+        const registrations = Number(r.registrations);
+        const retentionD1 = Number(r.retentionD1);
+        const retentionD7 = Number(r.retentionD7);
+        const retentionD30 = Number(r.retentionD30);
+        return {
+          dimension: { id: Number(r.dimensionId), name: r.dimensionName },
+          registrations,
+          payingUsers: Number(r.payingUsers),
+          firstChargeUsers: Number(r.firstChargeUsers),
+          entertainmentRevenue: Number(r.entertainmentRevenue),
+          entertainmentUsers: Number(r.entertainmentUsers),
+          rechargeGold: Number(r.rechargeGold),
+          exchangeAmount: Number(r.exchangeAmount),
+          exchangeUsers: Number(r.exchangeUsers),
+          retentionD1,
+          retentionD7,
+          retentionD30,
+          retentionD1Rate: registrations > 0 ? +(retentionD1 / registrations * 100).toFixed(2) : 0,
+          retentionD7Rate: registrations > 0 ? +(retentionD7 / registrations * 100).toFixed(2) : 0,
+          retentionD30Rate: registrations > 0 ? +(retentionD30 / registrations * 100).toFixed(2) : 0,
+        };
+      }),
     };
   }
 
@@ -607,6 +589,9 @@ export class ReportService {
       .addSelect('sd.rechargeGold', 'rechargeGold')
       .addSelect('sd.exchangeAmount', 'exchangeAmount')
       .addSelect('sd.exchangeUsers', 'exchangeUsers')
+      .addSelect('sd.retentionD1', 'retentionD1')
+      .addSelect('sd.retentionD7', 'retentionD7')
+      .addSelect('sd.retentionD30', 'retentionD30')
       .where('sd.date BETWEEN :startDate AND :endDate', { startDate, endDate })
       .orderBy('sd.date', 'DESC').addOrderBy('s.name', 'ASC');
 
@@ -625,6 +610,9 @@ export class ReportService {
         rechargeGold: Number(r.rechargeGold),
         exchangeAmount: Number(r.exchangeAmount),
         exchangeUsers: Number(r.exchangeUsers),
+        retentionD1: Number(r.retentionD1),
+        retentionD7: Number(r.retentionD7),
+        retentionD30: Number(r.retentionD30),
       })),
     };
   }
@@ -721,9 +709,6 @@ export class ReportService {
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -741,9 +726,6 @@ export class ReportService {
       revenue: Number(raw.revenue),
       registrations: Number(raw.registrations),
       payingUsers: Number(raw.payingUsers),
-      retentionD1: Number(raw.retentionD1),
-      retentionD7: Number(raw.retentionD7),
-      retentionD30: Number(raw.retentionD30),
     };
   }
 
@@ -765,9 +747,6 @@ export class ReportService {
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -785,10 +764,7 @@ export class ReportService {
       spend: Number(r.spend),
       revenue: Number(r.revenue),
       registrations: Number(r.registrations),
-        payingUsers: Number(r.payingUsers),
-      retentionD1: Number(r.retentionD1),
-      retentionD7: Number(r.retentionD7),
-      retentionD30: Number(r.retentionD30),
+      payingUsers: Number(r.payingUsers),
     }));
   }
 
@@ -822,9 +798,6 @@ export class ReportService {
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -846,9 +819,6 @@ export class ReportService {
       revenue: Number(r.revenue),
       registrations: Number(r.registrations),
       payingUsers: Number(r.payingUsers),
-      retentionD1: Number(r.retentionD1),
-      retentionD7: Number(r.retentionD7),
-      retentionD30: Number(r.retentionD30),
     }));
   }
 
@@ -883,9 +853,6 @@ export class ReportService {
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
@@ -910,9 +877,6 @@ export class ReportService {
       revenue: Number(r.revenue),
       registrations: Number(r.registrations),
       payingUsers: Number(r.payingUsers),
-      retentionD1: Number(r.retentionD1),
-      retentionD7: Number(r.retentionD7),
-      retentionD30: Number(r.retentionD30),
     }));
   }
 
@@ -951,15 +915,12 @@ export class ReportService {
       .addSelect('SUM(p.revenue)', 'revenue')
       .addSelect('SUM(p.registrations)', 'registrations')
       .addSelect('SUM(p.paying_users)', 'payingUsers')
-      .addSelect('SUM(p.retention_d1)', 'retentionD1')
-      .addSelect('SUM(p.retention_d7)', 'retentionD7')
-      .addSelect('SUM(p.retention_d30)', 'retentionD30')
       .where('p.date BETWEEN :startDate AND :endDate', {
         startDate: filters.startDate,
         endDate: filters.endDate,
       })
       .groupBy(`${jm.alias}.id`)
-      .addGroupBy(`${jm.alias}.name`)
+      .addGroupBy(`${jm.alias}.${dimension === 'app' ? 'appName' : 'name'}`)
       .orderBy('impressions', 'DESC');
 
     this.applyFilters(qb, filters);
@@ -973,10 +934,7 @@ export class ReportService {
       spend: Number(r.spend),
       revenue: Number(r.revenue),
       registrations: Number(r.registrations),
-        payingUsers: Number(r.payingUsers),
-      retentionD1: Number(r.retentionD1),
-      retentionD7: Number(r.retentionD7),
-      retentionD30: Number(r.retentionD30),
+      payingUsers: Number(r.payingUsers),
     }));
   }
 
@@ -1006,9 +964,6 @@ export class ReportService {
       registrationRate: +m.registrationRate.toFixed(2),
       costPerRegistration: +m.costPerRegistration.toFixed(2),
       costPerPayingUser: +m.costPerPayingUser.toFixed(2),
-      retentionD1Rate: +m.retentionD1Rate.toFixed(2),
-      retentionD7Rate: +m.retentionD7Rate.toFixed(2),
-      retentionD30Rate: +m.retentionD30Rate.toFixed(2),
       ltv: +m.ltv.toFixed(2),
     };
   }

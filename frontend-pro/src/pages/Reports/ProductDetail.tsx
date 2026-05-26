@@ -55,8 +55,6 @@ const ProductDetailPage = () => {
     { title: renderMetricTitle('costPerPayingUser'), dataIndex: 'costPerPayingUser' },
     { title: renderMetricTitle('registrationRate'), dataIndex: 'registrationRate' },
     { title: renderMetricTitle('payRate'), dataIndex: 'payRate' },
-    { title: renderMetricTitle('retentionD1Rate'), dataIndex: 'retentionD1Rate' },
-    { title: renderMetricTitle('retentionD7Rate'), dataIndex: 'retentionD7Rate' },
   ];
 
   if (!productId || Number.isNaN(productId)) {

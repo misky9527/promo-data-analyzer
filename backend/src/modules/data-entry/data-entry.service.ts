@@ -30,9 +30,6 @@ interface ExcelRow {
   revenue: number;
   chargeCount: number;
   registrations: number;
-  retentionD1: number;
-  retentionD7: number;
-  retentionD30: number;
   remark: string;
 }
 
@@ -49,9 +46,6 @@ const COLUMN_HEADERS = {
   revenue: '充值金额',
   chargeCount: '充值次数',
   registrations: '注册人数',
-  retentionD1: '次留率',
-  retentionD7: '7日留存率',
-  retentionD30: '30日留存率',
   remark: '备注',
 };
 
@@ -68,9 +62,6 @@ const TEMPLATE_COLUMNS: { key: keyof typeof COLUMN_HEADERS; width: number }[] = 
   { key: 'revenue', width: 12 },
   { key: 'chargeCount', width: 12 },
   { key: 'registrations', width: 14 },
-  { key: 'retentionD1', width: 12 },
-  { key: 'retentionD7', width: 14 },
-  { key: 'retentionD30', width: 14 },
   { key: 'remark', width: 20 },
 ];
 
@@ -239,10 +230,7 @@ export class DataEntryService {
     exampleRow.getCell(9).value = 3000;
     exampleRow.getCell(10).value = 50;
     exampleRow.getCell(11).value = 45;
-    exampleRow.getCell(12).value = 30;
-    exampleRow.getCell(13).value = 15;
-    exampleRow.getCell(14).value = 5;
-    exampleRow.getCell(15).value = '备注示例';
+    exampleRow.getCell(12).value = '备注示例';
     exampleRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
@@ -381,10 +369,7 @@ export class DataEntryService {
         revenue: getNum(9),
         chargeCount: getNum(10),
         registrations: getNum(11),
-        retentionD1: getNum(12),
-        retentionD7: getNum(13),
-        retentionD30: getNum(14),
-        remark: getVal(15),
+        remark: getVal(12),
       });
     });
     return rows;
@@ -453,9 +438,6 @@ export class DataEntryService {
           revenue: row.revenue,
           chargeCount: row.chargeCount,
           registrations: row.registrations,
-          retentionD1: row.retentionD1,
-          retentionD7: row.retentionD7,
-          retentionD30: row.retentionD30,
           remark: row.remark || null,
         })
         .orIgnore()
@@ -477,9 +459,6 @@ export class DataEntryService {
           revenue: row.revenue,
           chargeCount: row.chargeCount,
           registrations: row.registrations,
-          retentionD1: row.retentionD1,
-          retentionD7: row.retentionD7,
-          retentionD30: row.retentionD30,
           remark: row.remark || null,
         })
         .orUpdate(
@@ -491,9 +470,6 @@ export class DataEntryService {
             'revenue',
             'chargeCount',
             'registrations',
-            'retentionD1',
-            'retentionD7',
-            'retentionD30',
             'remark',
           ],
           ['date', 'channel_id', 'app_id', 'region_id'],

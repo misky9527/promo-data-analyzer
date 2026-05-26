@@ -21,6 +21,9 @@ const DAILY_COLUMNS = [
   { key: 'rechargeGold', label: '充值金币', width: 12 },
   { key: 'exchangeAmount', label: '兑换金额', width: 12 },
   { key: 'exchangeUsers', label: '兑换人数', width: 12 },
+  { key: 'retentionD1', label: '次留人数', width: 12 },
+  { key: 'retentionD7', label: '7留人数', width: 12 },
+  { key: 'retentionD30', label: '30留人数', width: 12 },
 ];
 
 @Injectable()
@@ -200,6 +203,9 @@ export class SiteService {
         rechargeGold: getNum(7),
         exchangeAmount: getNum(8),
         exchangeUsers: getNum(9),
+        retentionD1: getNum(10),
+        retentionD7: getNum(11),
+        retentionD30: getNum(12),
       });
     });
 
@@ -213,7 +219,7 @@ export class SiteService {
           await this.dailyRepo.createQueryBuilder()
             .insert().into(SiteDailyData).values(data)
             .orUpdate(
-              ['registrations','payingUsers','firstChargeUsers','entertainmentRevenue','entertainmentUsers','rechargeGold','exchangeAmount','exchangeUsers'],
+              ['registrations','payingUsers','firstChargeUsers','entertainmentRevenue','entertainmentUsers','rechargeGold','exchangeAmount','exchangeUsers','retentionD1','retentionD7','retentionD30'],
               ['date','site_id'],
             ).execute();
         }

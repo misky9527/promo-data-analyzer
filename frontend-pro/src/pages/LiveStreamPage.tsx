@@ -966,7 +966,7 @@ const EventHostSummaryTab = () => {
     loadData(value || undefined);
   }, [loadData]);
 
-  // 扁平数据源：group → hosts → subtotal → 下一组
+  // 扁平数据源：group → hosts → 下一组
   const dataSource = useMemo(() => {
     const rows: any[] = [];
     const map = new Map<string, API.EventHostSummaryRecord[]>();
@@ -977,24 +977,8 @@ const EventHostSummaryTab = () => {
     });
     map.forEach((hosts, key) => {
       const [eventName, liveDate] = key.split('|');
-      const subTotal = hosts.reduce((acc: any, h: any) => {
-        acc.totalComments += h.totalComments || 0;
-        acc.totalDuration += (h.siteCount || 0) * (h.avgDuration || 0);
-        acc.totalSiteCount += h.siteCount || 0;
-        return acc;
-      }, { totalComments: 0, totalDuration: 0, totalSiteCount: 0 });
-      rows.push({ _key: `g-${key}`, _type: 'group', eventName, liveDate, hostCount: hosts.length });
+      rows.push({ _key: `g-${key}`, _type: 'group', eventName, liveDate });
       hosts.forEach((h) => rows.push({ _key: `h-${key}-${h.host}`, _type: 'host', ...h }));
-      rows.push({
-        _key: `s-${key}`, _type: 'subtotal',
-        hostCount: hosts.length,
-        siteCount: subTotal.totalSiteCount,
-        avgDuration: subTotal.totalSiteCount ? Math.round(subTotal.totalDuration / subTotal.totalSiteCount) : 0,
-        totalComments: subTotal.totalComments,
-        avgStayVisit: hosts.length ? Math.round(hosts.reduce((s, h) => s + (h.avgStayVisit || 0), 0) / hosts.length) : 0,
-        avgStayPerson: hosts.length ? Math.round(hosts.reduce((s, h) => s + (h.avgStayPerson || 0), 0) / hosts.length) : 0,
-        avgPeakOnline: hosts.length ? Math.round(hosts.reduce((s, h) => s + (h.avgPeakOnline || 0), 0) / hosts.length) : 0,
-      });
     });
     return rows;
   }, [rawData]);
@@ -1004,13 +988,8 @@ const EventHostSummaryTab = () => {
       title: '主播', dataIndex: 'host', width: 260,
       render: (_: any, row: any) => {
         if (row._type === 'group') {
-          return (
-            <span style={{ fontWeight: 700, fontSize: 13, color: '#0958d9' }}>
-              {row.eventName} · {dayjs(row.liveDate).format('YYYY-MM-DD')}
-            </span>
-          );
+          return `${row.eventName} · ${dayjs(row.liveDate).format('YYYY-MM-DD')}`;
         }
-        if (row._type === 'subtotal') return <span style={{ fontWeight: 600, color: '#d48806' }}>小计</span>;
         return <span style={{ paddingLeft: 16 }}>{row.host}</span>;
       },
     },
@@ -1058,21 +1037,6 @@ const EventHostSummaryTab = () => {
     },
   ];
 
-  const grandTotal = useMemo(() => {
-    const hostRows = dataSource.filter((r) => r._type === 'host');
-    if (hostRows.length === 0) return null;
-    const c = hostRows.length;
-    const s = hostRows.reduce((acc: any, r: any) => {
-      acc.siteCount += r.siteCount || 0;
-      acc.totalComments += r.totalComments || 0;
-      acc.avgStayVisit += r.avgStayVisit || 0;
-      acc.avgStayPerson += r.avgStayPerson || 0;
-      acc.avgPeakOnline += r.avgPeakOnline || 0;
-      return acc;
-    }, { siteCount: 0, totalComments: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0 });
-    return { ...s, count: c };
-  }, [dataSource]);
-
   return (
     <div>
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1093,29 +1057,6 @@ const EventHostSummaryTab = () => {
         loading={loading}
         pagination={false}
         size="middle"
-        onRow={(row: any) => {
-          if (row._type === 'group') {
-            return { style: { backgroundColor: '#f0f5ff' } };
-          }
-          if (row._type === 'subtotal') {
-            return { style: { backgroundColor: '#fffbe6', fontWeight: 600, color: '#d48806' } };
-          }
-          return {};
-        }}
-        summary={() => {
-          if (!grandTotal) return null;
-          return (
-            <Table.Summary.Row style={{ backgroundColor: '#e6f4ff', fontWeight: 700 }}>
-              <Table.Summary.Cell index={0}>总计</Table.Summary.Cell>
-              <Table.Summary.Cell index={1}>{grandTotal.siteCount}</Table.Summary.Cell>
-              <Table.Summary.Cell index={2} />
-              <Table.Summary.Cell index={3}>{grandTotal.totalComments.toLocaleString()}</Table.Summary.Cell>
-              <Table.Summary.Cell index={4}>{formatDuration(Math.round(grandTotal.avgStayVisit / grandTotal.count))}</Table.Summary.Cell>
-              <Table.Summary.Cell index={5}>{formatDuration(Math.round(grandTotal.avgStayPerson / grandTotal.count))}</Table.Summary.Cell>
-              <Table.Summary.Cell index={6}>{Math.round(grandTotal.avgPeakOnline / grandTotal.count).toLocaleString()}</Table.Summary.Cell>
-            </Table.Summary.Row>
-          );
-        }}
       />
     </div>
   );

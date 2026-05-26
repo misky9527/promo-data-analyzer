@@ -1003,14 +1003,8 @@ const EventHostSummaryTab = () => {
   };
 
   const columns: any[] = [
-    {
-      title: '日期', dataIndex: 'liveDate', width: 110,
-      render: (_: any, row: any) => row._isFirst ? row.liveDate : null,
-    },
-    {
-      title: '赛事', dataIndex: 'eventName', width: 200, ellipsis: true,
-      render: (_: any, row: any) => row._isFirst ? row.eventName : null,
-    },
+    { title: '日期', dataIndex: 'liveDate', width: 110 },
+    { title: '赛事', dataIndex: 'eventName', width: 200, ellipsis: true },
     { title: '主播', dataIndex: 'host', width: 120 },
     { title: '站点数', dataIndex: 'siteCount', width: 80 },
     { title: '均时长', dataIndex: 'avgDuration', width: 100, render: (_: any, r: any) => formatDuration(r.avgDuration) },

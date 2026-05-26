@@ -52,7 +52,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -65,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -78,7 +78,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 2
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -109,7 +109,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            9
+            3
           ]
         },
         "register": 2
@@ -156,7 +156,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            36
+            19
           ]
         },
         "register": 22
@@ -172,7 +172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -206,7 +206,7 @@
       "time": {
         "hooks": {
           "onCheck": [
-            1
+            0
           ]
         },
         "register": 0
@@ -239,7 +239,7 @@
             0
           ]
         },
-        "register": 6
+        "register": 5
       },
       "enableBy": "register"
     },
@@ -1091,7 +1091,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1108,7 +1108,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1121,7 +1121,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 113
+        "register": 104
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 29
+        "register": 28
       },
       "enableBy": "config"
     },
@@ -1160,7 +1160,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 11
+        "register": 10
       },
       "enableBy": "config"
     },
@@ -1174,10 +1174,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            1
+            0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1190,7 +1190,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 34
+        "register": 30
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1241,7 +1241,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1280,7 +1280,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            0
+            1
           ]
         },
         "register": 1
@@ -1347,7 +1347,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 7
       },
       "enableBy": "register"
     },
@@ -1424,7 +1424,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -1437,7 +1437,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -1463,7 +1463,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 4
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1475,7 +1475,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 24
+        "register": 20
       },
       "enableBy": "config"
     },
@@ -1512,7 +1512,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1525,7 +1525,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1538,7 +1538,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1554,7 +1554,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1592,7 +1592,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1604,7 +1604,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/routePreloadOnLoad/routePreloadOnLoad": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 32
+        "register": 30
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 42
+        "register": 49
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 22
+        "register": 20
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1705,7 +1705,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1718,7 +1718,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1744,7 +1744,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1783,7 +1783,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1796,7 +1796,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1848,7 +1848,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1861,7 +1861,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1900,7 +1900,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 33
+        "register": 37
       },
       "enableBy": "register"
     },
@@ -1952,7 +1952,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1993,7 +1993,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            2
+            1
           ],
           "modifyAppData": [
             0
@@ -2002,7 +2002,7 @@
             0
           ]
         },
-        "register": 7
+        "register": 10
       }
     },
     "./node_modules/@umijs/plugins/dist/dva": {
@@ -2014,7 +2014,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 5
+        "register": 12
       },
       "enableBy": "config"
     },
@@ -2027,7 +2027,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2046,13 +2046,13 @@
             0
           ],
           "addLayouts": [
-            0
+            1
           ],
           "modifyAppData": [
             0
           ]
         },
-        "register": 2
+        "register": 3
       },
       "enableBy": "config"
     },
@@ -2065,7 +2065,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -2104,7 +2104,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2117,7 +2117,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2130,7 +2130,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/plugins/dist/qiankun/slave": {
@@ -2142,7 +2142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/plugins/dist/react-query": {
@@ -2206,7 +2206,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2223,7 +2223,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2240,7 +2240,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -3891,7 +3891,7 @@
       "parentId": "24",
       "id": "25",
       "absPath": "/dict/channels",
-      "__content": "import {\n  ModalForm,\n  PageContainer,\n  ProFormSwitch,\n  ProFormText,\n  ProTable,\n} from '@ant-design/pro-components';\nimport { Button, Popconfirm } from 'antd';\nimport { useRef, useState } from 'react';\nimport type { ActionType, ProColumns } from '@ant-design/pro-components';\nimport { createChannel, deleteChannel, getChannels, updateChannel } from '@/services/api';\n\nconst ChannelsPage = () => {\n  const actionRef = useRef<ActionType>();\n  const [editing, setEditing] = useState<any>();\n\n  const columns: ProColumns<any>[] = [\n    { title: '编码', dataIndex: 'code' },\n    { title: '名称', dataIndex: 'name' },\n    { title: '状态', dataIndex: 'status', valueType: 'switch', search: false },\n    { title: '备注', dataIndex: 'remark', search: false },\n    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => [\n        <a key=\"edit\" onClick={() => setEditing(row)}>编辑</a>,\n        <Popconfirm\n          key=\"delete\"\n          title=\"确认删除该渠道？\"\n          onConfirm={async () => {\n            await deleteChannel(row.id);\n            actionRef.current?.reload();\n          }}\n        >\n          <a>删除</a>\n        </Popconfirm>,\n      ],\n    },\n  ];\n\n  return (\n    <PageContainer header={{ title: false }}>\n      <ProTable<any>\n        rowKey=\"id\"\n        actionRef={actionRef}\n        columns={columns}\n        request={async (params) => {\n          const result = await getChannels({ page: params.current, pageSize: params.pageSize, keyword: params.name });\n          return { data: result.list || [], success: true, total: result.total || 0 };\n        }}\n        toolBarRender={() => [<Button key=\"add\" type=\"primary\" onClick={() => setEditing({})}>新建渠道</Button>]}\n      />\n      <ModalForm\n        title={editing?.id ? '编辑渠道' : '新建渠道'}\n        open={editing !== undefined}\n        initialValues={editing}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}\n        onFinish={async (values) => {\n          const payload = { ...values, status: values.status ? 1 : 0 } as any;\n          if (editing?.id) {\n            await updateChannel(editing.id, payload);\n          } else {\n            await createChannel(payload);\n          }\n          setEditing(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText name=\"code\" label=\"编码\" rules={[{ required: true }]} tooltip=\"导入Excel时用的匹配码，如 FB / GOOGLE / TIKTOK\" />\n        <ProFormText name=\"name\" label=\"名称\" rules={[{ required: true }]} />\n        <ProFormSwitch name=\"status\" label=\"启用\" />\n        <ProFormText name=\"remark\" label=\"备注\" />\n      </ModalForm>\n    </PageContainer>\n  );\n};\n\nexport default ChannelsPage;\n",
+      "__content": "import {\n  ModalForm,\n  PageContainer,\n  ProFormSwitch,\n  ProFormText,\n  ProTable,\n} from '@ant-design/pro-components';\nimport { Button, Modal, Popconfirm, message } from 'antd';\nimport { useRef, useState } from 'react';\nimport type { ActionType, ProColumns } from '@ant-design/pro-components';\nimport {\n  createChannel,\n  updateChannel,\n  disableChannel,\n  enableChannel,\n  deleteChannel,\n  restoreChannel,\n  permanentDeleteChannel,\n  getChannels,\n  getRecycleChannels,\n} from '@/services/api';\n\nconst ChannelsPage = () => {\n  const actionRef = useRef<ActionType>();\n  const recycleRef = useRef<ActionType>();\n  const [editing, setEditing] = useState<any>();\n  const [recycleOpen, setRecycleOpen] = useState(false);\n\n  const columns: ProColumns<any>[] = [\n    { title: '编码', dataIndex: 'code' },\n    { title: '名称', dataIndex: 'name' },\n    {\n      title: '状态',\n      dataIndex: 'status',\n      search: false,\n      render: (_, row) => (row.status === 1 ? '启用' : '禁用'),\n    },\n    { title: '备注', dataIndex: 'remark', search: false },\n    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => {\n        const actions: React.ReactNode[] = [\n          <a key=\"edit\" onClick={() => setEditing(row)}>编辑</a>,\n        ];\n        if (row.status === 1) {\n          actions.push(\n            <Popconfirm\n              key=\"disable\"\n              title=\"确认禁用该渠道？\"\n              onConfirm={async () => {\n                await disableChannel(row.id);\n                message.success('已禁用');\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: '#faad14' }}>禁用</a>\n            </Popconfirm>,\n          );\n        } else {\n          actions.push(\n            <Popconfirm\n              key=\"enable\"\n              title=\"确认启用该渠道？\"\n              onConfirm={async () => {\n                await enableChannel(row.id);\n                message.success('已启用');\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: '#52c41a' }}>启用</a>\n            </Popconfirm>,\n          );\n          actions.push(\n            <Popconfirm\n              key=\"delete\"\n              title=\"确认删除该渠道？删除后可到回收站恢复。\"\n              onConfirm={async () => {\n                await deleteChannel(row.id);\n                message.success('已移至回收站');\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: '#ff4d4f' }}>删除</a>\n            </Popconfirm>,\n          );\n        }\n        return actions;\n      },\n    },\n  ];\n\n  const recycleColumns: ProColumns<any>[] = [\n    { title: '编码', dataIndex: 'code' },\n    { title: '名称', dataIndex: 'name' },\n    { title: '删除时间', dataIndex: 'deletedAt', valueType: 'dateTime', search: false },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => [\n        <Popconfirm\n          key=\"restore\"\n          title=\"确认恢复该渠道？\"\n          onConfirm={async () => {\n            await restoreChannel(row.id);\n            message.success('已恢复');\n            recycleRef.current?.reload();\n            actionRef.current?.reload();\n          }}\n        >\n          <a style={{ color: '#52c41a' }}>恢复</a>\n        </Popconfirm>,\n        <Popconfirm\n          key=\"permanent\"\n          title=\"确认永久删除？此操作不可恢复！\"\n          onConfirm={async () => {\n            await permanentDeleteChannel(row.id);\n            message.success('已永久删除');\n            recycleRef.current?.reload();\n          }}\n        >\n          <a style={{ color: '#ff4d4f' }}>永久删除</a>\n        </Popconfirm>,\n      ],\n    },\n  ];\n\n  return (\n    <PageContainer header={{ title: false }}>\n      <ProTable<any>\n        rowKey=\"id\"\n        actionRef={actionRef}\n        columns={columns}\n        request={async (params) => {\n          const result = await getChannels({ page: params.current, pageSize: params.pageSize, keyword: params.name });\n          return { data: result.list || [], success: true, total: result.total || 0 };\n        }}\n        toolBarRender={() => [\n          <Button key=\"recycle\" onClick={() => setRecycleOpen(true)}>回收站</Button>,\n          <Button key=\"add\" type=\"primary\" onClick={() => setEditing({})}>新建渠道</Button>,\n        ]}\n      />\n      <ModalForm\n        title={editing?.id ? '编辑渠道' : '新建渠道'}\n        open={editing !== undefined}\n        initialValues={editing}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}\n        onFinish={async (values) => {\n          const payload = { ...values, status: values.status ? 1 : 0 } as any;\n          if (editing?.id) {\n            await updateChannel(editing.id, payload);\n          } else {\n            await createChannel(payload);\n          }\n          setEditing(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText name=\"code\" label=\"编码\" rules={[{ required: true }]} tooltip=\"导入Excel时用的匹配码，如 FB / GOOGLE / TIKTOK\" />\n        <ProFormText name=\"name\" label=\"名称\" rules={[{ required: true }]} />\n        <ProFormSwitch name=\"status\" label=\"启用\" />\n        <ProFormText name=\"remark\" label=\"备注\" />\n      </ModalForm>\n\n      {/* 回收站 */}\n      <Modal\n        title=\"渠道回收站\"\n        open={recycleOpen}\n        onCancel={() => setRecycleOpen(false)}\n        footer={null}\n        width={800}\n        destroyOnClose\n      >\n        <ProTable<any>\n          rowKey=\"id\"\n          actionRef={recycleRef}\n          columns={recycleColumns}\n          request={async (params) => {\n            const result = await getRecycleChannels({ page: params.current, pageSize: params.pageSize });\n            return { data: result.list || [], success: true, total: result.total || 0 };\n          }}\n          search={false}\n          options={false}\n        />\n      </Modal>\n    </PageContainer>\n  );\n};\n\nexport default ChannelsPage;\n",
       "__isJSFile": true,
       "__absFile": "/root/.openclaw/workspace-vest/promo-data-analyzer/frontend-pro/src/pages/Dictionary/Channels.tsx"
     },
@@ -3902,7 +3902,7 @@
       "parentId": "24",
       "id": "26",
       "absPath": "/dict/regions",
-      "__content": "import {\n  ModalForm,\n  PageContainer,\n  ProFormSwitch,\n  ProFormText,\n  ProTable,\n} from '@ant-design/pro-components';\nimport { Button, Popconfirm } from 'antd';\nimport { useRef, useState } from 'react';\nimport type { ActionType, ProColumns } from '@ant-design/pro-components';\nimport { createRegion, deleteRegion, getRegions, updateRegion } from '@/services/api';\n\nconst RegionsPage = () => {\n  const actionRef = useRef<ActionType>();\n  const [editing, setEditing] = useState<any>();\n\n  const columns: ProColumns<any>[] = [\n    { title: '名称', dataIndex: 'name' },\n    { title: '编码', dataIndex: 'code' },\n    { title: '状态', dataIndex: 'status', valueType: 'switch', search: false },\n    { title: '备注', dataIndex: 'remark', search: false },\n    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => [\n        <a key=\"edit\" onClick={() => setEditing(row)}>编辑</a>,\n        <Popconfirm\n          key=\"delete\"\n          title=\"确认删除该推广地区？\"\n          onConfirm={async () => {\n            await deleteRegion(row.id);\n            actionRef.current?.reload();\n          }}\n        >\n          <a>删除</a>\n        </Popconfirm>,\n      ],\n    },\n  ];\n\n  return (\n    <PageContainer header={{ title: false }}>\n      <ProTable<any>\n        rowKey=\"id\"\n        actionRef={actionRef}\n        columns={columns}\n        request={async (params) => {\n          const result = await getRegions({ page: params.current, pageSize: params.pageSize, keyword: params.name });\n          return { data: result.list || [], success: true, total: result.total || 0 };\n        }}\n        toolBarRender={() => [<Button key=\"add\" type=\"primary\" onClick={() => setEditing({})}>新建推广地区</Button>]}\n      />\n      <ModalForm\n        title={editing?.id ? '编辑推广地区' : '新建推广地区'}\n        open={editing !== undefined}\n        initialValues={editing}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}\n        onFinish={async (values) => {\n          const payload = { ...values, status: values.status ? 1 : 0 } as any;\n          if (editing?.id) {\n            await updateRegion(editing.id, payload);\n          } else {\n            await createRegion(payload);\n          }\n          setEditing(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText name=\"name\" label=\"名称\" rules={[{ required: true }]} />\n        <ProFormText name=\"code\" label=\"编码\" rules={[{ required: true }]} tooltip=\"导入Excel时匹配用，如 BR / VN / TH\" />\n        <ProFormSwitch name=\"status\" label=\"启用\" />\n        <ProFormText name=\"remark\" label=\"备注\" />\n      </ModalForm>\n    </PageContainer>\n  );\n};\n\nexport default RegionsPage;\n",
+      "__content": "import {\n  ModalForm,\n  PageContainer,\n  ProFormSwitch,\n  ProFormText,\n  ProTable,\n} from '@ant-design/pro-components';\nimport { Button, Modal, Popconfirm, message } from 'antd';\nimport { useRef, useState } from 'react';\nimport type { ActionType, ProColumns } from '@ant-design/pro-components';\nimport {\n  createRegion,\n  updateRegion,\n  disableRegion,\n  enableRegion,\n  deleteRegion,\n  restoreRegion,\n  permanentDeleteRegion,\n  getRegions,\n  getRecycleRegions,\n} from '@/services/api';\n\nconst RegionsPage = () => {\n  const actionRef = useRef<ActionType>();\n  const recycleRef = useRef<ActionType>();\n  const [editing, setEditing] = useState<any>();\n  const [recycleOpen, setRecycleOpen] = useState(false);\n\n  const columns: ProColumns<any>[] = [\n    { title: '名称', dataIndex: 'name' },\n    { title: '编码', dataIndex: 'code' },\n    {\n      title: '状态',\n      dataIndex: 'status',\n      search: false,\n      render: (_, row) => (row.status === 1 ? '启用' : '禁用'),\n    },\n    { title: '备注', dataIndex: 'remark', search: false },\n    { title: '创建时间', dataIndex: 'createdAt', valueType: 'date', fieldProps: { format: 'YYYY/MM/DD' }, search: false },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => {\n        const actions: React.ReactNode[] = [\n          <a key=\"edit\" onClick={() => setEditing(row)}>编辑</a>,\n        ];\n        if (row.status === 1) {\n          actions.push(\n            <Popconfirm\n              key=\"disable\"\n              title=\"确认禁用该推广地区？\"\n              onConfirm={async () => {\n                await disableRegion(row.id);\n                message.success('已禁用');\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: '#faad14' }}>禁用</a>\n            </Popconfirm>,\n          );\n        } else {\n          actions.push(\n            <Popconfirm\n              key=\"enable\"\n              title=\"确认启用该推广地区？\"\n              onConfirm={async () => {\n                await enableRegion(row.id);\n                message.success('已启用');\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: '#52c41a' }}>启用</a>\n            </Popconfirm>,\n          );\n          actions.push(\n            <Popconfirm\n              key=\"delete\"\n              title=\"确认删除该推广地区？删除后可到回收站恢复。\"\n              onConfirm={async () => {\n                await deleteRegion(row.id);\n                message.success('已移至回收站');\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: '#ff4d4f' }}>删除</a>\n            </Popconfirm>,\n          );\n        }\n        return actions;\n      },\n    },\n  ];\n\n  const recycleColumns: ProColumns<any>[] = [\n    { title: '名称', dataIndex: 'name' },\n    { title: '编码', dataIndex: 'code' },\n    { title: '删除时间', dataIndex: 'deletedAt', valueType: 'dateTime', search: false },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => [\n        <Popconfirm\n          key=\"restore\"\n          title=\"确认恢复该推广地区？\"\n          onConfirm={async () => {\n            await restoreRegion(row.id);\n            message.success('已恢复');\n            recycleRef.current?.reload();\n            actionRef.current?.reload();\n          }}\n        >\n          <a style={{ color: '#52c41a' }}>恢复</a>\n        </Popconfirm>,\n        <Popconfirm\n          key=\"permanent\"\n          title=\"确认永久删除？此操作不可恢复！\"\n          onConfirm={async () => {\n            await permanentDeleteRegion(row.id);\n            message.success('已永久删除');\n            recycleRef.current?.reload();\n          }}\n        >\n          <a style={{ color: '#ff4d4f' }}>永久删除</a>\n        </Popconfirm>,\n      ],\n    },\n  ];\n\n  return (\n    <PageContainer header={{ title: false }}>\n      <ProTable<any>\n        rowKey=\"id\"\n        actionRef={actionRef}\n        columns={columns}\n        request={async (params) => {\n          const result = await getRegions({ page: params.current, pageSize: params.pageSize, keyword: params.name });\n          return { data: result.list || [], success: true, total: result.total || 0 };\n        }}\n        toolBarRender={() => [\n          <Button key=\"recycle\" onClick={() => setRecycleOpen(true)}>回收站</Button>,\n          <Button key=\"add\" type=\"primary\" onClick={() => setEditing({})}>新建推广地区</Button>,\n        ]}\n      />\n      <ModalForm\n        title={editing?.id ? '编辑推广地区' : '新建推广地区'}\n        open={editing !== undefined}\n        initialValues={editing}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}\n        onFinish={async (values) => {\n          const payload = { ...values, status: values.status ? 1 : 0 } as any;\n          if (editing?.id) {\n            await updateRegion(editing.id, payload);\n          } else {\n            await createRegion(payload);\n          }\n          setEditing(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText name=\"name\" label=\"名称\" rules={[{ required: true }]} />\n        <ProFormText name=\"code\" label=\"编码\" rules={[{ required: true }]} tooltip=\"导入Excel时匹配用，如 BR / VN / TH\" />\n        <ProFormSwitch name=\"status\" label=\"启用\" />\n        <ProFormText name=\"remark\" label=\"备注\" />\n      </ModalForm>\n\n      {/* 回收站 */}\n      <Modal\n        title=\"推广地区回收站\"\n        open={recycleOpen}\n        onCancel={() => setRecycleOpen(false)}\n        footer={null}\n        width={800}\n        destroyOnClose\n      >\n        <ProTable<any>\n          rowKey=\"id\"\n          actionRef={recycleRef}\n          columns={recycleColumns}\n          request={async (params) => {\n            const result = await getRecycleRegions({ page: params.current, pageSize: params.pageSize });\n            return { data: result.list || [], success: true, total: result.total || 0 };\n          }}\n          search={false}\n          options={false}\n        />\n      </Modal>\n    </PageContainer>\n  );\n};\n\nexport default RegionsPage;\n",
       "__isJSFile": true,
       "__absFile": "/root/.openclaw/workspace-vest/promo-data-analyzer/frontend-pro/src/pages/Dictionary/Regions.tsx"
     },

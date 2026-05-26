@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Channel } from './entities/channel.entity';
@@ -23,6 +23,7 @@ export class DictionaryService {
   async listChannels(query: QueryDictDto) {
     const { page = 1, pageSize = 10 } = query;
     const qb = this.channelRepo.createQueryBuilder('c');
+    qb.andWhere('c.deletedAt IS NULL');
     if (query.status !== undefined) {
       qb.andWhere('c.status = :status', { status: query.status });
     }
@@ -59,10 +60,51 @@ export class DictionaryService {
     return this.channelRepo.save(entity);
   }
 
-  async deleteChannel(id: number): Promise<void> {
+  async disableChannel(id: number): Promise<void> {
     const entity = await this.channelRepo.findOne({ where: { id } });
     if (!entity) throw new NotFoundException('渠道不存在');
     await this.channelRepo.update(id, { status: 0 });
+  }
+
+  async enableChannel(id: number): Promise<void> {
+    const entity = await this.channelRepo.findOne({ where: { id } });
+    if (!entity) throw new NotFoundException('渠道不存在');
+    await this.channelRepo.update(id, { status: 1 });
+  }
+
+  async deleteChannel(id: number): Promise<void> {
+    const entity = await this.channelRepo.findOne({ where: { id } });
+    if (!entity) throw new NotFoundException('渠道不存在');
+    if (entity.status !== 0) {
+      throw new BadRequestException('请先禁用该渠道');
+    }
+    await this.channelRepo.softDelete(id);
+  }
+
+  async restoreChannel(id: number): Promise<void> {
+    const entity = await this.channelRepo.findOne({ where: { id }, withDeleted: true });
+    if (!entity) throw new NotFoundException('渠道不存在');
+    if (!entity.deletedAt) throw new BadRequestException('该渠道未被删除');
+    await this.channelRepo.restore(id);
+  }
+
+  async permanentDeleteChannel(id: number): Promise<void> {
+    const entity = await this.channelRepo.findOne({ where: { id }, withDeleted: true });
+    if (!entity) throw new NotFoundException('渠道不存在');
+    await this.channelRepo.remove(entity);
+  }
+
+  async recycleChannels(query: QueryDictDto) {
+    const { page = 1, pageSize = 10 } = query;
+    const qb = this.channelRepo.createQueryBuilder('c');
+    qb.andWhere('c.deletedAt IS NOT NULL');
+    if (query.keyword) {
+      qb.andWhere('(c.name ILIKE :kw OR c.code ILIKE :kw)', { kw: `%${query.keyword}%` });
+    }
+    qb.withDeleted();
+    qb.orderBy('c.deletedAt', 'DESC').skip((page - 1) * pageSize).take(pageSize);
+    const [list, total] = await qb.getManyAndCount();
+    return { list, total, page, pageSize };
   }
 
   // ─── 地区 ───
@@ -70,6 +112,7 @@ export class DictionaryService {
   async listRegions(query: QueryDictDto) {
     const { page = 1, pageSize = 10 } = query;
     const qb = this.regionRepo.createQueryBuilder('r');
+    qb.andWhere('r.deletedAt IS NULL');
     if (query.status !== undefined) {
       qb.andWhere('r.status = :status', { status: query.status });
     }
@@ -106,9 +149,50 @@ export class DictionaryService {
     return this.regionRepo.save(entity);
   }
 
-  async deleteRegion(id: number): Promise<void> {
+  async disableRegion(id: number): Promise<void> {
     const entity = await this.regionRepo.findOne({ where: { id } });
     if (!entity) throw new NotFoundException('地区不存在');
     await this.regionRepo.update(id, { status: 0 });
+  }
+
+  async enableRegion(id: number): Promise<void> {
+    const entity = await this.regionRepo.findOne({ where: { id } });
+    if (!entity) throw new NotFoundException('地区不存在');
+    await this.regionRepo.update(id, { status: 1 });
+  }
+
+  async deleteRegion(id: number): Promise<void> {
+    const entity = await this.regionRepo.findOne({ where: { id } });
+    if (!entity) throw new NotFoundException('地区不存在');
+    if (entity.status !== 0) {
+      throw new BadRequestException('请先禁用该地区');
+    }
+    await this.regionRepo.softDelete(id);
+  }
+
+  async restoreRegion(id: number): Promise<void> {
+    const entity = await this.regionRepo.findOne({ where: { id }, withDeleted: true });
+    if (!entity) throw new NotFoundException('地区不存在');
+    if (!entity.deletedAt) throw new BadRequestException('该地区未被删除');
+    await this.regionRepo.restore(id);
+  }
+
+  async permanentDeleteRegion(id: number): Promise<void> {
+    const entity = await this.regionRepo.findOne({ where: { id }, withDeleted: true });
+    if (!entity) throw new NotFoundException('地区不存在');
+    await this.regionRepo.remove(entity);
+  }
+
+  async recycleRegions(query: QueryDictDto) {
+    const { page = 1, pageSize = 10 } = query;
+    const qb = this.regionRepo.createQueryBuilder('r');
+    qb.andWhere('r.deletedAt IS NOT NULL');
+    if (query.keyword) {
+      qb.andWhere('(r.name ILIKE :kw OR r.code ILIKE :kw)', { kw: `%${query.keyword}%` });
+    }
+    qb.withDeleted();
+    qb.orderBy('r.deletedAt', 'DESC').skip((page - 1) * pageSize).take(pageSize);
+    const [list, total] = await qb.getManyAndCount();
+    return { list, total, page, pageSize };
   }
 }

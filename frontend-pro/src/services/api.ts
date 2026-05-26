@@ -69,7 +69,12 @@ export const updateChannel = (id: number, data: Record<string, unknown>) =>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
+export const disableChannel = (id: number) => request<any>(`/dict/channel/${id}/disable`, { method: 'POST' });
+export const enableChannel = (id: number) => request<any>(`/dict/channel/${id}/enable`, { method: 'POST' });
 export const deleteChannel = (id: number) => request<any>(`/dict/channel/${id}`, { method: 'DELETE' });
+export const restoreChannel = (id: number) => request<any>(`/dict/channel/${id}/restore`, { method: 'POST' });
+export const permanentDeleteChannel = (id: number) => request<any>(`/dict/channel/${id}/permanent`, { method: 'DELETE' });
+export const getRecycleChannels = (params: Record<string, unknown>) => request<any>(`/dict/channel/recycle${toQuery(params)}`);
 
 export const getRegions = (params: Record<string, unknown>) => request<any>(`/dict/region${toQuery(params)}`);
 export const createRegion = (data: Record<string, unknown>) =>
@@ -84,7 +89,12 @@ export const updateRegion = (id: number, data: Record<string, unknown>) =>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
+export const disableRegion = (id: number) => request<any>(`/dict/region/${id}/disable`, { method: 'POST' });
+export const enableRegion = (id: number) => request<any>(`/dict/region/${id}/enable`, { method: 'POST' });
 export const deleteRegion = (id: number) => request<any>(`/dict/region/${id}`, { method: 'DELETE' });
+export const restoreRegion = (id: number) => request<any>(`/dict/region/${id}/restore`, { method: 'POST' });
+export const permanentDeleteRegion = (id: number) => request<any>(`/dict/region/${id}/permanent`, { method: 'DELETE' });
+export const getRecycleRegions = (params: Record<string, unknown>) => request<any>(`/dict/region/recycle${toQuery(params)}`);
 
 export const getEntries = (params: Record<string, unknown>) => request<any>(`/data-entries${toQuery(params)}`);
 export const createEntry = (data: EntryPayload) =>

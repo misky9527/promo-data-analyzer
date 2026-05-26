@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, DeleteDateColumn } from 'typeorm';
 import { BaseTimeEntity } from '../../../common/entities/base-time.entity';
 
 @Entity('region')
@@ -17,4 +17,7 @@ export class Region extends BaseTimeEntity {
 
   @Column({ type: 'varchar', length: 500, nullable: true })
   remark: string | null;
+
+  @DeleteDateColumn({ type: 'timestamptz', nullable: true })
+  deletedAt: Date | null;
 }

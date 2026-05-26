@@ -52,7 +52,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -65,7 +65,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 3
       },
       "enableBy": "register"
     },
@@ -109,10 +109,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            2
           ]
         },
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -159,7 +159,7 @@
             17
           ]
         },
-        "register": 22
+        "register": 20
       },
       "enableBy": "register"
     },
@@ -172,7 +172,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -189,7 +189,7 @@
             0
           ],
           "onCheck": [
-            0
+            1
           ]
         },
         "register": 1
@@ -206,10 +206,10 @@
       "time": {
         "hooks": {
           "onCheck": [
-            1
+            0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -222,7 +222,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1091,7 +1091,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1105,10 +1105,10 @@
       "time": {
         "hooks": {
           "onStart": [
-            1
+            0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1134,7 +1134,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 96
+        "register": 99
       },
       "enableBy": "register"
     },
@@ -1147,7 +1147,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 25
+        "register": 32
       },
       "enableBy": "config"
     },
@@ -1174,10 +1174,10 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            0
+            1
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1190,7 +1190,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1203,7 +1203,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1280,7 +1280,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            0
           ]
         },
         "register": 1
@@ -1295,7 +1295,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1321,7 +1321,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1347,7 +1347,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 6
+        "register": 5
       },
       "enableBy": "register"
     },
@@ -1386,7 +1386,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1398,7 +1398,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1450,7 +1450,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1463,7 +1463,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 4
+        "register": 3
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/monorepo/redirect": {
@@ -1567,7 +1567,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 2
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mako/mako": {
@@ -1592,7 +1592,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 31
+        "register": 30
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1641,7 +1641,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1654,7 +1654,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 38
+        "register": 37
       },
       "enableBy": "register"
     },
@@ -1718,7 +1718,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1822,7 +1822,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1835,7 +1835,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1848,7 +1848,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1861,7 +1861,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1874,7 +1874,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1887,7 +1887,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1913,7 +1913,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 26
+        "register": 22
       },
       "enableBy": "register"
     },
@@ -1980,7 +1980,7 @@
       },
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/plugins/dist/antd": {
@@ -1993,7 +1993,7 @@
       "time": {
         "hooks": {
           "modifyConfig": [
-            1
+            2
           ],
           "modifyAppData": [
             0
@@ -2002,7 +2002,7 @@
             0
           ]
         },
-        "register": 7
+        "register": 6
       }
     },
     "./node_modules/@umijs/plugins/dist/dva": {
@@ -2046,10 +2046,10 @@
             0
           ],
           "addLayouts": [
-            0
+            1
           ],
           "modifyAppData": [
-            1
+            0
           ]
         },
         "register": 2
@@ -2065,7 +2065,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2078,7 +2078,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -2091,7 +2091,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2104,7 +2104,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2117,7 +2117,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2142,7 +2142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/plugins/dist/react-query": {
@@ -2154,7 +2154,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2167,7 +2167,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2254,10 +2254,10 @@
       "time": {
         "hooks": {
           "onCheckPkgJSON": [
-            1
+            0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2270,7 +2270,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     }
@@ -3862,7 +3862,7 @@
       "parentId": "21",
       "id": "23",
       "absPath": "/monitor/live-stream",
-      "__content": "import { PageContainer, ProTable } from '@ant-design/pro-components';\nimport { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin, Input } from 'antd';\nimport { UploadOutlined, InboxOutlined, SearchOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';\nimport type { UploadFile } from 'antd/es/upload/interface';\nimport { useRef, useState, useEffect, useMemo, useCallback } from 'react';\nimport dayjs from 'dayjs';\nimport type { ActionType, ProColumns, ProFormInstance } from '@ant-design/pro-components';\nimport {\n  getLiveStreamList,\n  getDailySummary,\n  getEventSummary,\n  getHostSummary,\n  getEventHostSummary,\n  deleteLiveStreamRecord,\n  importLiveStreamData,\n  batchDeleteLiveStreamRecords,\n  fetchLiveSiteList,\n} from '@/services/api';\n\n/** 秒数转为可读时长字符串 \"X小时X分X秒\" */\nfunction formatDuration(seconds: number | null | undefined): string {\n  if (seconds == null || seconds === 0) return '-';\n  const h = Math.floor(seconds / 3600);\n  const m = Math.floor((seconds % 3600) / 60);\n  const s = seconds % 60;\n  const parts: string[] = [];\n  if (h > 0) parts.push(`${h}小时`);\n  if (m > 0) parts.push(`${m}分`);\n  if (s > 0 || parts.length === 0) parts.push(`${s}秒`);\n  return parts.join('');\n}\n\ninterface ImportResultItem {\n  fileName: string;\n  success: number;\n  failed: number;\n  error?: string;\n}\n\nconst LiveStreamPage = () => {\n  const actionRef = useRef<ActionType>();\n  const detailFormRef = useRef<ProFormInstance>();\n  const summaryRef = useRef<ActionType>();\n  const [activeTab, setActiveTab] = useState('detail');\n  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);\n  const [importing, setImporting] = useState(false);\n  const [importProgress, setImportProgress] = useState({ current: 0, total: 0 });\n  const [fileList, setFileList] = useState<UploadFile[]>([]);\n  const [resultModalOpen, setResultModalOpen] = useState(false);\n  const [importResults, setImportResults] = useState<ImportResultItem[]>([]);\n  const [siteOptions, setSiteOptions] = useState<{ label: string; value: string }[]>([]);\n  const { message: msg } = App.useApp();\n\n  /** 点击每日汇总「查看明细」时，切换到直播数据并预设筛选 */\n  const jumpToDetail = (siteCode: string, liveDate: any) => {\n    setActiveTab('detail');\n    // JSON序列化后 Date 变成 \"2026-05-23T16:00:00.000Z\"，需按本地时间解析\n    let dateStr: string;\n    if (liveDate?.$d instanceof Date) {\n      dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    } else if (liveDate instanceof Date) {\n      dateStr = `${liveDate.getFullYear()}-${String(liveDate.getMonth() + 1).padStart(2, '0')}-${String(liveDate.getDate()).padStart(2, '0')}`;\n    } else if (typeof liveDate === 'string') {\n      // JSON 序列化后的 ISO 字符串，用 dayjs 按本地时区解析\n      dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    } else {\n      dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    }\n    setTimeout(() => {\n      detailFormRef.current?.setFieldsValue({ siteCode, liveDate: dateStr });\n      detailFormRef.current?.submit();\n    }, 200);\n  };\n\n  // 加载站点列表（用于搜索下拉）\n  useEffect(() => {\n    fetchLiveSiteList()\n      .then((list: any) => {\n        setSiteOptions(\n          (list || []).map((s: any) => ({ label: `${s.name} (${s.code})`, value: s.code })),\n        );\n      })\n      .catch(() => {});\n  }, []);\n\n  const columns: ProColumns<API.LiveStreamRecord>[] = [\n    { title: 'ID', dataIndex: 'id', width: 80, search: false },\n    {\n      title: '站点',\n      dataIndex: 'siteCode',\n      width: 120,\n      ellipsis: true,\n      render: (_, r) => (r as any).siteName || r.siteCode,\n      valueType: 'select',\n      fieldProps: {\n        options: siteOptions,\n        allowClear: true,\n        placeholder: '全部站点',\n      },\n    },\n    {\n      title: '日期',\n      dataIndex: 'liveDate',\n      width: 110,\n      valueType: 'date',\n    },\n    { title: '直播间ID', dataIndex: 'roomId', width: 110, search: false },\n    {\n      title: '赛事时间',\n      dataIndex: 'eventTime',\n      width: 80,\n      search: false,\n      render: (_, row) => (row as any).eventTime || '-',\n    },\n    {\n      title: '联赛',\n      dataIndex: 'league',\n      width: 80,\n      fieldProps: { placeholder: '模糊搜索联赛' },\n      render: (_, row) => (row as any).league || '-',\n    },\n    {\n      title: '赛事',\n      dataIndex: 'eventName',\n      width: 160,\n      ellipsis: true,\n      fieldProps: { placeholder: '模糊搜索赛事' },\n      render: (_, row) => (row as any).eventName || (row as any).liveInfo || '-',\n    },\n    {\n      title: '类型',\n      dataIndex: 'category',\n      width: 100,\n      fieldProps: { placeholder: '模糊搜索类型' },\n    },\n    {\n      title: '主播',\n      dataIndex: 'host',\n      width: 100,\n      fieldProps: { allowClear: true, placeholder: '全部' },\n    },\n    {\n      title: '开播时间',\n      dataIndex: 'startTime',\n      width: 170,\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '直播时长',\n      dataIndex: 'duration',\n      width: 110,\n      search: false,\n      render: (_, row) => formatDuration(row.duration),\n    },\n    {\n      title: '评论数',\n      dataIndex: 'commentCount',\n      width: 90,\n      sorter: true,\n      search: false,\n      render: (_, row) => (row.commentCount ?? 0).toLocaleString(),\n    },\n    {\n      title: '次均停留',\n      dataIndex: 'avgStayVisit',\n      width: 100,\n      sorter: true,\n      search: false,\n      render: (_, row) => formatDuration(row.avgStayVisit),\n    },\n    {\n      title: '人均停留',\n      dataIndex: 'avgStayPerson',\n      width: 100,\n      sorter: true,\n      search: false,\n      render: (_, row) => formatDuration(row.avgStayPerson),\n    },\n    {\n      title: '峰值在线',\n      dataIndex: 'peakOnline',\n      width: 90,\n      sorter: true,\n      search: false,\n      render: (_, row) => (row.peakOnline ?? 0).toLocaleString(),\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      width: 80,\n      render: (_, row) => [\n        <Popconfirm\n          key=\"delete\"\n          title=\"确认删除？\"\n          onConfirm={async () => {\n            await deleteLiveStreamRecord(row.id);\n            msg.success('已删除');\n            actionRef.current?.reload();\n          }}\n        >\n          <a>删除</a>\n        </Popconfirm>,\n      ],\n    },\n  ];\n\n  const summaryColumns: ProColumns<API.DailySummaryRecord>[] = [\n    {\n      title: '站点',\n      dataIndex: 'siteCode',\n      width: 150,\n      ellipsis: true,\n      render: (_, r) => r.siteName || r.siteCode,\n      valueType: 'select',\n      fieldProps: {\n        options: siteOptions,\n        allowClear: true,\n        placeholder: '全部站点',\n      },\n    },\n    {\n      title: '日期',\n      dataIndex: 'liveDate',\n      width: 120,\n      valueType: 'date',\n    },\n    {\n      title: '主播数',\n      dataIndex: 'hostCount',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      width: 100,\n      search: false,\n      render: (_, r) => r.totalComments.toLocaleString(),\n    },\n    {\n      title: '次均停留总数',\n      dataIndex: 'totalStayVisit',\n      width: 120,\n      search: false,\n      render: (_, r) => formatDuration(r.totalStayVisit),\n    },\n    {\n      title: '人均停留总数',\n      dataIndex: 'totalStayPerson',\n      width: 120,\n      search: false,\n      render: (_, r) => formatDuration(r.totalStayPerson),\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      width: 120,\n      search: false,\n      render: (_, r) => r.avgPeakOnline.toLocaleString(),\n    },\n    {\n      title: '直播场次',\n      dataIndex: 'streamCount',\n      width: 90,\n      search: false,\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      width: 100,\n      render: (_, r) => [\n        <a\n          key=\"detail\"\n          onClick={() => jumpToDetail(r.siteCode, r.liveDate)}\n        >\n          <SearchOutlined /> 查看明细\n        </a>,\n      ],\n    },\n  ];\n\n  const [sortField, setSortField] = useState<string | undefined>(undefined);\n  const [sortOrder, setSortOrder] = useState<string | undefined>(undefined);\n\n  const [eventSortField, setEventSortField] = useState<string | undefined>(undefined);\n  const [eventSortOrder, setEventSortOrder] = useState<string | undefined>(undefined);\n\n  // 赛事汇总内联展开\n  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);\n  const [expandedDataCache, setExpandedDataCache] = useState<Record<string, API.HostSummaryRecord[]>>({});\n  const [expandingRow, setExpandingRow] = useState<string | null>(null);\n\n  const toggleEventDetail = async (rowKey: string, eventName: string, liveDate: any) => {\n    // 已展开 → 收起\n    if (expandedRowKeys.includes(rowKey)) {\n      setExpandedRowKeys((prev) => prev.filter((k) => k !== rowKey));\n      return;\n    }\n    // 已缓存 → 直接展开\n    if (expandedDataCache[rowKey]) {\n      setExpandedRowKeys((prev) => [...prev, rowKey]);\n      return;\n    }\n    // 请求数据后展开\n    const dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    setExpandingRow(rowKey);\n    try {\n      const data = await getHostSummary({ eventName, liveDate: dateStr });\n      const list = Array.isArray(data) ? data : data.list || [];\n      setExpandedDataCache((prev) => ({ ...prev, [rowKey]: list }));\n      setExpandedRowKeys((prev) => [...prev, rowKey]);\n    } catch {\n      msg.error('加载明细失败');\n    } finally {\n      setExpandingRow(null);\n    }\n  };\n\n  const hostDetailColumns = [\n    { title: '主播', dataIndex: 'host', key: 'host', width: 120 },\n    { title: '站点', dataIndex: 'siteName', key: 'siteName', width: 120 },\n    {\n      title: '直播时长',\n      dataIndex: 'duration',\n      key: 'duration',\n      width: 110,\n      render: (_: any, r: any) => formatDuration(r.duration),\n    },\n    {\n      title: '评论数',\n      dataIndex: 'commentCount',\n      key: 'commentCount',\n      width: 90,\n      render: (_: any, r: any) => (r.commentCount ?? 0).toLocaleString(),\n    },\n    {\n      title: '次均停留',\n      dataIndex: 'avgStayVisit',\n      key: 'avgStayVisit',\n      width: 100,\n      render: (_: any, r: any) => formatDuration(r.avgStayVisit),\n    },\n    {\n      title: '人均停留',\n      dataIndex: 'avgStayPerson',\n      key: 'avgStayPerson',\n      width: 100,\n      render: (_: any, r: any) => formatDuration(r.avgStayPerson),\n    },\n    {\n      title: '峰值在线',\n      dataIndex: 'avgPeakOnline',\n      key: 'avgPeakOnline',\n      width: 90,\n      render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString(),\n    },\n  ];\n\n  // L1：按主播聚合（去重站点，汇总指标）\n  const aggregateByHost = (data: API.HostSummaryRecord[]) => {\n    const map = new Map<string, {\n      siteCodes: Set<string>;\n      totalDuration: number;\n      totalComments: number;\n      totalStayVisit: number;\n      totalStayPerson: number;\n      totalPeakOnline: number;\n      detail: API.HostSummaryRecord[];\n    }>();\n    data.forEach((r) => {\n      if (!map.has(r.host)) {\n        map.set(r.host, {\n          siteCodes: new Set(),\n          totalDuration: 0,\n          totalComments: 0,\n          totalStayVisit: 0,\n          totalStayPerson: 0,\n          totalPeakOnline: 0,\n          detail: [],\n        });\n      }\n      const g = map.get(r.host)!;\n      g.siteCodes.add(r.siteCode);\n      g.totalDuration += r.duration || 0;\n      g.totalComments += r.commentCount || 0;\n      g.totalStayVisit += r.avgStayVisit || 0;\n      g.totalStayPerson += r.avgStayPerson || 0;\n      g.totalPeakOnline += r.avgPeakOnline || 0;\n      g.detail.push(r);\n    });\n    return Array.from(map.entries()).map(([host, g]) => ({\n      host,\n      siteCount: g.siteCodes.size,\n      avgDuration: Math.round(g.totalDuration / g.siteCodes.size),\n      totalComments: g.totalComments,\n      avgStayVisit: Math.round(g.totalStayVisit / g.detail.length),\n      avgStayPerson: Math.round(g.totalStayPerson / g.detail.length),\n      avgPeakOnline: Math.round(g.totalPeakOnline / g.detail.length),\n      detail: g.detail,\n    }));\n  };\n\n  const hostAggColumns = [\n    { title: '主播', dataIndex: 'host', width: 120 },\n    { title: '站点数', dataIndex: 'siteCount', width: 70 },\n    {\n      title: '平均直播时长',\n      dataIndex: 'avgDuration',\n      width: 120,\n      render: (_: any, r: any) => formatDuration(r.avgDuration),\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      width: 100,\n      render: (_: any, r: any) => r.totalComments.toLocaleString(),\n    },\n    {\n      title: '平均次均停留',\n      dataIndex: 'avgStayVisit',\n      width: 130,\n      render: (_: any, r: any) => formatDuration(r.avgStayVisit),\n    },\n    {\n      title: '平均人均停留',\n      dataIndex: 'avgStayPerson',\n      width: 130,\n      render: (_: any, r: any) => formatDuration(r.avgStayPerson),\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      width: 130,\n      render: (_: any, r: any) => r.avgPeakOnline.toLocaleString(),\n    },\n  ];\n\n  const [dedupFiles, setDedupFiles] = useState<any[]>([]);\n  const [dedupModalOpen, setDedupModalOpen] = useState(false);\n  const [dedupCount, setDedupCount] = useState(0);\n\n  const doImport = async (files: File[], mode?: string) => {\n    const res: any = await importLiveStreamData(files, mode);\n    return res;\n  };\n\n  const handleImport = async () => {\n    if (fileList.length === 0) {\n      msg.warning('请先选择 CSV 文件');\n      return;\n    }\n    setImporting(true);\n    setImportProgress({ current: 0, total: fileList.length });\n\n    try {\n      const rawFiles = fileList\n        .filter((f) => f.originFileObj)\n        .map((f) => f.originFileObj as File);\n\n      const res: any = await doImport(rawFiles);\n\n      // 检测重复数据，弹窗让用户选择\n      const files = res.files || [];\n      const hasDupError = files.some((f: any) => f.duplicates > 0 && !f.error);\n      const hasRealDup = files.some((f: any) => f.duplicates > 0 && f.error);\n      if (hasRealDup || hasDupError) {\n        setDedupFiles(rawFiles);\n        setDedupCount(files.reduce((s: number, f: any) => s + (f.duplicates || 0), 0));\n        setDedupModalOpen(true);\n        setImporting(false);\n        return;\n      }\n\n      setImportResults(res.files || []);\n      setResultModalOpen(true);\n\n      const totalOk = res.totalSuccess || 0;\n      const totalFail = res.totalFailed || 0;\n      if (totalFail === 0) {\n        msg.success(`全部导入成功: ${totalOk} 条`);\n      } else {\n        msg.warning(`导入完成: 成功 ${totalOk} 条, 失败 ${totalFail} 条`);\n      }\n\n      setFileList([]);\n      setImportProgress({ current: fileList.length, total: fileList.length });\n      actionRef.current?.reload();\n    } catch (err: any) {\n      msg.error(err?.message || '导入失败');\n    } finally {\n      setImporting(false);\n    }\n  };\n\n  const handleDedupChoice = async (mode: 'overwrite' | 'ignore') => {\n    setDedupModalOpen(false);\n    setImporting(true);\n    try {\n      const res: any = await doImport(dedupFiles, mode);\n      setImportResults(res.files || []);\n      setResultModalOpen(true);\n      msg.success(`导入完成 (${mode === 'overwrite' ? '已覆盖' : '已忽略'}重复数据)`);\n      setFileList([]);\n      actionRef.current?.reload();\n    } catch (err: any) {\n      msg.error(err?.message || '导入失败');\n    } finally {\n      setImporting(false);\n    }\n  };\n\n  const eventSummaryColumns: ProColumns<API.EventSummaryRecord>[] = [\n    {\n      title: '赛事时间',\n      dataIndex: 'eventTime',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '赛事',\n      dataIndex: 'eventName',\n      width: 180,\n      ellipsis: true,\n      fieldProps: { placeholder: '模糊搜索赛事' },\n    },\n    {\n      title: '日期',\n      dataIndex: 'liveDate',\n      width: 110,\n      valueType: 'date',\n      fieldProps: { placeholder: '选择日期' },\n    },\n    {\n      title: '直播间数',\n      dataIndex: 'roomCount',\n      width: 90,\n      search: false,\n    },\n    {\n      title: '联赛',\n      dataIndex: 'league',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '类型',\n      dataIndex: 'category',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '主播数',\n      dataIndex: 'hostCount',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      width: 100,\n      sorter: true,\n      search: false,\n      render: (_, r) => r.totalComments.toLocaleString(),\n    },\n    {\n      title: '总人均停留',\n      dataIndex: 'totalStayPerson',\n      width: 110,\n      sorter: true,\n      search: false,\n      render: (_, r) => formatDuration(r.totalStayPerson),\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      width: 120,\n      sorter: true,\n      search: false,\n      render: (_, r) => r.avgPeakOnline.toLocaleString(),\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      width: 100,\n      render: (_, r) => {\n        const key = `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`;\n        return [\n          <a\n            key=\"hostDetail\"\n            onClick={() => toggleEventDetail(key, r.eventName, r.liveDate)}\n          >\n            <SearchOutlined /> {expandedRowKeys.includes(key) ? '收起明细' : '查看明细'}\n          </a>,\n        ];\n      },\n    },\n  ];\n\n  const resultColumns = [\n    { title: '文件名', dataIndex: 'fileName', key: 'fileName' },\n    { title: '成功', dataIndex: 'success', key: 'success', width: 80 },\n    { title: '失败', dataIndex: 'failed', key: 'failed', width: 80 },\n    {\n      title: '错误信息',\n      dataIndex: 'error',\n      key: 'error',\n      ellipsis: true,\n      render: (text: string) => text || '-',\n    },\n  ];\n\n  return (\n    <PageContainer>\n      <div style={{ marginBottom: 24 }}>\n        <Upload.Dragger\n          accept=\".csv,.xlsx\"\n          multiple\n          fileList={fileList}\n          beforeUpload={(file) => {\n            const name = file.name.toLowerCase();\n            const isCSV = name.endsWith('.csv') || name.endsWith('.xlsx');\n            if (!isCSV) {\n              msg.error(`${file.name} 不是 CSV/XLSX 文件`);\n              return Upload.LIST_IGNORE;\n            }\n            setFileList((prev) => [...prev, { uid: file.name + Date.now(), name: file.name, originFileObj: file } as any]);\n            return false;\n          }}\n          onRemove={(file) => {\n            setFileList((prev) => prev.filter((f) => f.uid !== file.uid));\n          }}\n          showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}\n          disabled={importing}\n          style={{ padding: '16px 0' }}\n        >\n          <p className=\"ant-upload-drag-icon\">\n            <InboxOutlined />\n          </p>\n          <p className=\"ant-upload-text\">点击或拖拽 CSV 文件到此区域上传</p>\n          <p className=\"ant-upload-hint\">支持批量上传，文件名格式: {\"{code}-{date}.csv 或 .xlsx\"}</p>\n        </Upload.Dragger>\n\n        {fileList.length > 0 && (\n          <div style={{ marginTop: 12, textAlign: 'right' }}>\n            <Button\n              type=\"primary\"\n              icon={<UploadOutlined />}\n              loading={importing}\n              onClick={handleImport}\n            >\n              开始导入 ({fileList.length} 个文件)\n            </Button>\n            <Button\n              style={{ marginLeft: 8 }}\n              onClick={() => setFileList([])}\n              disabled={importing}\n            >\n              清空\n            </Button>\n          </div>\n        )}\n\n        {importing && importProgress.total > 0 && (\n          <div style={{ marginTop: 12 }}>\n            <Progress\n              percent={Math.round((importProgress.current / importProgress.total) * 100)}\n              format={() => `${importProgress.current}/${importProgress.total}`}\n            />\n          </div>\n        )}\n      </div>\n\n      <Tabs\n        activeKey={activeTab}\n        onChange={setActiveTab}\n        items={[\n          {\n            key: 'detail',\n            label: '直播数据',\n            children: (\n              <div>\n                <ProTable<API.LiveStreamRecord>\n                  actionRef={actionRef}\n                  onChange={(_, __, sorter: any) => {\n                    if (sorter && !Array.isArray(sorter)) {\n                      const s = sorter as { field?: string; columnKey?: string; order?: string };\n                      const field = s.field || s.columnKey;\n                      if (field && s.order) {\n                        setSortField(field);\n                        setSortOrder(s.order);\n                      } else {\n                        setSortField(undefined);\n                        setSortOrder(undefined);\n                      }\n                    } else {\n                      setSortField(undefined);\n                      setSortOrder(undefined);\n                    }\n                  }}\n                  formRef={detailFormRef}\n                  headerTitle=\"直播数据\"\n                  rowKey=\"id\"\n                  search={{ labelWidth: 80 }}\n                  toolbar={{\n                    actions: [\n                      selectedRowKeys.length > 0 && (\n                        <Popconfirm\n                          key=\"batchDelete\"\n                          title=\"确认批量删除？\"\n                          onConfirm={async () => {\n                            await batchDeleteLiveStreamRecords(selectedRowKeys as number[]);\n                            msg.success('已批量删除');\n                            setSelectedRowKeys([]);\n                            actionRef.current?.reload();\n                          }}\n                        >\n                          <Button danger>批量删除 ({selectedRowKeys.length})</Button>\n                        </Popconfirm>\n                      ),\n                    ].filter(Boolean) as React.ReactNode[],\n                  }}\n                  rowSelection={{\n                    selectedRowKeys,\n                    onChange: setSelectedRowKeys,\n                  }}\n                  tableAlertRender={false}\n                  request={async (params: any) => {\n                    const { current, pageSize, siteCode, category, host, league, eventName, liveDate } = params;\n                    const res = await getLiveStreamList({ page: current, pageSize, siteCode, category, host, league, liveInfo: eventName, liveDate, sortField, sortOrder });\n                    return { data: res.list, total: res.total, success: true };\n                  }}\n                  columns={columns}\n                  pagination={{ defaultPageSize: 20 }}\n                />\n\n                <Modal\n                  title=\"导入结果\"\n                  open={resultModalOpen}\n                  onCancel={() => setResultModalOpen(false)}\n                  footer={[\n                    <Button key=\"close\" type=\"primary\" onClick={() => setResultModalOpen(false)}>\n                      关闭\n                    </Button>,\n                  ]}\n                  width={700}\n                >\n                  <Table\n                    dataSource={importResults}\n                    columns={resultColumns}\n                    rowKey=\"fileName\"\n                    pagination={false}\n                    size=\"small\"\n                    summary={() => {\n                      const totalSuccess = importResults.reduce((s, r) => s + r.success, 0);\n                      const totalFailed = importResults.reduce((s, r) => s + r.failed, 0);\n                      return (\n                        <Table.Summary.Row>\n                          <Table.Summary.Cell index={0}>\n                            <strong>合计</strong>\n                          </Table.Summary.Cell>\n                          <Table.Summary.Cell index={1}>\n                            <strong style={{ color: '#52c41a' }}>{totalSuccess}</strong>\n                          </Table.Summary.Cell>\n                          <Table.Summary.Cell index={2}>\n                            <strong style={{ color: '#ff4d4f' }}>{totalFailed}</strong>\n                          </Table.Summary.Cell>\n                          <Table.Summary.Cell index={3}>-</Table.Summary.Cell>\n                        </Table.Summary.Row>\n                      );\n                    }}\n                  />\n                </Modal>\n\n                <Modal\n                  title=\"发现已有数据\"\n                  open={dedupModalOpen}\n                  onCancel={() => setDedupModalOpen(false)}\n                  footer={[\n                    <Button key=\"cancel\" onClick={() => setDedupModalOpen(false)}>\n                      取消\n                    </Button>,\n                    <Button key=\"overwrite\" type=\"primary\" danger onClick={() => handleDedupChoice('overwrite')}>\n                      覆盖该日期数据\n                    </Button>,\n                  ]}\n                >\n                  <p>当前日期已有 {dedupCount} 条导入数据。</p>\n                  <p><strong>覆盖：</strong>删除该站点+该日期的全部旧数据，写入新数据。</p>\n                  <p><strong>取消：</strong>跳过该文件，不导入。</p>\n                </Modal>\n              </div>\n            ),\n          },\n          {\n            key: 'summary',\n            label: '每日汇总',\n            children: (\n              <ProTable<API.DailySummaryRecord>\n                actionRef={summaryRef}\n                headerTitle=\"每日汇总\"\n                rowKey={(r) => `${r.siteCode}-${r.liveDate}`}\n                search={{ labelWidth: 80 }}\n                request={async (params: any) => {\n                  const { current, pageSize, siteCode, liveDate } = params;\n                  const res = await getDailySummary({ page: current, pageSize, siteCode, liveDate });\n                  return { data: res.list, total: res.total, success: true };\n                }}\n                columns={summaryColumns}\n                pagination={{ defaultPageSize: 20 }}\n              />\n            ),\n          },\n          {\n            key: 'event-host-summary',\n            label: '赛事主播汇总',\n            children: <EventHostSummaryTab />,\n          },\n          {\n            key: 'event-summary',\n            label: '赛事汇总',\n            children: (\n              <div>\n                <ProTable<API.EventSummaryRecord>\n                  headerTitle=\"赛事汇总\"\n                  rowKey={(r) => `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`}\n                  search={{ labelWidth: 80 }}\n                  onChange={(_, __, sorter: any) => {\n                    if (sorter && !Array.isArray(sorter)) {\n                      const s = sorter as { field?: string; columnKey?: string; order?: string };\n                      const field = s.field || s.columnKey;\n                      if (field && s.order) {\n                        setEventSortField(field);\n                        setEventSortOrder(s.order);\n                      } else {\n                        setEventSortField(undefined);\n                        setEventSortOrder(undefined);\n                      }\n                    } else {\n                      setEventSortField(undefined);\n                      setEventSortOrder(undefined);\n                    }\n                  }}\n                  request={async (params: any) => {\n                    const { current, pageSize, liveDate, eventName } = params;\n                    const res = await getEventSummary({\n                      page: current,\n                      pageSize,\n                      liveDate,\n                      eventName,\n                      sortField: eventSortField,\n                      sortOrder: eventSortOrder,\n                    });\n                    return { data: res.list, total: res.total, success: true };\n                  }}\n                  columns={eventSummaryColumns}\n                  expandable={{\n                    expandedRowKeys,\n                    onExpandedRowsChange: (keys) => setExpandedRowKeys([...keys]),\n                    expandedRowRender: (record) => {\n                      const key = `${record.eventTime}-${record.eventName}-${record.liveDate}-${record.league}-${record.category}`;\n                      const detailData = expandedDataCache[key] || [];\n                      if (expandingRow === key) {\n                        return (\n                          <div style={{ textAlign: 'center', padding: 24 }}>\n                            <Spin />\n                          </div>\n                        );\n                      }\n                      if (detailData.length === 0) return null;\n                      const l1Data = aggregateByHost(detailData);\n                      const l1Summary = l1Data.reduce(\n                        (acc: any, r: any) => {\n                          acc.siteCount += r.siteCount;\n                          acc.totalComments += r.totalComments;\n                          acc.totalDuration += r.siteCount * r.avgDuration;\n                          acc.avgStayVisit += r.avgStayVisit;\n                          acc.avgStayPerson += r.avgStayPerson;\n                          acc.avgPeakOnline += r.avgPeakOnline;\n                          acc.count++;\n                          return acc;\n                        },\n                        { siteCount: 0, totalComments: 0, totalDuration: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, count: 0 },\n                      );\n                      return (\n                        <Table\n                          dataSource={l1Data}\n                          columns={hostAggColumns}\n                          rowKey=\"host\"\n                          pagination={false}\n                          size=\"small\"\n                          style={{ margin: '8px 0 8px 48px' }}\n                          expandable={{\n                            expandedRowRender: (l1: any) => (\n                              <Table<API.HostSummaryRecord>\n                                dataSource={l1.detail}\n                                columns={hostDetailColumns}\n                                rowKey={(r: any) => `${r.host}-${r.siteCode}`}\n                                pagination={false}\n                                size=\"small\"\n                                style={{ margin: '4px 0 4px 24px' }}\n                              />\n                            ),\n                          }}\n                          summary={() => {\n                            if (l1Data.length === 0) return null;\n                            const c = l1Summary.count || 1;\n                            return (\n                              <Table.Summary.Row>\n                                <Table.Summary.Cell index={0}><strong>合计</strong></Table.Summary.Cell>\n                                <Table.Summary.Cell index={1}>{l1Summary.siteCount}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={2}>{formatDuration(Math.round(l1Summary.totalDuration / l1Summary.siteCount))}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={3}>{l1Summary.totalComments.toLocaleString()}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={4}>{formatDuration(Math.round(l1Summary.avgStayVisit / c))}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={5}>{formatDuration(Math.round(l1Summary.avgStayPerson / c))}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={6}>{Math.round(l1Summary.avgPeakOnline / c).toLocaleString()}</Table.Summary.Cell>\n                              </Table.Summary.Row>\n                            );\n                          }}\n                        />\n                      );\n                    },\n                  }}\n                  pagination={{ defaultPageSize: 20 }}\n                />\n\n              </div>\n            ),\n          },\n        ]}\n      />\n    </PageContainer>\n  );\n};\n\n// ═══════════════════════════════════════════════════════════\n// 赛事主播汇总 Tab（自包含组件）\n// ═══════════════════════════════════════════════════════════\n\nconst EventHostSummaryTab = () => {\n  const { message: msg } = App.useApp();\n  const [rawData, setRawData] = useState<API.EventHostSummaryRecord[]>([]);\n  const [loading, setLoading] = useState(false);\n  const [searchText, setSearchText] = useState('');\n  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());\n\n  const loadData = useCallback(async (eventName?: string) => {\n    setLoading(true);\n    try {\n      const params: Record<string, unknown> = {};\n      if (eventName) params.eventName = eventName;\n      const res = await getEventHostSummary(params);\n      setRawData(Array.isArray(res) ? res : res.list || []);\n    } catch {\n      msg.error('加载赛事主播汇总失败');\n    } finally {\n      setLoading(false);\n    }\n  }, []);\n\n  useEffect(() => {\n    loadData();\n  }, [loadData]);\n\n  const handleSearch = useCallback((value: string) => {\n    setSearchText(value);\n    loadData(value || undefined);\n    setCollapsedGroups(new Set());\n  }, [loadData]);\n\n  // 按 eventName + liveDate 分组\n  const groups = useMemo(() => {\n    const map = new Map<string, {\n      eventName: string;\n      liveDate: string;\n      hosts: API.EventHostSummaryRecord[];\n    }>();\n    rawData.forEach((r) => {\n      const key = `${r.eventName}|${r.liveDate}`;\n      if (!map.has(key)) {\n        map.set(key, { eventName: r.eventName, liveDate: r.liveDate, hosts: [] });\n      }\n      map.get(key)!.hosts.push(r);\n    });\n    return Array.from(map.values());\n  }, [rawData]);\n\n  const toggleGroup = useCallback((key: string) => {\n    setCollapsedGroups((prev) => {\n      const next = new Set(prev);\n      if (next.has(key)) next.delete(key);\n      else next.add(key);\n      return next;\n    });\n  }, []);\n\n  // 全局总计\n  const globalTotals = useMemo(() => {\n    if (rawData.length === 0) return null;\n    const siteCountSet = new Set<string>();\n    let totalComments = 0;\n    let totalAvgStayVisit = 0;\n    let totalAvgStayPerson = 0;\n    let totalAvgPeakOnline = 0;\n    let hostCount = 0;\n    rawData.forEach((r) => {\n      siteCountSet.add(`${r.eventName}|${r.liveDate}|${r.host}`);\n      totalComments += r.totalComments;\n      totalAvgStayVisit += r.avgStayVisit;\n      totalAvgStayPerson += r.avgStayPerson;\n      totalAvgPeakOnline += r.avgPeakOnline;\n      hostCount++;\n    });\n    return {\n      totalComments,\n      avgStayVisit: hostCount ? Math.round(totalAvgStayVisit / hostCount) : 0,\n      avgStayPerson: hostCount ? Math.round(totalAvgStayPerson / hostCount) : 0,\n      avgPeakOnline: hostCount ? Math.round(totalAvgPeakOnline / hostCount) : 0,\n      hostCount,\n    };\n  }, [rawData]);\n\n  // Host expandable → L2 site detail\n  const [expandedHostKeys, setExpandedHostKeys] = useState<Set<string>>(new Set());\n  const [hostDetailCache, setHostDetailCache] = useState<Record<string, API.HostSummaryRecord[]>>({});\n  const [loadingHostDetail, setLoadingHostDetail] = useState<string | null>(null);\n\n  const toggleHostDetail = useCallback(async (hostKey: string, eventName: string, liveDate: string) => {\n    setExpandedHostKeys((prev) => {\n      const next = new Set(prev);\n      if (next.has(hostKey)) {\n        next.delete(hostKey);\n        return next;\n      }\n      return next;\n    });\n    if (expandedHostKeys.has(hostKey)) return;\n    if (hostDetailCache[hostKey]) {\n      setExpandedHostKeys((prev) => new Set([...prev, hostKey]));\n      return;\n    }\n    setLoadingHostDetail(hostKey);\n    try {\n      const data = await getHostSummary({ eventName, liveDate });\n      const list = Array.isArray(data) ? data : data.list || [];\n      // 过滤出该主播的数据\n      const hostDetail = list.filter((d: API.HostSummaryRecord) => d.host === hostKey.split('|').pop());\n      setHostDetailCache((prev) => ({ ...prev, [hostKey]: hostDetail }));\n      setExpandedHostKeys((prev) => new Set([...prev, hostKey]));\n    } catch {\n      msg.error('加载站点明细失败');\n    } finally {\n      setLoadingHostDetail(null);\n    }\n  }, [expandedHostKeys, hostDetailCache]);\n\n  const hostAggColumns = [\n    { title: '主播', dataIndex: 'host', width: 120 },\n    { title: '站点数', dataIndex: 'siteCount', width: 70 },\n    {\n      title: '平均直播时长',\n      dataIndex: 'avgDuration',\n      width: 120,\n      render: (_: any, r: any) => formatDuration(r.avgDuration),\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      width: 100,\n      render: (_: any, r: any) => (r.totalComments ?? 0).toLocaleString(),\n    },\n    {\n      title: '平均次均停留',\n      dataIndex: 'avgStayVisit',\n      width: 130,\n      render: (_: any, r: any) => formatDuration(r.avgStayVisit),\n    },\n    {\n      title: '平均人均停留',\n      dataIndex: 'avgStayPerson',\n      width: 130,\n      render: (_: any, r: any) => formatDuration(r.avgStayPerson),\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      width: 130,\n      render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString(),\n    },\n  ];\n\n  const hostDetailColumns = [\n    { title: '主播', dataIndex: 'host', key: 'host', width: 120 },\n    { title: '站点', dataIndex: 'siteName', key: 'siteName', width: 120 },\n    {\n      title: '直播时长',\n      dataIndex: 'duration',\n      key: 'duration',\n      width: 110,\n      render: (_: any, r: any) => formatDuration(r.duration),\n    },\n    {\n      title: '评论数',\n      dataIndex: 'commentCount',\n      key: 'commentCount',\n      width: 90,\n      render: (_: any, r: any) => (r.commentCount ?? 0).toLocaleString(),\n    },\n    {\n      title: '次均停留',\n      dataIndex: 'avgStayVisit',\n      key: 'avgStayVisit',\n      width: 100,\n      render: (_: any, r: any) => formatDuration(r.avgStayVisit),\n    },\n    {\n      title: '人均停留',\n      dataIndex: 'avgStayPerson',\n      key: 'avgStayPerson',\n      width: 100,\n      render: (_: any, r: any) => formatDuration(r.avgStayPerson),\n    },\n    {\n      title: '峰值在线',\n      dataIndex: 'avgPeakOnline',\n      key: 'avgPeakOnline',\n      width: 90,\n      render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString(),\n    },\n  ];\n\n  // 构建分组数据源\n  const groupDataSource = useMemo(() => {\n    const rows: any[] = [];\n    groups.forEach((g, gi) => {\n      const gKey = `${g.eventName}|${g.liveDate}`;\n      const isCollapsed = collapsedGroups.has(gKey);\n\n      // 计算分组小计\n      const subTotal = g.hosts.reduce(\n        (acc: any, h: any) => {\n          acc.totalComments += h.totalComments || 0;\n          acc.avgStayVisit += h.avgStayVisit || 0;\n          acc.avgStayPerson += h.avgStayPerson || 0;\n          acc.avgPeakOnline += h.avgPeakOnline || 0;\n          acc.totalDuration += (h.siteCount || 0) * (h.avgDuration || 0);\n          acc.totalSiteCount += h.siteCount || 0;\n          return acc;\n        },\n        { totalComments: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, totalDuration: 0, totalSiteCount: 0 },\n      );\n      const hostCount = g.hosts.length;\n\n      // 分组行\n      rows.push({\n        _type: 'group',\n        _key: `g-${gi}`,\n        eventName: g.eventName,\n        liveDate: g.liveDate,\n        isCollapsed,\n        toggleKey: gKey,\n        hostCount,\n        subTotalComments: subTotal.totalComments,\n        subAvgStayVisit: hostCount ? Math.round(subTotal.avgStayVisit / hostCount) : 0,\n        subAvgStayPerson: hostCount ? Math.round(subTotal.avgStayPerson / hostCount) : 0,\n        subAvgPeakOnline: hostCount ? Math.round(subTotal.avgPeakOnline / hostCount) : 0,\n        subAvgDuration: subTotal.totalSiteCount ? Math.round(subTotal.totalDuration / subTotal.totalSiteCount) : 0,\n        totalSiteCount: subTotal.totalSiteCount,\n      });\n\n      // 主播行（仅展开时）\n      if (!isCollapsed) {\n        g.hosts.forEach((h, hi) => {\n          const hostKey = `${g.eventName}|${g.liveDate}|${h.host}`;\n          rows.push({\n            _type: 'host',\n            _key: `h-${gi}-${hi}`,\n            ...h,\n            hostKey,\n            groupEventName: g.eventName,\n            groupLiveDate: g.liveDate,\n          });\n        });\n      }\n    });\n    return rows;\n  }, [groups, collapsedGroups]);\n\n  const eventHostColumns: any[] = [\n    {\n      title: '赛事',\n      dataIndex: 'eventName',\n      key: 'eventName',\n      width: 200,\n      render: (_: any, row: any) => {\n        if (row._type === 'group') {\n          const icon = row.isCollapsed ? (\n            <CaretRightOutlined style={{ marginRight: 6 }} />\n          ) : (\n            <CaretDownOutlined style={{ marginRight: 6 }} />\n          );\n          return (\n            <span\n              style={{ cursor: 'pointer', fontWeight: 600, fontSize: 14 }}\n              onClick={() => toggleGroup(row.toggleKey)}\n            >\n              {icon}\n              {row.eventName}\n              <span style={{ fontWeight: 400, marginLeft: 12, fontSize: 12, color: '#888' }}>\n                {dayjs(row.liveDate).format('YYYY-MM-DD')}\n              </span>\n              <span style={{ fontWeight: 400, marginLeft: 8, fontSize: 12, color: '#1890ff' }}>\n                ({row.hostCount}位主播)\n              </span>\n            </span>\n          );\n        }\n        return <span style={{ paddingLeft: 8 }}>{row.host}</span>;\n      },\n    },\n    {\n      title: '站点数',\n      dataIndex: 'siteCount',\n      key: 'siteCount',\n      width: 80,\n      render: (_: any, row: any) => {\n        if (row._type === 'group') return <span style={{ fontWeight: 600 }}>{row.totalSiteCount}</span>;\n        return row.siteCount;\n      },\n    },\n    {\n      title: '平均直播时长',\n      dataIndex: 'avgDuration',\n      key: 'avgDuration',\n      width: 120,\n      render: (_: any, row: any) => {\n        if (row._type === 'group')\n          return <span style={{ fontWeight: 600 }}>{formatDuration(row.subAvgDuration)}</span>;\n        return formatDuration(row.avgDuration);\n      },\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      key: 'totalComments',\n      width: 100,\n      render: (_: any, row: any) => {\n        if (row._type === 'group')\n          return <span style={{ fontWeight: 600 }}>{row.subTotalComments.toLocaleString()}</span>;\n        return (row.totalComments ?? 0).toLocaleString();\n      },\n    },\n    {\n      title: '平均次均停留',\n      dataIndex: 'avgStayVisit',\n      key: 'avgStayVisit',\n      width: 130,\n      render: (_: any, row: any) => {\n        if (row._type === 'group')\n          return <span style={{ fontWeight: 600 }}>{formatDuration(row.subAvgStayVisit)}</span>;\n        return formatDuration(row.avgStayVisit);\n      },\n    },\n    {\n      title: '平均人均停留',\n      dataIndex: 'avgStayPerson',\n      key: 'avgStayPerson',\n      width: 130,\n      render: (_: any, row: any) => {\n        if (row._type === 'group')\n          return <span style={{ fontWeight: 600 }}>{formatDuration(row.subAvgStayPerson)}</span>;\n        return formatDuration(row.avgStayPerson);\n      },\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      key: 'avgPeakOnline',\n      width: 130,\n      render: (_: any, row: any) => {\n        if (row._type === 'group')\n          return <span style={{ fontWeight: 600 }}>{row.subAvgPeakOnline.toLocaleString()}</span>;\n        return (row.avgPeakOnline ?? 0).toLocaleString();\n      },\n    },\n  ];\n\n  return (\n    <div>\n      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>\n        <h4 style={{ margin: 0 }}>赛事主播汇总</h4>\n        <Input.Search\n          placeholder=\"搜索赛事名\"\n          allowClear\n          value={searchText}\n          onChange={(e) => setSearchText(e.target.value)}\n          onSearch={handleSearch}\n          style={{ width: 300 }}\n        />\n      </div>\n      <Table\n        dataSource={groupDataSource}\n        columns={eventHostColumns}\n        rowKey=\"_key\"\n        loading={loading}\n        pagination={false}\n        size=\"middle\"\n        expandable={{\n          rowExpandable: (row: any) => row._type === 'host',\n          expandedRowKeys: [...expandedHostKeys],\n          onExpand: (expanded: boolean, row: any) => {\n            if (expanded) {\n              toggleHostDetail(row.hostKey, row.groupEventName, row.groupLiveDate);\n            } else {\n              setExpandedHostKeys((prev) => {\n                const next = new Set(prev);\n                next.delete(row.hostKey);\n                return next;\n              });\n            }\n          },\n          expandedRowRender: (row: any) => {\n            if (row._type !== 'host') return null;\n            if (loadingHostDetail === row.hostKey) {\n              return (\n                <div style={{ textAlign: 'center', padding: 16 }}>\n                  <Spin />\n                </div>\n              );\n            }\n            const detail = hostDetailCache[row.hostKey] || [];\n            if (detail.length === 0) {\n              return (\n                <div style={{ padding: 8, color: '#999' }}>暂无站点数据</div>\n              );\n            }\n            return (\n              <Table\n                dataSource={detail}\n                columns={hostDetailColumns}\n                rowKey={(r: any) => `${r.host}-${r.siteCode}`}\n                pagination={false}\n                size=\"small\"\n                style={{ margin: '4px 0 4px 32px' }}\n              />\n            );\n          },\n        }}\n        onRow={(record: any) => {\n          if (record._type === 'group') {\n            return {\n              style: {\n                backgroundColor: '#f0f5ff',\n                fontWeight: 600,\n              },\n            };\n          }\n          return {};\n        }}\n        summary={() => {\n          if (!globalTotals || rawData.length === 0) return null;\n          return (\n            <Table.Summary.Row style={{ backgroundColor: '#fafafa', fontWeight: 700 }}>\n              <Table.Summary.Cell index={1}>\n                <strong>全局总计</strong>\n              </Table.Summary.Cell>\n              <Table.Summary.Cell index={2} />\n              <Table.Summary.Cell index={3} />\n              <Table.Summary.Cell index={4}>\n                {globalTotals.totalComments.toLocaleString()}\n              </Table.Summary.Cell>\n              <Table.Summary.Cell index={5}>\n                {formatDuration(globalTotals.avgStayVisit)}\n              </Table.Summary.Cell>\n              <Table.Summary.Cell index={6}>\n                {formatDuration(globalTotals.avgStayPerson)}\n              </Table.Summary.Cell>\n              <Table.Summary.Cell index={7}>\n                {globalTotals.avgPeakOnline.toLocaleString()}\n              </Table.Summary.Cell>\n            </Table.Summary.Row>\n          );\n        }}\n      />\n    </div>\n  );\n};\n\nexport default LiveStreamPage;\n",
+      "__content": "import { PageContainer, ProTable } from '@ant-design/pro-components';\nimport { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin, Input } from 'antd';\nimport { UploadOutlined, InboxOutlined, SearchOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';\nimport type { UploadFile } from 'antd/es/upload/interface';\nimport { useRef, useState, useEffect, useMemo, useCallback } from 'react';\nimport dayjs from 'dayjs';\nimport type { ActionType, ProColumns, ProFormInstance } from '@ant-design/pro-components';\nimport {\n  getLiveStreamList,\n  getDailySummary,\n  getEventSummary,\n  getHostSummary,\n  getEventHostSummary,\n  deleteLiveStreamRecord,\n  importLiveStreamData,\n  batchDeleteLiveStreamRecords,\n  fetchLiveSiteList,\n} from '@/services/api';\n\n/** 秒数转为可读时长字符串 \"X小时X分X秒\" */\nfunction formatDuration(seconds: number | null | undefined): string {\n  if (seconds == null || seconds === 0) return '-';\n  const h = Math.floor(seconds / 3600);\n  const m = Math.floor((seconds % 3600) / 60);\n  const s = seconds % 60;\n  const parts: string[] = [];\n  if (h > 0) parts.push(`${h}小时`);\n  if (m > 0) parts.push(`${m}分`);\n  if (s > 0 || parts.length === 0) parts.push(`${s}秒`);\n  return parts.join('');\n}\n\ninterface ImportResultItem {\n  fileName: string;\n  success: number;\n  failed: number;\n  error?: string;\n}\n\nconst LiveStreamPage = () => {\n  const actionRef = useRef<ActionType>();\n  const detailFormRef = useRef<ProFormInstance>();\n  const summaryRef = useRef<ActionType>();\n  const [activeTab, setActiveTab] = useState('detail');\n  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);\n  const [importing, setImporting] = useState(false);\n  const [importProgress, setImportProgress] = useState({ current: 0, total: 0 });\n  const [fileList, setFileList] = useState<UploadFile[]>([]);\n  const [resultModalOpen, setResultModalOpen] = useState(false);\n  const [importResults, setImportResults] = useState<ImportResultItem[]>([]);\n  const [siteOptions, setSiteOptions] = useState<{ label: string; value: string }[]>([]);\n  const { message: msg } = App.useApp();\n\n  /** 点击每日汇总「查看明细」时，切换到直播数据并预设筛选 */\n  const jumpToDetail = (siteCode: string, liveDate: any) => {\n    setActiveTab('detail');\n    // JSON序列化后 Date 变成 \"2026-05-23T16:00:00.000Z\"，需按本地时间解析\n    let dateStr: string;\n    if (liveDate?.$d instanceof Date) {\n      dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    } else if (liveDate instanceof Date) {\n      dateStr = `${liveDate.getFullYear()}-${String(liveDate.getMonth() + 1).padStart(2, '0')}-${String(liveDate.getDate()).padStart(2, '0')}`;\n    } else if (typeof liveDate === 'string') {\n      // JSON 序列化后的 ISO 字符串，用 dayjs 按本地时区解析\n      dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    } else {\n      dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    }\n    setTimeout(() => {\n      detailFormRef.current?.setFieldsValue({ siteCode, liveDate: dateStr });\n      detailFormRef.current?.submit();\n    }, 200);\n  };\n\n  // 加载站点列表（用于搜索下拉）\n  useEffect(() => {\n    fetchLiveSiteList()\n      .then((list: any) => {\n        setSiteOptions(\n          (list || []).map((s: any) => ({ label: `${s.name} (${s.code})`, value: s.code })),\n        );\n      })\n      .catch(() => {});\n  }, []);\n\n  const columns: ProColumns<API.LiveStreamRecord>[] = [\n    { title: 'ID', dataIndex: 'id', width: 80, search: false },\n    {\n      title: '站点',\n      dataIndex: 'siteCode',\n      width: 120,\n      ellipsis: true,\n      render: (_, r) => (r as any).siteName || r.siteCode,\n      valueType: 'select',\n      fieldProps: {\n        options: siteOptions,\n        allowClear: true,\n        placeholder: '全部站点',\n      },\n    },\n    {\n      title: '日期',\n      dataIndex: 'liveDate',\n      width: 110,\n      valueType: 'date',\n    },\n    { title: '直播间ID', dataIndex: 'roomId', width: 110, search: false },\n    {\n      title: '赛事时间',\n      dataIndex: 'eventTime',\n      width: 80,\n      search: false,\n      render: (_, row) => (row as any).eventTime || '-',\n    },\n    {\n      title: '联赛',\n      dataIndex: 'league',\n      width: 80,\n      fieldProps: { placeholder: '模糊搜索联赛' },\n      render: (_, row) => (row as any).league || '-',\n    },\n    {\n      title: '赛事',\n      dataIndex: 'eventName',\n      width: 160,\n      ellipsis: true,\n      fieldProps: { placeholder: '模糊搜索赛事' },\n      render: (_, row) => (row as any).eventName || (row as any).liveInfo || '-',\n    },\n    {\n      title: '类型',\n      dataIndex: 'category',\n      width: 100,\n      fieldProps: { placeholder: '模糊搜索类型' },\n    },\n    {\n      title: '主播',\n      dataIndex: 'host',\n      width: 100,\n      fieldProps: { allowClear: true, placeholder: '全部' },\n    },\n    {\n      title: '开播时间',\n      dataIndex: 'startTime',\n      width: 170,\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '直播时长',\n      dataIndex: 'duration',\n      width: 110,\n      search: false,\n      render: (_, row) => formatDuration(row.duration),\n    },\n    {\n      title: '评论数',\n      dataIndex: 'commentCount',\n      width: 90,\n      sorter: true,\n      search: false,\n      render: (_, row) => (row.commentCount ?? 0).toLocaleString(),\n    },\n    {\n      title: '次均停留',\n      dataIndex: 'avgStayVisit',\n      width: 100,\n      sorter: true,\n      search: false,\n      render: (_, row) => formatDuration(row.avgStayVisit),\n    },\n    {\n      title: '人均停留',\n      dataIndex: 'avgStayPerson',\n      width: 100,\n      sorter: true,\n      search: false,\n      render: (_, row) => formatDuration(row.avgStayPerson),\n    },\n    {\n      title: '峰值在线',\n      dataIndex: 'peakOnline',\n      width: 90,\n      sorter: true,\n      search: false,\n      render: (_, row) => (row.peakOnline ?? 0).toLocaleString(),\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      width: 80,\n      render: (_, row) => [\n        <Popconfirm\n          key=\"delete\"\n          title=\"确认删除？\"\n          onConfirm={async () => {\n            await deleteLiveStreamRecord(row.id);\n            msg.success('已删除');\n            actionRef.current?.reload();\n          }}\n        >\n          <a>删除</a>\n        </Popconfirm>,\n      ],\n    },\n  ];\n\n  const summaryColumns: ProColumns<API.DailySummaryRecord>[] = [\n    {\n      title: '站点',\n      dataIndex: 'siteCode',\n      width: 150,\n      ellipsis: true,\n      render: (_, r) => r.siteName || r.siteCode,\n      valueType: 'select',\n      fieldProps: {\n        options: siteOptions,\n        allowClear: true,\n        placeholder: '全部站点',\n      },\n    },\n    {\n      title: '日期',\n      dataIndex: 'liveDate',\n      width: 120,\n      valueType: 'date',\n    },\n    {\n      title: '主播数',\n      dataIndex: 'hostCount',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      width: 100,\n      search: false,\n      render: (_, r) => r.totalComments.toLocaleString(),\n    },\n    {\n      title: '次均停留总数',\n      dataIndex: 'totalStayVisit',\n      width: 120,\n      search: false,\n      render: (_, r) => formatDuration(r.totalStayVisit),\n    },\n    {\n      title: '人均停留总数',\n      dataIndex: 'totalStayPerson',\n      width: 120,\n      search: false,\n      render: (_, r) => formatDuration(r.totalStayPerson),\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      width: 120,\n      search: false,\n      render: (_, r) => r.avgPeakOnline.toLocaleString(),\n    },\n    {\n      title: '直播场次',\n      dataIndex: 'streamCount',\n      width: 90,\n      search: false,\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      width: 100,\n      render: (_, r) => [\n        <a\n          key=\"detail\"\n          onClick={() => jumpToDetail(r.siteCode, r.liveDate)}\n        >\n          <SearchOutlined /> 查看明细\n        </a>,\n      ],\n    },\n  ];\n\n  const [sortField, setSortField] = useState<string | undefined>(undefined);\n  const [sortOrder, setSortOrder] = useState<string | undefined>(undefined);\n\n  const [eventSortField, setEventSortField] = useState<string | undefined>(undefined);\n  const [eventSortOrder, setEventSortOrder] = useState<string | undefined>(undefined);\n\n  // 赛事汇总内联展开\n  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);\n  const [expandedDataCache, setExpandedDataCache] = useState<Record<string, API.HostSummaryRecord[]>>({});\n  const [expandingRow, setExpandingRow] = useState<string | null>(null);\n\n  const toggleEventDetail = async (rowKey: string, eventName: string, liveDate: any) => {\n    // 已展开 → 收起\n    if (expandedRowKeys.includes(rowKey)) {\n      setExpandedRowKeys((prev) => prev.filter((k) => k !== rowKey));\n      return;\n    }\n    // 已缓存 → 直接展开\n    if (expandedDataCache[rowKey]) {\n      setExpandedRowKeys((prev) => [...prev, rowKey]);\n      return;\n    }\n    // 请求数据后展开\n    const dateStr = dayjs(liveDate).format('YYYY-MM-DD');\n    setExpandingRow(rowKey);\n    try {\n      const data = await getHostSummary({ eventName, liveDate: dateStr });\n      const list = Array.isArray(data) ? data : data.list || [];\n      setExpandedDataCache((prev) => ({ ...prev, [rowKey]: list }));\n      setExpandedRowKeys((prev) => [...prev, rowKey]);\n    } catch {\n      msg.error('加载明细失败');\n    } finally {\n      setExpandingRow(null);\n    }\n  };\n\n  const hostDetailColumns = [\n    { title: '主播', dataIndex: 'host', key: 'host', width: 120 },\n    { title: '站点', dataIndex: 'siteName', key: 'siteName', width: 120 },\n    {\n      title: '直播时长',\n      dataIndex: 'duration',\n      key: 'duration',\n      width: 110,\n      render: (_: any, r: any) => formatDuration(r.duration),\n    },\n    {\n      title: '评论数',\n      dataIndex: 'commentCount',\n      key: 'commentCount',\n      width: 90,\n      render: (_: any, r: any) => (r.commentCount ?? 0).toLocaleString(),\n    },\n    {\n      title: '次均停留',\n      dataIndex: 'avgStayVisit',\n      key: 'avgStayVisit',\n      width: 100,\n      render: (_: any, r: any) => formatDuration(r.avgStayVisit),\n    },\n    {\n      title: '人均停留',\n      dataIndex: 'avgStayPerson',\n      key: 'avgStayPerson',\n      width: 100,\n      render: (_: any, r: any) => formatDuration(r.avgStayPerson),\n    },\n    {\n      title: '峰值在线',\n      dataIndex: 'avgPeakOnline',\n      key: 'avgPeakOnline',\n      width: 90,\n      render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString(),\n    },\n  ];\n\n  // L1：按主播聚合（去重站点，汇总指标）\n  const aggregateByHost = (data: API.HostSummaryRecord[]) => {\n    const map = new Map<string, {\n      siteCodes: Set<string>;\n      totalDuration: number;\n      totalComments: number;\n      totalStayVisit: number;\n      totalStayPerson: number;\n      totalPeakOnline: number;\n      detail: API.HostSummaryRecord[];\n    }>();\n    data.forEach((r) => {\n      if (!map.has(r.host)) {\n        map.set(r.host, {\n          siteCodes: new Set(),\n          totalDuration: 0,\n          totalComments: 0,\n          totalStayVisit: 0,\n          totalStayPerson: 0,\n          totalPeakOnline: 0,\n          detail: [],\n        });\n      }\n      const g = map.get(r.host)!;\n      g.siteCodes.add(r.siteCode);\n      g.totalDuration += r.duration || 0;\n      g.totalComments += r.commentCount || 0;\n      g.totalStayVisit += r.avgStayVisit || 0;\n      g.totalStayPerson += r.avgStayPerson || 0;\n      g.totalPeakOnline += r.avgPeakOnline || 0;\n      g.detail.push(r);\n    });\n    return Array.from(map.entries()).map(([host, g]) => ({\n      host,\n      siteCount: g.siteCodes.size,\n      avgDuration: Math.round(g.totalDuration / g.siteCodes.size),\n      totalComments: g.totalComments,\n      avgStayVisit: Math.round(g.totalStayVisit / g.detail.length),\n      avgStayPerson: Math.round(g.totalStayPerson / g.detail.length),\n      avgPeakOnline: Math.round(g.totalPeakOnline / g.detail.length),\n      detail: g.detail,\n    }));\n  };\n\n  const hostAggColumns = [\n    { title: '主播', dataIndex: 'host', width: 120 },\n    { title: '站点数', dataIndex: 'siteCount', width: 70 },\n    {\n      title: '平均直播时长',\n      dataIndex: 'avgDuration',\n      width: 120,\n      render: (_: any, r: any) => formatDuration(r.avgDuration),\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      width: 100,\n      render: (_: any, r: any) => r.totalComments.toLocaleString(),\n    },\n    {\n      title: '平均次均停留',\n      dataIndex: 'avgStayVisit',\n      width: 130,\n      render: (_: any, r: any) => formatDuration(r.avgStayVisit),\n    },\n    {\n      title: '平均人均停留',\n      dataIndex: 'avgStayPerson',\n      width: 130,\n      render: (_: any, r: any) => formatDuration(r.avgStayPerson),\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      width: 130,\n      render: (_: any, r: any) => r.avgPeakOnline.toLocaleString(),\n    },\n  ];\n\n  const [dedupFiles, setDedupFiles] = useState<any[]>([]);\n  const [dedupModalOpen, setDedupModalOpen] = useState(false);\n  const [dedupCount, setDedupCount] = useState(0);\n\n  const doImport = async (files: File[], mode?: string) => {\n    const res: any = await importLiveStreamData(files, mode);\n    return res;\n  };\n\n  const handleImport = async () => {\n    if (fileList.length === 0) {\n      msg.warning('请先选择 CSV 文件');\n      return;\n    }\n    setImporting(true);\n    setImportProgress({ current: 0, total: fileList.length });\n\n    try {\n      const rawFiles = fileList\n        .filter((f) => f.originFileObj)\n        .map((f) => f.originFileObj as File);\n\n      const res: any = await doImport(rawFiles);\n\n      // 检测重复数据，弹窗让用户选择\n      const files = res.files || [];\n      const hasDupError = files.some((f: any) => f.duplicates > 0 && !f.error);\n      const hasRealDup = files.some((f: any) => f.duplicates > 0 && f.error);\n      if (hasRealDup || hasDupError) {\n        setDedupFiles(rawFiles);\n        setDedupCount(files.reduce((s: number, f: any) => s + (f.duplicates || 0), 0));\n        setDedupModalOpen(true);\n        setImporting(false);\n        return;\n      }\n\n      setImportResults(res.files || []);\n      setResultModalOpen(true);\n\n      const totalOk = res.totalSuccess || 0;\n      const totalFail = res.totalFailed || 0;\n      if (totalFail === 0) {\n        msg.success(`全部导入成功: ${totalOk} 条`);\n      } else {\n        msg.warning(`导入完成: 成功 ${totalOk} 条, 失败 ${totalFail} 条`);\n      }\n\n      setFileList([]);\n      setImportProgress({ current: fileList.length, total: fileList.length });\n      actionRef.current?.reload();\n    } catch (err: any) {\n      msg.error(err?.message || '导入失败');\n    } finally {\n      setImporting(false);\n    }\n  };\n\n  const handleDedupChoice = async (mode: 'overwrite' | 'ignore') => {\n    setDedupModalOpen(false);\n    setImporting(true);\n    try {\n      const res: any = await doImport(dedupFiles, mode);\n      setImportResults(res.files || []);\n      setResultModalOpen(true);\n      msg.success(`导入完成 (${mode === 'overwrite' ? '已覆盖' : '已忽略'}重复数据)`);\n      setFileList([]);\n      actionRef.current?.reload();\n    } catch (err: any) {\n      msg.error(err?.message || '导入失败');\n    } finally {\n      setImporting(false);\n    }\n  };\n\n  const eventSummaryColumns: ProColumns<API.EventSummaryRecord>[] = [\n    {\n      title: '赛事时间',\n      dataIndex: 'eventTime',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '赛事',\n      dataIndex: 'eventName',\n      width: 180,\n      ellipsis: true,\n      fieldProps: { placeholder: '模糊搜索赛事' },\n    },\n    {\n      title: '日期',\n      dataIndex: 'liveDate',\n      width: 110,\n      valueType: 'date',\n      fieldProps: { placeholder: '选择日期' },\n    },\n    {\n      title: '直播间数',\n      dataIndex: 'roomCount',\n      width: 90,\n      search: false,\n    },\n    {\n      title: '联赛',\n      dataIndex: 'league',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '类型',\n      dataIndex: 'category',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '主播数',\n      dataIndex: 'hostCount',\n      width: 80,\n      search: false,\n    },\n    {\n      title: '评论总数',\n      dataIndex: 'totalComments',\n      width: 100,\n      sorter: true,\n      search: false,\n      render: (_, r) => r.totalComments.toLocaleString(),\n    },\n    {\n      title: '总人均停留',\n      dataIndex: 'totalStayPerson',\n      width: 110,\n      sorter: true,\n      search: false,\n      render: (_, r) => formatDuration(r.totalStayPerson),\n    },\n    {\n      title: '平均峰值在线',\n      dataIndex: 'avgPeakOnline',\n      width: 120,\n      sorter: true,\n      search: false,\n      render: (_, r) => r.avgPeakOnline.toLocaleString(),\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      width: 100,\n      render: (_, r) => {\n        const key = `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`;\n        return [\n          <a\n            key=\"hostDetail\"\n            onClick={() => toggleEventDetail(key, r.eventName, r.liveDate)}\n          >\n            <SearchOutlined /> {expandedRowKeys.includes(key) ? '收起明细' : '查看明细'}\n          </a>,\n        ];\n      },\n    },\n  ];\n\n  const resultColumns = [\n    { title: '文件名', dataIndex: 'fileName', key: 'fileName' },\n    { title: '成功', dataIndex: 'success', key: 'success', width: 80 },\n    { title: '失败', dataIndex: 'failed', key: 'failed', width: 80 },\n    {\n      title: '错误信息',\n      dataIndex: 'error',\n      key: 'error',\n      ellipsis: true,\n      render: (text: string) => text || '-',\n    },\n  ];\n\n  return (\n    <PageContainer>\n      <div style={{ marginBottom: 24 }}>\n        <Upload.Dragger\n          accept=\".csv,.xlsx\"\n          multiple\n          fileList={fileList}\n          beforeUpload={(file) => {\n            const name = file.name.toLowerCase();\n            const isCSV = name.endsWith('.csv') || name.endsWith('.xlsx');\n            if (!isCSV) {\n              msg.error(`${file.name} 不是 CSV/XLSX 文件`);\n              return Upload.LIST_IGNORE;\n            }\n            setFileList((prev) => [...prev, { uid: file.name + Date.now(), name: file.name, originFileObj: file } as any]);\n            return false;\n          }}\n          onRemove={(file) => {\n            setFileList((prev) => prev.filter((f) => f.uid !== file.uid));\n          }}\n          showUploadList={{ showPreviewIcon: false, showRemoveIcon: true }}\n          disabled={importing}\n          style={{ padding: '16px 0' }}\n        >\n          <p className=\"ant-upload-drag-icon\">\n            <InboxOutlined />\n          </p>\n          <p className=\"ant-upload-text\">点击或拖拽 CSV 文件到此区域上传</p>\n          <p className=\"ant-upload-hint\">支持批量上传，文件名格式: {\"{code}-{date}.csv 或 .xlsx\"}</p>\n        </Upload.Dragger>\n\n        {fileList.length > 0 && (\n          <div style={{ marginTop: 12, textAlign: 'right' }}>\n            <Button\n              type=\"primary\"\n              icon={<UploadOutlined />}\n              loading={importing}\n              onClick={handleImport}\n            >\n              开始导入 ({fileList.length} 个文件)\n            </Button>\n            <Button\n              style={{ marginLeft: 8 }}\n              onClick={() => setFileList([])}\n              disabled={importing}\n            >\n              清空\n            </Button>\n          </div>\n        )}\n\n        {importing && importProgress.total > 0 && (\n          <div style={{ marginTop: 12 }}>\n            <Progress\n              percent={Math.round((importProgress.current / importProgress.total) * 100)}\n              format={() => `${importProgress.current}/${importProgress.total}`}\n            />\n          </div>\n        )}\n      </div>\n\n      <Tabs\n        activeKey={activeTab}\n        onChange={setActiveTab}\n        items={[\n          {\n            key: 'detail',\n            label: '直播数据',\n            children: (\n              <div>\n                <ProTable<API.LiveStreamRecord>\n                  actionRef={actionRef}\n                  onChange={(_, __, sorter: any) => {\n                    if (sorter && !Array.isArray(sorter)) {\n                      const s = sorter as { field?: string; columnKey?: string; order?: string };\n                      const field = s.field || s.columnKey;\n                      if (field && s.order) {\n                        setSortField(field);\n                        setSortOrder(s.order);\n                      } else {\n                        setSortField(undefined);\n                        setSortOrder(undefined);\n                      }\n                    } else {\n                      setSortField(undefined);\n                      setSortOrder(undefined);\n                    }\n                  }}\n                  formRef={detailFormRef}\n                  headerTitle=\"直播数据\"\n                  rowKey=\"id\"\n                  search={{ labelWidth: 80 }}\n                  toolbar={{\n                    actions: [\n                      selectedRowKeys.length > 0 && (\n                        <Popconfirm\n                          key=\"batchDelete\"\n                          title=\"确认批量删除？\"\n                          onConfirm={async () => {\n                            await batchDeleteLiveStreamRecords(selectedRowKeys as number[]);\n                            msg.success('已批量删除');\n                            setSelectedRowKeys([]);\n                            actionRef.current?.reload();\n                          }}\n                        >\n                          <Button danger>批量删除 ({selectedRowKeys.length})</Button>\n                        </Popconfirm>\n                      ),\n                    ].filter(Boolean) as React.ReactNode[],\n                  }}\n                  rowSelection={{\n                    selectedRowKeys,\n                    onChange: setSelectedRowKeys,\n                  }}\n                  tableAlertRender={false}\n                  request={async (params: any) => {\n                    const { current, pageSize, siteCode, category, host, league, eventName, liveDate } = params;\n                    const res = await getLiveStreamList({ page: current, pageSize, siteCode, category, host, league, liveInfo: eventName, liveDate, sortField, sortOrder });\n                    return { data: res.list, total: res.total, success: true };\n                  }}\n                  columns={columns}\n                  pagination={{ defaultPageSize: 20 }}\n                />\n\n                <Modal\n                  title=\"导入结果\"\n                  open={resultModalOpen}\n                  onCancel={() => setResultModalOpen(false)}\n                  footer={[\n                    <Button key=\"close\" type=\"primary\" onClick={() => setResultModalOpen(false)}>\n                      关闭\n                    </Button>,\n                  ]}\n                  width={700}\n                >\n                  <Table\n                    dataSource={importResults}\n                    columns={resultColumns}\n                    rowKey=\"fileName\"\n                    pagination={false}\n                    size=\"small\"\n                    summary={() => {\n                      const totalSuccess = importResults.reduce((s, r) => s + r.success, 0);\n                      const totalFailed = importResults.reduce((s, r) => s + r.failed, 0);\n                      return (\n                        <Table.Summary.Row>\n                          <Table.Summary.Cell index={0}>\n                            <strong>合计</strong>\n                          </Table.Summary.Cell>\n                          <Table.Summary.Cell index={1}>\n                            <strong style={{ color: '#52c41a' }}>{totalSuccess}</strong>\n                          </Table.Summary.Cell>\n                          <Table.Summary.Cell index={2}>\n                            <strong style={{ color: '#ff4d4f' }}>{totalFailed}</strong>\n                          </Table.Summary.Cell>\n                          <Table.Summary.Cell index={3}>-</Table.Summary.Cell>\n                        </Table.Summary.Row>\n                      );\n                    }}\n                  />\n                </Modal>\n\n                <Modal\n                  title=\"发现已有数据\"\n                  open={dedupModalOpen}\n                  onCancel={() => setDedupModalOpen(false)}\n                  footer={[\n                    <Button key=\"cancel\" onClick={() => setDedupModalOpen(false)}>\n                      取消\n                    </Button>,\n                    <Button key=\"overwrite\" type=\"primary\" danger onClick={() => handleDedupChoice('overwrite')}>\n                      覆盖该日期数据\n                    </Button>,\n                  ]}\n                >\n                  <p>当前日期已有 {dedupCount} 条导入数据。</p>\n                  <p><strong>覆盖：</strong>删除该站点+该日期的全部旧数据，写入新数据。</p>\n                  <p><strong>取消：</strong>跳过该文件，不导入。</p>\n                </Modal>\n              </div>\n            ),\n          },\n          {\n            key: 'summary',\n            label: '每日汇总',\n            children: (\n              <ProTable<API.DailySummaryRecord>\n                actionRef={summaryRef}\n                headerTitle=\"每日汇总\"\n                rowKey={(r) => `${r.siteCode}-${r.liveDate}`}\n                search={{ labelWidth: 80 }}\n                request={async (params: any) => {\n                  const { current, pageSize, siteCode, liveDate } = params;\n                  const res = await getDailySummary({ page: current, pageSize, siteCode, liveDate });\n                  return { data: res.list, total: res.total, success: true };\n                }}\n                columns={summaryColumns}\n                pagination={{ defaultPageSize: 20 }}\n              />\n            ),\n          },\n          {\n            key: 'event-host-summary',\n            label: '赛事主播汇总',\n            children: <EventHostSummaryTab />,\n          },\n          {\n            key: 'event-summary',\n            label: '赛事汇总',\n            children: (\n              <div>\n                <ProTable<API.EventSummaryRecord>\n                  headerTitle=\"赛事汇总\"\n                  rowKey={(r) => `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`}\n                  search={{ labelWidth: 80 }}\n                  onChange={(_, __, sorter: any) => {\n                    if (sorter && !Array.isArray(sorter)) {\n                      const s = sorter as { field?: string; columnKey?: string; order?: string };\n                      const field = s.field || s.columnKey;\n                      if (field && s.order) {\n                        setEventSortField(field);\n                        setEventSortOrder(s.order);\n                      } else {\n                        setEventSortField(undefined);\n                        setEventSortOrder(undefined);\n                      }\n                    } else {\n                      setEventSortField(undefined);\n                      setEventSortOrder(undefined);\n                    }\n                  }}\n                  request={async (params: any) => {\n                    const { current, pageSize, liveDate, eventName } = params;\n                    const res = await getEventSummary({\n                      page: current,\n                      pageSize,\n                      liveDate,\n                      eventName,\n                      sortField: eventSortField,\n                      sortOrder: eventSortOrder,\n                    });\n                    return { data: res.list, total: res.total, success: true };\n                  }}\n                  columns={eventSummaryColumns}\n                  expandable={{\n                    expandedRowKeys,\n                    onExpandedRowsChange: (keys) => setExpandedRowKeys([...keys]),\n                    expandedRowRender: (record) => {\n                      const key = `${record.eventTime}-${record.eventName}-${record.liveDate}-${record.league}-${record.category}`;\n                      const detailData = expandedDataCache[key] || [];\n                      if (expandingRow === key) {\n                        return (\n                          <div style={{ textAlign: 'center', padding: 24 }}>\n                            <Spin />\n                          </div>\n                        );\n                      }\n                      if (detailData.length === 0) return null;\n                      const l1Data = aggregateByHost(detailData);\n                      const l1Summary = l1Data.reduce(\n                        (acc: any, r: any) => {\n                          acc.siteCount += r.siteCount;\n                          acc.totalComments += r.totalComments;\n                          acc.totalDuration += r.siteCount * r.avgDuration;\n                          acc.avgStayVisit += r.avgStayVisit;\n                          acc.avgStayPerson += r.avgStayPerson;\n                          acc.avgPeakOnline += r.avgPeakOnline;\n                          acc.count++;\n                          return acc;\n                        },\n                        { siteCount: 0, totalComments: 0, totalDuration: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, count: 0 },\n                      );\n                      return (\n                        <Table\n                          dataSource={l1Data}\n                          columns={hostAggColumns}\n                          rowKey=\"host\"\n                          pagination={false}\n                          size=\"small\"\n                          style={{ margin: '8px 0 8px 48px' }}\n                          expandable={{\n                            expandedRowRender: (l1: any) => (\n                              <Table<API.HostSummaryRecord>\n                                dataSource={l1.detail}\n                                columns={hostDetailColumns}\n                                rowKey={(r: any) => `${r.host}-${r.siteCode}`}\n                                pagination={false}\n                                size=\"small\"\n                                style={{ margin: '4px 0 4px 24px' }}\n                              />\n                            ),\n                          }}\n                          summary={() => {\n                            if (l1Data.length === 0) return null;\n                            const c = l1Summary.count || 1;\n                            return (\n                              <Table.Summary.Row>\n                                <Table.Summary.Cell index={0}><strong>合计</strong></Table.Summary.Cell>\n                                <Table.Summary.Cell index={1}>{l1Summary.siteCount}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={2}>{formatDuration(Math.round(l1Summary.totalDuration / l1Summary.siteCount))}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={3}>{l1Summary.totalComments.toLocaleString()}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={4}>{formatDuration(Math.round(l1Summary.avgStayVisit / c))}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={5}>{formatDuration(Math.round(l1Summary.avgStayPerson / c))}</Table.Summary.Cell>\n                                <Table.Summary.Cell index={6}>{Math.round(l1Summary.avgPeakOnline / c).toLocaleString()}</Table.Summary.Cell>\n                              </Table.Summary.Row>\n                            );\n                          }}\n                        />\n                      );\n                    },\n                  }}\n                  pagination={{ defaultPageSize: 20 }}\n                />\n\n              </div>\n            ),\n          },\n        ]}\n      />\n    </PageContainer>\n  );\n};\n\n// ═══════════════════════════════════════════════════════════\n// 赛事主播汇总 Tab（自包含组件）\n// ═══════════════════════════════════════════════════════════\n\nconst EventHostSummaryTab = () => {\n  const { message: msg } = App.useApp();\n  const [rawData, setRawData] = useState<API.EventHostSummaryRecord[]>([]);\n  const [loading, setLoading] = useState(false);\n  const [searchText, setSearchText] = useState('');\n\n  const loadData = useCallback(async (eventName?: string) => {\n    setLoading(true);\n    try {\n      const params: Record<string, unknown> = {};\n      if (eventName) params.eventName = eventName;\n      const res = await getEventHostSummary(params);\n      setRawData(Array.isArray(res) ? res : res.list || []);\n    } catch {\n      msg.error('加载赛事主播汇总失败');\n    } finally {\n      setLoading(false);\n    }\n  }, []);\n\n  useEffect(() => {\n    loadData();\n  }, [loadData]);\n\n  const handleSearch = useCallback((value: string) => {\n    setSearchText(value);\n    loadData(value || undefined);\n  }, [loadData]);\n\n  const groups = useMemo(() => {\n    const map = new Map<string, {\n      eventName: string;\n      liveDate: string;\n      hosts: API.EventHostSummaryRecord[];\n    }>();\n    rawData.forEach((r) => {\n      const key = `${r.eventName}|${r.liveDate}`;\n      if (!map.has(key)) {\n        map.set(key, { eventName: r.eventName, liveDate: r.liveDate, hosts: [] });\n      }\n      map.get(key)!.hosts.push(r);\n    });\n    return Array.from(map.values());\n  }, [rawData]);\n\n  const globalTotals = useMemo(() => {\n    if (rawData.length === 0) return null;\n    let totalComments = 0;\n    let totalAvgStayVisit = 0;\n    let totalAvgStayPerson = 0;\n    let totalAvgPeakOnline = 0;\n    let totalSiteCount = 0;\n    let hostCount = 0;\n    rawData.forEach((r) => {\n      totalComments += r.totalComments;\n      totalAvgStayVisit += r.avgStayVisit;\n      totalAvgStayPerson += r.avgStayPerson;\n      totalAvgPeakOnline += r.avgPeakOnline;\n      totalSiteCount += r.siteCount;\n      hostCount++;\n    });\n    return {\n      totalComments,\n      totalSiteCount,\n      avgStayVisit: hostCount ? Math.round(totalAvgStayVisit / hostCount) : 0,\n      avgStayPerson: hostCount ? Math.round(totalAvgStayPerson / hostCount) : 0,\n      avgPeakOnline: hostCount ? Math.round(totalAvgPeakOnline / hostCount) : 0,\n      hostCount,\n    };\n  }, [rawData]);\n\n  const columns = [\n    { title: '主播', dataIndex: 'host', width: 120 },\n    { title: '站点数', dataIndex: 'siteCount', width: 80 },\n    { title: '平均直播时长', dataIndex: 'avgDuration', width: 120, render: (_: any, r: any) => formatDuration(r.avgDuration) },\n    { title: '评论总数', dataIndex: 'totalComments', width: 100, render: (_: any, r: any) => (r.totalComments ?? 0).toLocaleString() },\n    { title: '平均次均停留', dataIndex: 'avgStayVisit', width: 130, render: (_: any, r: any) => formatDuration(r.avgStayVisit) },\n    { title: '平均人均停留', dataIndex: 'avgStayPerson', width: 130, render: (_: any, r: any) => formatDuration(r.avgStayPerson) },\n    { title: '平均峰值在线', dataIndex: 'avgPeakOnline', width: 130, render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString() },\n  ];\n\n  return (\n    <div>\n      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>\n        <h4 style={{ margin: 0 }}>赛事主播汇总</h4>\n        <Input.Search\n          placeholder=\"搜索赛事名\"\n          allowClear\n          value={searchText}\n          onChange={(e) => setSearchText(e.target.value)}\n          onSearch={handleSearch}\n          style={{ width: 300 }}\n        />\n      </div>\n      {groups.map((g, gi) => {\n        const subTotal = g.hosts.reduce(\n          (acc: any, h: any) => {\n            acc.totalComments += h.totalComments || 0;\n            acc.avgStayVisit += h.avgStayVisit || 0;\n            acc.avgStayPerson += h.avgStayPerson || 0;\n            acc.avgPeakOnline += h.avgPeakOnline || 0;\n            acc.totalDuration += (h.siteCount || 0) * (h.avgDuration || 0);\n            acc.totalSiteCount += h.siteCount || 0;\n            return acc;\n          },\n          { totalComments: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, totalDuration: 0, totalSiteCount: 0 },\n        );\n        const hc = g.hosts.length;\n        return (\n          <div key={`${g.eventName}|${g.liveDate}`} style={{ marginBottom: gi < groups.length - 1 ? 24 : 8 }}>\n            <h5 style={{ margin: '0 0 8px', color: '#1677ff', fontSize: 14 }}>\n              🏆 {g.eventName} · {dayjs(g.liveDate).format('YYYY-MM-DD')}\n            </h5>\n            <Table\n              dataSource={g.hosts}\n              columns={columns}\n              rowKey={(r: any) => `${r.eventName}|${r.liveDate}|${r.host}`}\n              pagination={false}\n              size=\"small\"\n              loading={loading}\n              summary={() => (\n                <Table.Summary.Row style={{ backgroundColor: '#fffbe6', fontWeight: 600 }}>\n                  <Table.Summary.Cell index={0}>小计</Table.Summary.Cell>\n                  <Table.Summary.Cell index={1}>{subTotal.totalSiteCount}</Table.Summary.Cell>\n                  <Table.Summary.Cell index={2}>\n                    {formatDuration(subTotal.totalSiteCount ? Math.round(subTotal.totalDuration / subTotal.totalSiteCount) : 0)}\n                  </Table.Summary.Cell>\n                  <Table.Summary.Cell index={3}>{subTotal.totalComments.toLocaleString()}</Table.Summary.Cell>\n                  <Table.Summary.Cell index={4}>\n                    {formatDuration(hc ? Math.round(subTotal.avgStayVisit / hc) : 0)}\n                  </Table.Summary.Cell>\n                  <Table.Summary.Cell index={5}>\n                    {formatDuration(hc ? Math.round(subTotal.avgStayPerson / hc) : 0)}\n                  </Table.Summary.Cell>\n                  <Table.Summary.Cell index={6}>\n                    {(hc ? Math.round(subTotal.avgPeakOnline / hc) : 0).toLocaleString()}\n                  </Table.Summary.Cell>\n                </Table.Summary.Row>\n              )}\n            />\n          </div>\n        );\n      })}\n      {globalTotals && rawData.length > 0 && (\n        <div style={{ marginTop: 12, padding: '10px 16px', backgroundColor: '#e6f4ff', borderRadius: 6, fontWeight: 700, display: 'flex', gap: 32, fontSize: 13, flexWrap: 'wrap' }}>\n          <span>总计 · {globalTotals.hostCount}位主播</span>\n          <span>{globalTotals.totalSiteCount} 站点</span>\n          <span>评论 {globalTotals.totalComments.toLocaleString()}</span>\n          <span>均次均 {formatDuration(globalTotals.avgStayVisit)}</span>\n          <span>均人均 {formatDuration(globalTotals.avgStayPerson)}</span>\n          <span>均峰值 {globalTotals.avgPeakOnline.toLocaleString()}</span>\n        </div>\n      )}\n    </div>\n  );\n};\n\nexport default LiveStreamPage;\n",
       "__isJSFile": true,
       "__absFile": "/root/.openclaw/workspace-vest/promo-data-analyzer/frontend-pro/src/pages/LiveStreamPage.tsx"
     },

@@ -943,6 +943,9 @@ const EventHostSummaryTab = () => {
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
 
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<'ascend' | 'descend' | null>(null);
+
   const loadData = useCallback(async (eventName?: string) => {
     setLoading(true);
     try {
@@ -966,7 +969,7 @@ const EventHostSummaryTab = () => {
     loadData(value || undefined);
   }, [loadData]);
 
-  // 扁平数据源：group → hosts → 下一组
+  // 扁平数据源：group → hosts（组内排序）→ 下一组
   const dataSource = useMemo(() => {
     const rows: any[] = [];
     const map = new Map<string, API.EventHostSummaryRecord[]>();
@@ -977,11 +980,19 @@ const EventHostSummaryTab = () => {
     });
     map.forEach((hosts, key) => {
       const [eventName, liveDate] = key.split('|');
+      // 组内排序
+      if (sortField && sortOrder) {
+        hosts.sort((a: any, b: any) => {
+          const av = a[sortField] ?? 0;
+          const bv = b[sortField] ?? 0;
+          return sortOrder === 'ascend' ? av - bv : bv - av;
+        });
+      }
       rows.push({ _key: `g-${key}`, _type: 'group', eventName, liveDate });
       hosts.forEach((h) => rows.push({ _key: `h-${key}-${h.host}`, _type: 'host', ...h }));
     });
     return rows;
-  }, [rawData]);
+  }, [rawData, sortField, sortOrder]);
 
   const columns: any[] = [
     {
@@ -1012,6 +1023,7 @@ const EventHostSummaryTab = () => {
     },
     {
       title: '评论', dataIndex: 'totalComments', width: 100,
+      sorter: (a: any, b: any) => (a._type === 'group' || b._type === 'group') ? 0 : (a.totalComments ?? 0) - (b.totalComments ?? 0),
       render: (_: any, row: any) => {
         if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return (row.totalComments ?? 0).toLocaleString();
@@ -1019,6 +1031,7 @@ const EventHostSummaryTab = () => {
     },
     {
       title: '均次均', dataIndex: 'avgStayVisit', width: 120,
+      sorter: (a: any, b: any) => (a._type === 'group' || b._type === 'group') ? 0 : (a.avgStayVisit ?? 0) - (b.avgStayVisit ?? 0),
       render: (_: any, row: any) => {
         if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return formatDuration(row.avgStayVisit);
@@ -1026,6 +1039,7 @@ const EventHostSummaryTab = () => {
     },
     {
       title: '均人均', dataIndex: 'avgStayPerson', width: 120,
+      sorter: (a: any, b: any) => (a._type === 'group' || b._type === 'group') ? 0 : (a.avgStayPerson ?? 0) - (b.avgStayPerson ?? 0),
       render: (_: any, row: any) => {
         if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return formatDuration(row.avgStayPerson);
@@ -1033,6 +1047,7 @@ const EventHostSummaryTab = () => {
     },
     {
       title: '均峰值', dataIndex: 'avgPeakOnline', width: 90,
+      sorter: (a: any, b: any) => (a._type === 'group' || b._type === 'group') ? 0 : (a.avgPeakOnline ?? 0) - (b.avgPeakOnline ?? 0),
       render: (_: any, row: any) => {
         if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return (row.avgPeakOnline ?? 0).toLocaleString();
@@ -1060,6 +1075,15 @@ const EventHostSummaryTab = () => {
         loading={loading}
         pagination={false}
         size="middle"
+        onChange={(_, __, sorter: any) => {
+          if (sorter && sorter.order) {
+            setSortField(sorter.field || sorter.columnKey || null);
+            setSortOrder(sorter.order);
+          } else {
+            setSortField(null);
+            setSortOrder(null);
+          }
+        }}
       />
     </div>
   );

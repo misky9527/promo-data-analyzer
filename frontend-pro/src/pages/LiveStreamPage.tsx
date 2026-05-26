@@ -356,6 +356,85 @@ const LiveStreamPage = () => {
     },
   ];
 
+  // L1：按主播聚合（去重站点，汇总指标）
+  const aggregateByHost = (data: API.HostSummaryRecord[]) => {
+    const map = new Map<string, {
+      siteCodes: Set<string>;
+      totalDuration: number;
+      totalComments: number;
+      totalStayVisit: number;
+      totalStayPerson: number;
+      totalPeakOnline: number;
+      detail: API.HostSummaryRecord[];
+    }>();
+    data.forEach((r) => {
+      if (!map.has(r.host)) {
+        map.set(r.host, {
+          siteCodes: new Set(),
+          totalDuration: 0,
+          totalComments: 0,
+          totalStayVisit: 0,
+          totalStayPerson: 0,
+          totalPeakOnline: 0,
+          detail: [],
+        });
+      }
+      const g = map.get(r.host)!;
+      g.siteCodes.add(r.siteCode);
+      g.totalDuration += r.duration || 0;
+      g.totalComments += r.commentCount || 0;
+      g.totalStayVisit += r.avgStayVisit || 0;
+      g.totalStayPerson += r.avgStayPerson || 0;
+      g.totalPeakOnline += r.avgPeakOnline || 0;
+      g.detail.push(r);
+    });
+    return Array.from(map.entries()).map(([host, g]) => ({
+      host,
+      siteCount: g.siteCodes.size,
+      avgDuration: Math.round(g.totalDuration / g.siteCodes.size),
+      totalComments: g.totalComments,
+      avgStayVisit: Math.round(g.totalStayVisit / g.detail.length),
+      avgStayPerson: Math.round(g.totalStayPerson / g.detail.length),
+      avgPeakOnline: Math.round(g.totalPeakOnline / g.detail.length),
+      detail: g.detail,
+    }));
+  };
+
+  const hostAggColumns = [
+    { title: '主播', dataIndex: 'host', width: 120 },
+    { title: '站点数', dataIndex: 'siteCount', width: 70 },
+    {
+      title: '平均直播时长',
+      dataIndex: 'avgDuration',
+      width: 120,
+      render: (_: any, r: any) => formatDuration(r.avgDuration),
+    },
+    {
+      title: '评论总数',
+      dataIndex: 'totalComments',
+      width: 100,
+      render: (_: any, r: any) => r.totalComments.toLocaleString(),
+    },
+    {
+      title: '平均次均停留',
+      dataIndex: 'avgStayVisit',
+      width: 130,
+      render: (_: any, r: any) => formatDuration(r.avgStayVisit),
+    },
+    {
+      title: '平均人均停留',
+      dataIndex: 'avgStayPerson',
+      width: 130,
+      render: (_: any, r: any) => formatDuration(r.avgStayPerson),
+    },
+    {
+      title: '平均峰值在线',
+      dataIndex: 'avgPeakOnline',
+      width: 130,
+      render: (_: any, r: any) => r.avgPeakOnline.toLocaleString(),
+    },
+  ];
+
   const [dedupFiles, setDedupFiles] = useState<any[]>([]);
   const [dedupModalOpen, setDedupModalOpen] = useState(false);
   const [dedupCount, setDedupCount] = useState(0);
@@ -774,7 +853,7 @@ const LiveStreamPage = () => {
                     onExpandedRowsChange: (keys) => setExpandedRowKeys([...keys]),
                     expandedRowRender: (record) => {
                       const key = `${record.eventTime}-${record.eventName}-${record.liveDate}-${record.league}-${record.category}`;
-                      const data = expandedDataCache[key] || [];
+                      const detailData = expandedDataCache[key] || [];
                       if (expandingRow === key) {
                         return (
                           <div style={{ textAlign: 'center', padding: 24 }}>
@@ -782,37 +861,53 @@ const LiveStreamPage = () => {
                           </div>
                         );
                       }
-                      if (data.length === 0) return null;
+                      if (detailData.length === 0) return null;
+                      const l1Data = aggregateByHost(detailData);
+                      const l1Summary = l1Data.reduce(
+                        (acc: any, r: any) => {
+                          acc.siteCount += r.siteCount;
+                          acc.totalComments += r.totalComments;
+                          acc.totalDuration += r.siteCount * r.avgDuration;
+                          acc.avgStayVisit += r.avgStayVisit;
+                          acc.avgStayPerson += r.avgStayPerson;
+                          acc.avgPeakOnline += r.avgPeakOnline;
+                          acc.count++;
+                          return acc;
+                        },
+                        { siteCount: 0, totalComments: 0, totalDuration: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, count: 0 },
+                      );
                       return (
-                        <Table<API.HostSummaryRecord>
-                          dataSource={data}
-                          columns={hostDetailColumns}
-                          rowKey={(r: any) => `${r.host}-${r.siteCode}`}
+                        <Table
+                          dataSource={l1Data}
+                          columns={hostAggColumns}
+                          rowKey="host"
                           pagination={false}
                           size="small"
                           style={{ margin: '8px 0 8px 48px' }}
+                          expandable={{
+                            expandedRowRender: (l1: any) => (
+                              <Table<API.HostSummaryRecord>
+                                dataSource={l1.detail}
+                                columns={hostDetailColumns}
+                                rowKey={(r: any) => `${r.host}-${r.siteCode}`}
+                                pagination={false}
+                                size="small"
+                                style={{ margin: '4px 0 4px 24px' }}
+                              />
+                            ),
+                          }}
                           summary={() => {
-                            const sum = data.reduce(
-                              (acc: any, r: any) => {
-                                acc.duration += r.duration || 0;
-                                acc.commentCount += r.commentCount || 0;
-                                acc.avgStayVisit += r.avgStayVisit || 0;
-                                acc.avgStayPerson += r.avgStayPerson || 0;
-                                acc.avgPeakOnline += r.avgPeakOnline || 0;
-                                acc.count++;
-                                return acc;
-                              },
-                              { duration: 0, commentCount: 0, avgStayVisit: 0, avgStayPerson: 0, avgPeakOnline: 0, count: 0 },
-                            );
+                            if (l1Data.length === 0) return null;
+                            const c = l1Summary.count || 1;
                             return (
                               <Table.Summary.Row>
                                 <Table.Summary.Cell index={0}><strong>合计</strong></Table.Summary.Cell>
-                                <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
-                                <Table.Summary.Cell index={2}>{formatDuration(sum.duration)}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={3}>{sum.commentCount.toLocaleString()}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={4}>{formatDuration(Math.round(sum.avgStayVisit / sum.count))}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={5}>{formatDuration(Math.round(sum.avgStayPerson / sum.count))}</Table.Summary.Cell>
-                                <Table.Summary.Cell index={6}>{Math.round(sum.avgPeakOnline / sum.count).toLocaleString()}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={1}>{l1Summary.siteCount}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={2}>{formatDuration(Math.round(l1Summary.totalDuration / l1Summary.siteCount))}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={3}>{l1Summary.totalComments.toLocaleString()}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={4}>{formatDuration(Math.round(l1Summary.avgStayVisit / c))}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={5}>{formatDuration(Math.round(l1Summary.avgStayPerson / c))}</Table.Summary.Cell>
+                                <Table.Summary.Cell index={6}>{Math.round(l1Summary.avgPeakOnline / c).toLocaleString()}</Table.Summary.Cell>
                               </Table.Summary.Row>
                             );
                           }}

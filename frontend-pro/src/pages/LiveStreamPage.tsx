@@ -1,5 +1,5 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin } from 'antd';
+import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin, Input } from 'antd';
 import { UploadOutlined, InboxOutlined, SearchOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
@@ -1361,21 +1361,21 @@ const EventHostSummaryTab = () => {
           if (!globalTotals || rawData.length === 0) return null;
           return (
             <Table.Summary.Row style={{ backgroundColor: '#fafafa', fontWeight: 700 }}>
-              <Table.Summary.Cell index={0}>
+              <Table.Summary.Cell index={1}>
                 <strong>全局总计</strong>
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={1} />
               <Table.Summary.Cell index={2} />
-              <Table.Summary.Cell index={3}>
+              <Table.Summary.Cell index={3} />
+              <Table.Summary.Cell index={4}>
                 {globalTotals.totalComments.toLocaleString()}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={4}>
+              <Table.Summary.Cell index={5}>
                 {formatDuration(globalTotals.avgStayVisit)}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={5}>
+              <Table.Summary.Cell index={6}>
                 {formatDuration(globalTotals.avgStayPerson)}
               </Table.Summary.Cell>
-              <Table.Summary.Cell index={6}>
+              <Table.Summary.Cell index={7}>
                 {globalTotals.avgPeakOnline.toLocaleString()}
               </Table.Summary.Cell>
             </Table.Summary.Row>

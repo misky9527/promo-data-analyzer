@@ -988,7 +988,10 @@ const EventHostSummaryTab = () => {
       title: '主播', dataIndex: 'host', width: 260,
       render: (_: any, row: any) => {
         if (row._type === 'group') {
-          return `${row.eventName} · ${dayjs(row.liveDate).format('YYYY-MM-DD')}`;
+          return {
+            children: <strong>{row.eventName} · {dayjs(row.liveDate).format('YYYY-MM-DD')}</strong>,
+            props: { colSpan: 7 },
+          };
         }
         return <span style={{ paddingLeft: 16 }}>{row.host}</span>;
       },
@@ -996,42 +999,42 @@ const EventHostSummaryTab = () => {
     {
       title: '站点数', dataIndex: 'siteCount', width: 80,
       render: (_: any, row: any) => {
-        if (row._type === 'group') return null;
+        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return row.siteCount;
       },
     },
     {
       title: '均时长', dataIndex: 'avgDuration', width: 120,
       render: (_: any, row: any) => {
-        if (row._type === 'group') return null;
+        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return formatDuration(row.avgDuration);
       },
     },
     {
       title: '评论', dataIndex: 'totalComments', width: 100,
       render: (_: any, row: any) => {
-        if (row._type === 'group') return null;
+        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return (row.totalComments ?? 0).toLocaleString();
       },
     },
     {
       title: '均次均', dataIndex: 'avgStayVisit', width: 120,
       render: (_: any, row: any) => {
-        if (row._type === 'group') return null;
+        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return formatDuration(row.avgStayVisit);
       },
     },
     {
       title: '均人均', dataIndex: 'avgStayPerson', width: 120,
       render: (_: any, row: any) => {
-        if (row._type === 'group') return null;
+        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return formatDuration(row.avgStayPerson);
       },
     },
     {
       title: '均峰值', dataIndex: 'avgPeakOnline', width: 90,
       render: (_: any, row: any) => {
-        if (row._type === 'group') return null;
+        if (row._type === 'group') return { children: null, props: { colSpan: 0 } };
         return (row.avgPeakOnline ?? 0).toLocaleString();
       },
     },

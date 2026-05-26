@@ -95,7 +95,7 @@
             0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -109,7 +109,7 @@
       "time": {
         "hooks": {
           "onStart": [
-            3
+            2
           ]
         },
         "register": 2
@@ -129,7 +129,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -156,7 +156,7 @@
       "time": {
         "hooks": {
           "modifyAppData": [
-            19
+            20
           ]
         },
         "register": 22
@@ -1160,7 +1160,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 10
+        "register": 11
       },
       "enableBy": "config"
     },
@@ -1177,7 +1177,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1190,7 +1190,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1216,7 +1216,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 30
+        "register": 33
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/mpa/mpa": {
@@ -1241,7 +1241,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/overrides/overrides": {
@@ -1295,7 +1295,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1321,7 +1321,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1347,7 +1347,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1360,7 +1360,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 7
+        "register": 6
       },
       "enableBy": "register"
     },
@@ -1386,7 +1386,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/ssr/ssr": {
@@ -1450,7 +1450,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1475,7 +1475,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 20
+        "register": 22
       },
       "enableBy": "config"
     },
@@ -1512,7 +1512,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -1525,7 +1525,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -1538,7 +1538,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/swc/swc": {
@@ -1554,7 +1554,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1592,7 +1592,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/hmrGuardian/hmrGuardian": {
@@ -1616,7 +1616,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 30
+        "register": 32
       }
     },
     "./node_modules/@umijs/preset-umi/dist/features/forget/forget": {
@@ -1641,7 +1641,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1654,7 +1654,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 3
+        "register": 2
       },
       "enableBy": "register"
     },
@@ -1667,7 +1667,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 49
+        "register": 40
       },
       "enableBy": "register"
     },
@@ -1680,7 +1680,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 20
+        "register": 18
       }
     },
     "./node_modules/@umijs/preset-umi/dist/commands/help": {
@@ -1692,7 +1692,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1757,7 +1757,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1783,7 +1783,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1796,7 +1796,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1861,7 +1861,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1874,7 +1874,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -1887,7 +1887,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -1926,7 +1926,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 37
+        "register": 31
       },
       "enableBy": "register"
     },
@@ -1952,7 +1952,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2002,7 +2002,7 @@
             0
           ]
         },
-        "register": 10
+        "register": 7
       }
     },
     "./node_modules/@umijs/plugins/dist/dva": {
@@ -2014,7 +2014,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 12
+        "register": 5
       },
       "enableBy": "config"
     },
@@ -2027,7 +2027,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "config"
     },
@@ -2046,13 +2046,13 @@
             0
           ],
           "addLayouts": [
-            1
+            0
           ],
           "modifyAppData": [
             0
           ]
         },
-        "register": 3
+        "register": 2
       },
       "enableBy": "config"
     },
@@ -2104,7 +2104,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2117,7 +2117,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2130,7 +2130,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 2
+        "register": 1
       }
     },
     "./node_modules/@umijs/plugins/dist/qiankun/slave": {
@@ -2142,7 +2142,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 2
       }
     },
     "./node_modules/@umijs/plugins/dist/react-query": {
@@ -2206,7 +2206,7 @@
       "config": {},
       "time": {
         "hooks": {},
-        "register": 1
+        "register": 0
       },
       "enableBy": "config"
     },
@@ -2223,7 +2223,7 @@
             0
           ]
         },
-        "register": 0
+        "register": 1
       },
       "enableBy": "register"
     },
@@ -2240,7 +2240,7 @@
             0
           ]
         },
-        "register": 1
+        "register": 0
       },
       "enableBy": "register"
     },
@@ -2254,7 +2254,7 @@
       "time": {
         "hooks": {
           "onCheckPkgJSON": [
-            0
+            1
           ]
         },
         "register": 0
@@ -3913,7 +3913,7 @@
       "parentId": "24",
       "id": "27",
       "absPath": "/dict/users",
-      "__content": "import {\n  ModalForm,\n  PageContainer,\n  ProFormSelect,\n  ProFormSwitch,\n  ProFormText,\n  ProTable,\n} from '@ant-design/pro-components';\nimport { Tag, Button, Popconfirm, message } from 'antd';\nimport { useRef, useState } from 'react';\nimport type { ActionType, ProColumns } from '@ant-design/pro-components';\nimport {\n  fetchAdminUserList,\n  createAdminUser,\n  updateAdminUser,\n  deleteAdminUser,\n  resetAdminUserPassword,\n} from '@/services/api';\n\nconst roleOptions = [\n  { label: '超级管理员', value: 'super_admin' },\n  { label: '管理员', value: 'admin' },\n];\n\nconst ROLE_LABELS: Record<string, string> = {\n  super_admin: '超级管理员',\n  admin: '管理员',\n};\n\nconst ROLE_COLORS: Record<string, string> = {\n  super_admin: 'blue',\n  admin: 'green',\n};\n\nconst UserManagementPage = () => {\n  const actionRef = useRef<ActionType>();\n  const [editing, setEditing] = useState<any>();\n\n  const columns: ProColumns<API.AdminUserRecord>[] = [\n    { title: '用户名', dataIndex: 'username' },\n    {\n      title: '角色',\n      dataIndex: 'roleType',\n      valueType: 'select',\n      valueEnum: {\n        super_admin: { text: '超级管理员' },\n        admin: { text: '管理员' },\n      },\n      render: (_, row) => (\n        <Tag color={ROLE_COLORS[row.roleType] || 'default'}>\n          {ROLE_LABELS[row.roleType] || row.roleType}\n        </Tag>\n      ),\n    },\n    {\n      title: '状态',\n      dataIndex: 'status',\n      valueType: 'select',\n      valueEnum: {\n        1: { text: '启用' },\n        0: { text: '禁用' },\n      },\n      render: (_, row) => (\n        <Tag color={row.status === 1 ? 'green' : 'red'}>\n          {row.status === 1 ? '启用' : '禁用'}\n        </Tag>\n      ),\n    },\n    {\n      title: '最后登录',\n      dataIndex: 'lastLoginAt',\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '创建时间',\n      dataIndex: 'createdAt',\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => {\n        const isSuperAdmin = row.roleType === 'super_admin';\n        return [\n          <a key=\"edit\" onClick={() => setEditing(row)}>\n            编辑\n          </a>,\n          <Popconfirm\n            key=\"reset-pwd\"\n            title={`确认重置 ${row.username} 的密码为 admin123？`}\n            onConfirm={async () => {\n              await resetAdminUserPassword(row.id);\n              message.success('密码已重置');\n            }}\n          >\n            <a>重置密码</a>\n          </Popconfirm>,\n          !isSuperAdmin && (\n            <Popconfirm\n              key=\"delete\"\n              title={`确认删除用户 ${row.username}？`}\n              onConfirm={async () => {\n                await deleteAdminUser(row.id);\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: 'red' }}>删除</a>\n            </Popconfirm>\n          ),\n        ];\n      },\n    },\n  ];\n\n  return (\n    <PageContainer header={{ title: false }}>\n      <ProTable<API.AdminUserRecord>\n        rowKey=\"id\"\n        actionRef={actionRef}\n        columns={columns}\n        request={async (params) => {\n          const result = await fetchAdminUserList({\n            page: params.current,\n            pageSize: params.pageSize,\n            username: params.username,\n            roleType: params.roleType,\n          });\n          return {\n            data: result.list || [],\n            success: true,\n            total: result.total || 0,\n          };\n        }}\n        toolBarRender={() => [\n          <Button key=\"add\" type=\"primary\" onClick={() => setEditing({})}>\n            新建用户\n          </Button>,\n        ]}\n      />\n      <ModalForm\n        title={editing?.id ? '编辑用户' : '新建用户'}\n        open={editing !== undefined}\n        initialValues={editing}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}\n        onFinish={async (values) => {\n          if (editing?.id) {\n            await updateAdminUser(editing.id, {\n              roleType: values.roleType,\n              status: values.status ? 1 : 0,\n            });\n          } else {\n            await createAdminUser({\n              username: values.username,\n              password: values.password,\n              roleType: values.roleType,\n              status: values.status ? 1 : 0,\n            });\n          }\n          setEditing(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText\n          name=\"username\"\n          label=\"用户名\"\n          rules={[{ required: true, message: '请输入用户名' }]}\n          disabled={!!editing?.id}\n          placeholder=\"请输入用户名\"\n        />\n        {!editing?.id && (\n          <ProFormText.Password\n            name=\"password\"\n            label=\"密码\"\n            rules={[{ required: true, message: '请输入密码' }]}\n            placeholder=\"请输入密码\"\n          />\n        )}\n        <ProFormSelect\n          name=\"roleType\"\n          label=\"角色\"\n          options={roleOptions}\n          rules={[{ required: true, message: '请选择角色' }]}\n        />\n        <ProFormSwitch name=\"status\" label=\"启用\" />\n      </ModalForm>\n    </PageContainer>\n  );\n};\n\nexport default UserManagementPage;\n",
+      "__content": "import {\n  ModalForm,\n  PageContainer,\n  ProFormSelect,\n  ProFormSwitch,\n  ProFormText,\n  ProTable,\n} from '@ant-design/pro-components';\nimport { Tag, Button, Popconfirm, message, Modal, Form, Input, App } from 'antd';\nimport { useRef, useState } from 'react';\nimport type { ActionType, ProColumns } from '@ant-design/pro-components';\nimport {\n  fetchAdminUserList,\n  createAdminUser,\n  updateAdminUser,\n  deleteAdminUser,\n  resetAdminUserPassword,\n  changeAdminUserPassword,\n  updateAdminUserSelf,\n} from '@/services/api';\n\nconst roleOptions = [\n  { label: '超级管理员', value: 'super_admin' },\n  { label: '管理员', value: 'admin' },\n];\n\nconst ROLE_LABELS: Record<string, string> = {\n  super_admin: '超级管理员',\n  admin: '管理员',\n};\n\nconst ROLE_COLORS: Record<string, string> = {\n  super_admin: 'blue',\n  admin: 'green',\n};\n\nfunction getCurrentUserId(): number | null {\n  try {\n    const raw = localStorage.getItem('promo_user');\n    const user = raw ? JSON.parse(raw) : null;\n    return user?.id ?? null;\n  } catch {\n    return null;\n  }\n}\n\nconst UserManagementPage = () => {\n  const actionRef = useRef<ActionType>();\n  const [editing, setEditing] = useState<any>();\n  const [editingSelf, setEditingSelf] = useState<any>();\n  const [changePwdOpen, setChangePwdOpen] = useState(false);\n  const [changePwdLoading, setChangePwdLoading] = useState(false);\n  const [changePwdForm] = Form.useForm();\n  const currentUserId = getCurrentUserId();\n\n  const columns: ProColumns<API.AdminUserRecord>[] = [\n    { title: '用户名', dataIndex: 'username' },\n    {\n      title: '角色',\n      dataIndex: 'roleType',\n      valueType: 'select',\n      valueEnum: {\n        super_admin: { text: '超级管理员' },\n        admin: { text: '管理员' },\n      },\n      render: (_, row) => (\n        <Tag color={ROLE_COLORS[row.roleType] || 'default'}>\n          {ROLE_LABELS[row.roleType] || row.roleType}\n        </Tag>\n      ),\n    },\n    {\n      title: '状态',\n      dataIndex: 'status',\n      valueType: 'select',\n      valueEnum: {\n        1: { text: '启用' },\n        0: { text: '禁用' },\n      },\n      render: (_, row) => (\n        <Tag color={row.status === 1 ? 'green' : 'red'}>\n          {row.status === 1 ? '启用' : '禁用'}\n        </Tag>\n      ),\n    },\n    {\n      title: '最后登录',\n      dataIndex: 'lastLoginAt',\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '创建时间',\n      dataIndex: 'createdAt',\n      valueType: 'dateTime',\n      search: false,\n    },\n    {\n      title: '操作',\n      valueType: 'option',\n      render: (_, row) => {\n        const isSuperAdmin = row.roleType === 'super_admin';\n        const isSelf = row.id === currentUserId;\n\n        return [\n          isSelf ? (\n            <a key=\"edit-self\" onClick={() => setEditingSelf(row)}>\n              修改信息\n            </a>\n          ) : (\n            <a key=\"edit\" onClick={() => setEditing(row)}>\n              编辑\n            </a>\n          ),\n          <Popconfirm\n            key=\"reset-pwd\"\n            title={`确认重置 ${row.username} 的密码为 admin123？`}\n            onConfirm={async () => {\n              await resetAdminUserPassword(row.id);\n              message.success('密码已重置');\n            }}\n          >\n            <a>重置密码</a>\n          </Popconfirm>,\n          !isSuperAdmin && (\n            <Popconfirm\n              key=\"delete\"\n              title={`确认删除用户 ${row.username}？`}\n              onConfirm={async () => {\n                await deleteAdminUser(row.id);\n                actionRef.current?.reload();\n              }}\n            >\n              <a style={{ color: 'red' }}>删除</a>\n            </Popconfirm>\n          ),\n        ];\n      },\n    },\n  ];\n\n  const handleChangePassword = async (values: { oldPassword: string; newPassword: string; confirmPassword: string }) => {\n    if (values.newPassword !== values.confirmPassword) {\n      message.error('两次输入的新密码不一致');\n      return;\n    }\n    setChangePwdLoading(true);\n    try {\n      await changeAdminUserPassword({\n        oldPassword: values.oldPassword,\n        newPassword: values.newPassword,\n      });\n      message.success('密码修改成功，请重新登录');\n      setChangePwdOpen(false);\n      changePwdForm.resetFields();\n      // 清除登录状态，跳转到登录页\n      localStorage.removeItem('promo_token');\n      localStorage.removeItem('promo_user');\n      setTimeout(() => {\n        window.location.href = '/login';\n      }, 1500);\n    } catch {\n      // error handled by request interceptor\n    } finally {\n      setChangePwdLoading(false);\n    }\n  };\n\n  return (\n    <PageContainer header={{ title: false }}>\n      <ProTable<API.AdminUserRecord>\n        rowKey=\"id\"\n        actionRef={actionRef}\n        columns={columns}\n        request={async (params) => {\n          const result = await fetchAdminUserList({\n            page: params.current,\n            pageSize: params.pageSize,\n            username: params.username,\n            roleType: params.roleType,\n          });\n          return {\n            data: result.list || [],\n            success: true,\n            total: result.total || 0,\n          };\n        }}\n        toolBarRender={() => [\n          <Button key=\"change-pwd\" onClick={() => setChangePwdOpen(true)}>\n            修改密码\n          </Button>,\n          <Button key=\"add\" type=\"primary\" onClick={() => setEditing({})}>\n            新建用户\n          </Button>,\n        ]}\n      />\n\n      {/* 普通编辑 / 新建 Modal */}\n      <ModalForm\n        title={editing?.id ? '编辑用户' : '新建用户'}\n        open={editing !== undefined}\n        initialValues={editing}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}\n        onFinish={async (values) => {\n          if (editing?.id) {\n            await updateAdminUser(editing.id, {\n              roleType: values.roleType,\n              status: values.status ? 1 : 0,\n            });\n          } else {\n            await createAdminUser({\n              username: values.username,\n              password: values.password,\n              roleType: values.roleType,\n              status: values.status ? 1 : 0,\n            });\n          }\n          setEditing(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText\n          name=\"username\"\n          label=\"用户名\"\n          rules={[{ required: true, message: '请输入用户名' }]}\n          disabled={!!editing?.id}\n          placeholder=\"请输入用户名\"\n        />\n        {!editing?.id && (\n          <ProFormText.Password\n            name=\"password\"\n            label=\"密码\"\n            rules={[{ required: true, message: '请输入密码' }]}\n            placeholder=\"请输入密码\"\n          />\n        )}\n        <ProFormSelect\n          name=\"roleType\"\n          label=\"角色\"\n          options={roleOptions}\n          rules={[{ required: true, message: '请选择角色' }]}\n        />\n        <ProFormSwitch name=\"status\" label=\"启用\" />\n      </ModalForm>\n\n      {/* 修改自己的信息 Modal - 只允许改用户名 */}\n      <ModalForm\n        title=\"修改个人信息\"\n        open={editingSelf !== undefined}\n        initialValues={editingSelf}\n        modalProps={{ destroyOnClose: true, onCancel: () => setEditingSelf(undefined) }}\n        onFinish={async (values) => {\n          await updateAdminUserSelf({ username: values.username });\n          message.success('信息修改成功');\n          // 更新 localStorage 中的用户名\n          try {\n            const raw = localStorage.getItem('promo_user');\n            if (raw) {\n              const user = JSON.parse(raw);\n              user.username = values.username;\n              localStorage.setItem('promo_user', JSON.stringify(user));\n            }\n          } catch { /* ignore */ }\n          setEditingSelf(undefined);\n          actionRef.current?.reload();\n          return true;\n        }}\n      >\n        <ProFormText\n          name=\"username\"\n          label=\"用户名\"\n          rules={[{ required: true, message: '请输入用户名' }]}\n          placeholder=\"请输入用户名\"\n        />\n        <ProFormSelect\n          name=\"roleType\"\n          label=\"角色\"\n          options={roleOptions}\n          disabled\n        />\n        <ProFormSwitch name=\"status\" label=\"启用\" disabled />\n      </ModalForm>\n\n      {/* 修改密码 Modal */}\n      <Modal\n        title=\"修改密码\"\n        open={changePwdOpen}\n        onCancel={() => {\n          setChangePwdOpen(false);\n          changePwdForm.resetFields();\n        }}\n        confirmLoading={changePwdLoading}\n        onOk={() => changePwdForm.submit()}\n        destroyOnClose\n      >\n        <Form\n          form={changePwdForm}\n          layout=\"vertical\"\n          onFinish={handleChangePassword}\n        >\n          <Form.Item\n            name=\"oldPassword\"\n            label=\"旧密码\"\n            rules={[{ required: true, message: '请输入旧密码' }]}\n          >\n            <Input.Password placeholder=\"请输入旧密码\" />\n          </Form.Item>\n          <Form.Item\n            name=\"newPassword\"\n            label=\"新密码\"\n            rules={[\n              { required: true, message: '请输入新密码' },\n              { min: 6, message: '密码长度不能少于6位' },\n            ]}\n          >\n            <Input.Password placeholder=\"请输入新密码（至少6位）\" />\n          </Form.Item>\n          <Form.Item\n            name=\"confirmPassword\"\n            label=\"确认新密码\"\n            dependencies={['newPassword']}\n            rules={[\n              { required: true, message: '请确认新密码' },\n              ({ getFieldValue }) => ({\n                validator(_, value) {\n                  if (!value || getFieldValue('newPassword') === value) {\n                    return Promise.resolve();\n                  }\n                  return Promise.reject(new Error('两次输入的新密码不一致'));\n                },\n              }),\n            ]}\n          >\n            <Input.Password placeholder=\"请再次输入新密码\" />\n          </Form.Item>\n        </Form>\n      </Modal>\n    </PageContainer>\n  );\n};\n\nexport default UserManagementPage;\n",
       "__isJSFile": true,
       "__absFile": "/root/.openclaw/workspace-vest/promo-data-analyzer/frontend-pro/src/pages/Admin/UserManagement.tsx"
     },

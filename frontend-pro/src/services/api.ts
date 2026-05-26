@@ -325,3 +325,7 @@ export const deleteAdminUser = (id: number) =>
   request(`/admin/admin-user/${id}`, { method: 'DELETE' });
 export const resetAdminUserPassword = (id: number) =>
   request(`/admin/admin-user/${id}/reset-password`, { method: 'POST' });
+export const changeAdminUserPassword = (data: { oldPassword: string; newPassword: string }) =>
+  request('/admin/admin-user/change-password', { method: 'POST', data });
+export const updateAdminUserSelf = (data: { username?: string }) =>
+  request('/admin/admin-user/self', { method: 'PUT', data });

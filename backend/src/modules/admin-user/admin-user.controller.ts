@@ -5,6 +5,8 @@ import { AdminUserService } from './admin-user.service';
 import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { AdminUserPageQueryDto } from './dto/admin-user-page-query.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { UpdateSelfDto } from './dto/update-self.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RoleType } from '../../common/constants/business.constants';
 
@@ -21,6 +23,19 @@ export class AdminUserController {
   @Post()
   create(@Body() dto: CreateAdminUserDto) {
     return this.adminUserService.create(dto);
+  }
+
+  // 精确路由必须放在 :id 动态路由之前，否则会被 ParseIntPipe 拦截
+  @Put('self')
+  @Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+  updateSelf(@Req() req: any, @Body() dto: UpdateSelfDto) {
+    return this.adminUserService.updateSelf(req.user.id, dto);
+  }
+
+  @Post('change-password')
+  @Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+  changePassword(@Req() req: any, @Body() dto: ChangePasswordDto) {
+    return this.adminUserService.changePassword(req.user.id, dto);
   }
 
   @Put(':id')

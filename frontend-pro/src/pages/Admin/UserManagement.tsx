@@ -6,7 +6,7 @@ import {
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { Tag, Button, Popconfirm, message } from 'antd';
+import { Tag, Button, Popconfirm, message, Modal, Form, Input, App } from 'antd';
 import { useRef, useState } from 'react';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {
@@ -15,6 +15,8 @@ import {
   updateAdminUser,
   deleteAdminUser,
   resetAdminUserPassword,
+  changeAdminUserPassword,
+  updateAdminUserSelf,
 } from '@/services/api';
 
 const roleOptions = [
@@ -32,9 +34,24 @@ const ROLE_COLORS: Record<string, string> = {
   admin: 'green',
 };
 
+function getCurrentUserId(): number | null {
+  try {
+    const raw = localStorage.getItem('promo_user');
+    const user = raw ? JSON.parse(raw) : null;
+    return user?.id ?? null;
+  } catch {
+    return null;
+  }
+}
+
 const UserManagementPage = () => {
   const actionRef = useRef<ActionType>();
   const [editing, setEditing] = useState<any>();
+  const [editingSelf, setEditingSelf] = useState<any>();
+  const [changePwdOpen, setChangePwdOpen] = useState(false);
+  const [changePwdLoading, setChangePwdLoading] = useState(false);
+  const [changePwdForm] = Form.useForm();
+  const currentUserId = getCurrentUserId();
 
   const columns: ProColumns<API.AdminUserRecord>[] = [
     { title: '用户名', dataIndex: 'username' },
@@ -83,10 +100,18 @@ const UserManagementPage = () => {
       valueType: 'option',
       render: (_, row) => {
         const isSuperAdmin = row.roleType === 'super_admin';
+        const isSelf = row.id === currentUserId;
+
         return [
-          <a key="edit" onClick={() => setEditing(row)}>
-            编辑
-          </a>,
+          isSelf ? (
+            <a key="edit-self" onClick={() => setEditingSelf(row)}>
+              修改信息
+            </a>
+          ) : (
+            <a key="edit" onClick={() => setEditing(row)}>
+              编辑
+            </a>
+          ),
           <Popconfirm
             key="reset-pwd"
             title={`确认重置 ${row.username} 的密码为 admin123？`}
@@ -114,6 +139,33 @@ const UserManagementPage = () => {
     },
   ];
 
+  const handleChangePassword = async (values: { oldPassword: string; newPassword: string; confirmPassword: string }) => {
+    if (values.newPassword !== values.confirmPassword) {
+      message.error('两次输入的新密码不一致');
+      return;
+    }
+    setChangePwdLoading(true);
+    try {
+      await changeAdminUserPassword({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      });
+      message.success('密码修改成功，请重新登录');
+      setChangePwdOpen(false);
+      changePwdForm.resetFields();
+      // 清除登录状态，跳转到登录页
+      localStorage.removeItem('promo_token');
+      localStorage.removeItem('promo_user');
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 1500);
+    } catch {
+      // error handled by request interceptor
+    } finally {
+      setChangePwdLoading(false);
+    }
+  };
+
   return (
     <PageContainer header={{ title: false }}>
       <ProTable<API.AdminUserRecord>
@@ -134,11 +186,16 @@ const UserManagementPage = () => {
           };
         }}
         toolBarRender={() => [
+          <Button key="change-pwd" onClick={() => setChangePwdOpen(true)}>
+            修改密码
+          </Button>,
           <Button key="add" type="primary" onClick={() => setEditing({})}>
             新建用户
           </Button>,
         ]}
       />
+
+      {/* 普通编辑 / 新建 Modal */}
       <ModalForm
         title={editing?.id ? '编辑用户' : '新建用户'}
         open={editing !== undefined}
@@ -186,6 +243,99 @@ const UserManagementPage = () => {
         />
         <ProFormSwitch name="status" label="启用" />
       </ModalForm>
+
+      {/* 修改自己的信息 Modal - 只允许改用户名 */}
+      <ModalForm
+        title="修改个人信息"
+        open={editingSelf !== undefined}
+        initialValues={editingSelf}
+        modalProps={{ destroyOnClose: true, onCancel: () => setEditingSelf(undefined) }}
+        onFinish={async (values) => {
+          await updateAdminUserSelf({ username: values.username });
+          message.success('信息修改成功');
+          // 更新 localStorage 中的用户名
+          try {
+            const raw = localStorage.getItem('promo_user');
+            if (raw) {
+              const user = JSON.parse(raw);
+              user.username = values.username;
+              localStorage.setItem('promo_user', JSON.stringify(user));
+            }
+          } catch { /* ignore */ }
+          setEditingSelf(undefined);
+          actionRef.current?.reload();
+          return true;
+        }}
+      >
+        <ProFormText
+          name="username"
+          label="用户名"
+          rules={[{ required: true, message: '请输入用户名' }]}
+          placeholder="请输入用户名"
+        />
+        <ProFormSelect
+          name="roleType"
+          label="角色"
+          options={roleOptions}
+          disabled
+        />
+        <ProFormSwitch name="status" label="启用" disabled />
+      </ModalForm>
+
+      {/* 修改密码 Modal */}
+      <Modal
+        title="修改密码"
+        open={changePwdOpen}
+        onCancel={() => {
+          setChangePwdOpen(false);
+          changePwdForm.resetFields();
+        }}
+        confirmLoading={changePwdLoading}
+        onOk={() => changePwdForm.submit()}
+        destroyOnClose
+      >
+        <Form
+          form={changePwdForm}
+          layout="vertical"
+          onFinish={handleChangePassword}
+        >
+          <Form.Item
+            name="oldPassword"
+            label="旧密码"
+            rules={[{ required: true, message: '请输入旧密码' }]}
+          >
+            <Input.Password placeholder="请输入旧密码" />
+          </Form.Item>
+          <Form.Item
+            name="newPassword"
+            label="新密码"
+            rules={[
+              { required: true, message: '请输入新密码' },
+              { min: 6, message: '密码长度不能少于6位' },
+            ]}
+          >
+            <Input.Password placeholder="请输入新密码（至少6位）" />
+          </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            label="确认新密码"
+            dependencies={['newPassword']}
+            rules={[
+              { required: true, message: '请确认新密码' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('newPassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('两次输入的新密码不一致'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="请再次输入新密码" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </PageContainer>
   );
 };

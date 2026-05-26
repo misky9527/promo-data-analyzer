@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException, ForbiddenException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, ForbiddenException, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -6,6 +6,8 @@ import { AdminUser } from '../auth/entities/admin-user.entity';
 import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { AdminUserPageQueryDto } from './dto/admin-user-page-query.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { UpdateSelfDto } from './dto/update-self.dto';
 import { RoleType } from '../../common/constants/business.constants';
 
 @Injectable()
@@ -89,5 +91,49 @@ export class AdminUserService {
     await this.userRepo.save(entity);
 
     return { message: '密码已重置为 admin123' };
+  }
+
+  async changePassword(userId: number, dto: ChangePasswordDto) {
+    const entity = await this.userRepo.findOne({ where: { id: userId } });
+    if (!entity) throw new NotFoundException('用户不存在');
+
+    // 校验旧密码
+    const isMatch = await bcrypt.compare(dto.oldPassword, entity.passwordHash);
+    if (!isMatch) {
+      throw new BadRequestException('旧密码不正确');
+    }
+
+    // 校验新旧密码不能相同
+    if (dto.oldPassword === dto.newPassword) {
+      throw new BadRequestException('新密码不能与旧密码相同');
+    }
+
+    // Hash 新密码
+    const passwordHash = await bcrypt.hash(dto.newPassword, 10);
+    entity.passwordHash = passwordHash;
+    // 使所有旧 JWT 失效
+    entity.jwtVersion = (entity.jwtVersion || 0) + 1;
+    await this.userRepo.save(entity);
+
+    return { message: '密码修改成功，请重新登录' };
+  }
+
+  async updateSelf(userId: number, dto: UpdateSelfDto) {
+    const entity = await this.userRepo.findOne({ where: { id: userId } });
+    if (!entity) throw new NotFoundException('用户不存在');
+
+    // 只允许修改 username
+    if (dto.username !== undefined) {
+      // 检查用户名是否被其他用户占用
+      const existing = await this.userRepo.findOne({ where: { username: dto.username } });
+      if (existing && existing.id !== userId) {
+        throw new ConflictException('用户名已存在');
+      }
+      entity.username = dto.username;
+    }
+
+    const saved = await this.userRepo.save(entity);
+    const { passwordHash: _, ...rest } = saved;
+    return rest;
   }
 }

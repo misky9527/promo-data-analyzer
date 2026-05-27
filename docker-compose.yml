@@ -27,7 +27,7 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: ***
       DB_NAME: promo_data
-      JWT_SECRET: ***
+      JWT_SECRET: promo-jwt-secret-dev-2026
       OPEN_API_TOKEN: ***
     depends_on:
       db:

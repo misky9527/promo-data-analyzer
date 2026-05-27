@@ -2,10 +2,5 @@ node_modules
 .git
 .umi
 .umi-production
-mock
-tests
-src
-config
-docs
+dist
 *.md
-tsconfig.json

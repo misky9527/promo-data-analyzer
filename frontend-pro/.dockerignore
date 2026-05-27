@@ -1,0 +1,11 @@
+node_modules
+.git
+.umi
+.umi-production
+mock
+tests
+src
+config
+docs
+*.md
+tsconfig.json

@@ -15,8 +15,6 @@ services:
       retries: 5
 
   backend:
-    build:
-      context: ./backend
     image: ghcr.io/misky9527/promo-backend:latest
     restart: unless-stopped
     ports:
@@ -34,8 +32,6 @@ services:
         condition: service_healthy
 
   frontend:
-    build:
-      context: ./frontend-pro
     image: ghcr.io/misky9527/promo-frontend:latest
     restart: unless-stopped
     ports:

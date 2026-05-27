@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { BaseTimeEntity } from '../../../common/entities/base-time.entity';
+import { Site } from '../../site/entities/site.entity';
 
 @Entity('streamer')
 export class Streamer extends BaseTimeEntity {
@@ -9,8 +10,12 @@ export class Streamer extends BaseTimeEntity {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
-  affiliation: string | null;
+  @ManyToOne(() => Site, { nullable: true })
+  @JoinColumn({ name: 'site_id' })
+  site: Site | null;
+
+  @Column({ type: 'bigint', nullable: true })
+  siteId: number | null;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   baseSalary: number | null;

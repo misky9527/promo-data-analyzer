@@ -8,9 +8,9 @@ export class CreateStreamerDto {
   name: string;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(200)
-  affiliation?: string;
+  @Type(() => Number)
+  @IsNumber()
+  siteId?: number;
 
   @IsOptional()
   @Type(() => Number)

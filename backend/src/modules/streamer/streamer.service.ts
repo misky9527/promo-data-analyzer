@@ -16,7 +16,8 @@ export class StreamerService {
 
   async list(query: QueryStreamerDto) {
     const { page = 1, pageSize = 10, name } = query;
-    const qb = this.streamerRepo.createQueryBuilder('s');
+    const qb = this.streamerRepo.createQueryBuilder('s')
+      .leftJoinAndSelect('s.site', 'site');
     if (name) {
       qb.andWhere('s.name ILIKE :name', { name: `%${name}%` });
     }
@@ -25,12 +26,16 @@ export class StreamerService {
     return { list, total, page, pageSize };
   }
 
+  async findOne(id: number): Promise<Streamer | null> {
+    return this.streamerRepo.findOne({ where: { id }, relations: ['site'] });
+  }
+
   async create(dto: CreateStreamerDto): Promise<Streamer> {
     return this.streamerRepo.save(this.streamerRepo.create(dto));
   }
 
   async update(id: number, dto: UpdateStreamerDto): Promise<Streamer> {
-    const entity = await this.streamerRepo.findOne({ where: { id } });
+    const entity = await this.findOne(id);
     if (!entity) throw new NotFoundException('主播不存在');
     Object.assign(entity, dto);
     return this.streamerRepo.save(entity);

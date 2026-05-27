@@ -25,7 +25,8 @@ const StreamerCenterPage = () => {
 
   const columns: ProColumns<any>[] = [
     { title: '主播名称', dataIndex: 'name' },
-    { title: '主播归属', dataIndex: 'affiliation', search: false },
+    { title: '主播归属', dataIndex: ['site', 'name'], search: false },
+    { title: '主播归属', dataIndex: 'siteId', hideInTable: true, search: false },
     {
       title: '基础工资',
       dataIndex: 'baseSalary',
@@ -96,7 +97,10 @@ const StreamerCenterPage = () => {
         initialValues={editing}
         modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}
         onFinish={async (values) => {
-          const payload = { ...values };
+          const payload = {
+            ...values,
+            siteId: values.siteId || null,
+          };
           if (editing?.id) {
             await updateStreamer(editing.id, payload);
           } else {
@@ -109,11 +113,11 @@ const StreamerCenterPage = () => {
       >
         <ProFormText name="name" label="主播名称" rules={[{ required: true }]} />
         <ProFormSelect
-          name="affiliation"
+          name="siteId"
           label="主播归属"
           request={async () => {
             const res = await getSites({ page: 1, pageSize: 999 });
-            return (res.list || []).map((s: any) => ({ label: s.name, value: s.name }));
+            return (res.list || []).map((s: any) => ({ label: s.name, value: s.id }));
           }}
         />
         <ProFormDigit name="baseSalary" label="基础工资" fieldProps={{ precision: 2, prefix: '¥' }} />

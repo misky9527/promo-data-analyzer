@@ -17,7 +17,7 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    image: promo-backend:latest
     restart: unless-stopped
     ports:
       - "3003:3003"
@@ -34,7 +34,7 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend-pro
+    image: promo-frontend:latest
     restart: unless-stopped
     ports:
       - "5166:5166"

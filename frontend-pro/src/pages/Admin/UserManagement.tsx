@@ -1,12 +1,14 @@
 import {
   ModalForm,
   PageContainer,
+  ProFormCheckbox,
+  ProFormDependency,
   ProFormSelect,
   ProFormSwitch,
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { Tag, Button, Popconfirm, message, Modal, Form, Input, App } from 'antd';
+import { Tag, Button, Popconfirm, message, Modal, Form, Input } from 'antd';
 import { useRef, useState } from 'react';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {
@@ -17,6 +19,7 @@ import {
   resetAdminUserPassword,
   changeAdminUserPassword,
   updateAdminUserSelf,
+  setAdminUserPassword,
 } from '@/services/api';
 
 const roleOptions = [
@@ -34,12 +37,24 @@ const ROLE_COLORS: Record<string, string> = {
   admin: 'green',
 };
 
+const PERMISSION_OPTIONS = [
+  { label: '仪表盘', value: 'dashboard' },
+  { label: '核心数据', value: 'core_data' },
+  { label: '分析报表', value: 'reports' },
+  { label: 'AI 总结', value: 'ai' },
+  { label: '站点管理', value: 'sites' },
+  { label: '字典管理', value: 'dict' },
+  { label: '直播数据', value: 'live' },
+  { label: '系统配置', value: 'system' },
+];
+
 function getCurrentUserId(): number | null {
   try {
     const raw = localStorage.getItem('promo_user');
     const user = raw ? JSON.parse(raw) : null;
     return user?.id ?? null;
-  } catch {
+  }
+  catch {
     return null;
   }
 }
@@ -51,7 +66,36 @@ const UserManagementPage = () => {
   const [changePwdOpen, setChangePwdOpen] = useState(false);
   const [changePwdLoading, setChangePwdLoading] = useState(false);
   const [changePwdForm] = Form.useForm();
+  const [changeOtherPwdOpen, setChangeOtherPwdOpen] = useState(false);
+  const [changeOtherPwdLoading, setChangeOtherPwdLoading] = useState(false);
+  const [changeOtherPwdForm] = Form.useForm();
+  const [selectedUser, setSelectedUser] = useState<API.AdminUserRecord | null>(null);
   const currentUserId = getCurrentUserId();
+
+  const openChangeOtherPassword = (row: API.AdminUserRecord) => {
+    setSelectedUser(row);
+    setChangeOtherPwdOpen(true);
+    changeOtherPwdForm.resetFields();
+  };
+
+  const handleChangeOtherPassword = async (values: { newPassword: string; confirmPassword: string }) => {
+    if (values.newPassword !== values.confirmPassword) {
+      message.error('两次输入的新密码不一致');
+      return;
+    }
+    if (!selectedUser) return;
+    setChangeOtherPwdLoading(true);
+    try {
+      await setAdminUserPassword(selectedUser.id, { newPassword: values.newPassword });
+      message.success(`已成功修改 ${selectedUser.username} 的密码`);
+      setChangeOtherPwdOpen(false);
+      changeOtherPwdForm.resetFields();
+    } catch {
+      // error handled by request interceptor
+    } finally {
+      setChangeOtherPwdLoading(false);
+    }
+  };
 
   const columns: ProColumns<API.AdminUserRecord>[] = [
     { title: '用户名', dataIndex: 'username' },
@@ -112,6 +156,9 @@ const UserManagementPage = () => {
               编辑
             </a>
           ),
+          <a key="change-pwd" onClick={() => openChangeOtherPassword(row)}>
+            修改密码
+          </a>,
           <Popconfirm
             key="reset-pwd"
             title={`确认重置 ${row.username} 的密码为 admin123？`}
@@ -206,6 +253,7 @@ const UserManagementPage = () => {
             await updateAdminUser(editing.id, {
               roleType: values.roleType,
               status: values.status ? 1 : 0,
+              permissions: values.permissions || [],
             });
           } else {
             await createAdminUser({
@@ -213,6 +261,7 @@ const UserManagementPage = () => {
               password: values.password,
               roleType: values.roleType,
               status: values.status ? 1 : 0,
+              permissions: values.permissions || [],
             });
           }
           setEditing(undefined);
@@ -242,6 +291,23 @@ const UserManagementPage = () => {
           rules={[{ required: true, message: '请选择角色' }]}
         />
         <ProFormSwitch name="status" label="启用" />
+        {/* 仅 admin 角色显示权限选择，super_admin 自动拥有全部权限 */}
+        <ProFormDependency name={['roleType']}>
+          {({ roleType }) => {
+            // For new users, only show when roleType is 'admin'
+            // For editing, show when original role is 'admin' (roleType might not be set if unchanged)
+            const isAdmin = roleType === 'admin' || (!editing?.id && roleType === 'admin') || (editing?.roleType === 'admin' && roleType !== 'super_admin');
+            if (!isAdmin) return null;
+            return (
+              <ProFormCheckbox.Group
+                name="permissions"
+                label="模块权限"
+                layout="horizontal"
+                options={PERMISSION_OPTIONS}
+              />
+            );
+          }}
+        </ProFormDependency>
       </ModalForm>
 
       {/* 修改自己的信息 Modal - 只允许改用户名 */}
@@ -282,7 +348,7 @@ const UserManagementPage = () => {
         <ProFormSwitch name="status" label="启用" disabled />
       </ModalForm>
 
-      {/* 修改密码 Modal */}
+      {/* 修改自己密码 Modal */}
       <Modal
         title="修改密码"
         open={changePwdOpen}
@@ -306,6 +372,54 @@ const UserManagementPage = () => {
           >
             <Input.Password placeholder="请输入旧密码" />
           </Form.Item>
+          <Form.Item
+            name="newPassword"
+            label="新密码"
+            rules={[
+              { required: true, message: '请输入新密码' },
+              { min: 6, message: '密码长度不能少于6位' },
+            ]}
+          >
+            <Input.Password placeholder="请输入新密码（至少6位）" />
+          </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            label="确认新密码"
+            dependencies={['newPassword']}
+            rules={[
+              { required: true, message: '请确认新密码' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('newPassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('两次输入的新密码不一致'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="请再次输入新密码" />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* 修改他人密码 Modal */}
+      <Modal
+        title={`修改用户密码 - ${selectedUser?.username || ''}`}
+        open={changeOtherPwdOpen}
+        onCancel={() => {
+          setChangeOtherPwdOpen(false);
+          changeOtherPwdForm.resetFields();
+        }}
+        confirmLoading={changeOtherPwdLoading}
+        onOk={() => changeOtherPwdForm.submit()}
+        destroyOnClose
+      >
+        <Form
+          form={changeOtherPwdForm}
+          layout="vertical"
+          onFinish={handleChangeOtherPassword}
+        >
           <Form.Item
             name="newPassword"
             label="新密码"

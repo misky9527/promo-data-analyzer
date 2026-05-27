@@ -1,5 +1,5 @@
-import { IsOptional, IsEnum } from 'class-validator';
-import { RoleType } from '../../../common/constants/business.constants';
+import { IsOptional, IsEnum, IsArray } from 'class-validator';
+import { RoleType, UserPermission } from '../../../common/constants/business.constants';
 
 export class UpdateAdminUserDto {
   @IsOptional()
@@ -8,4 +8,9 @@ export class UpdateAdminUserDto {
 
   @IsOptional()
   status?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(UserPermission, { each: true })
+  permissions?: string[];
 }

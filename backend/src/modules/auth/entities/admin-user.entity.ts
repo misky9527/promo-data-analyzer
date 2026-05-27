@@ -23,4 +23,7 @@ export class AdminUser extends BaseTimeEntity {
 
   @Column({ type: 'timestamptz', name: 'last_login_at', nullable: true })
   lastLoginAt: Date | null;
+
+  @Column({ type: 'jsonb', nullable: true })
+  permissions: string[] | null;
 }

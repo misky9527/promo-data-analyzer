@@ -1,5 +1,5 @@
-import { IsString, MaxLength, IsEnum, IsOptional } from 'class-validator';
-import { RoleType } from '../../../common/constants/business.constants';
+import { IsString, MaxLength, IsEnum, IsOptional, IsArray } from 'class-validator';
+import { RoleType, UserPermission } from '../../../common/constants/business.constants';
 
 export class CreateAdminUserDto {
   @IsString()
@@ -15,4 +15,9 @@ export class CreateAdminUserDto {
 
   @IsOptional()
   status?: number;
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(UserPermission, { each: true })
+  permissions?: string[];
 }

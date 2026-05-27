@@ -329,3 +329,5 @@ export const changeAdminUserPassword = (data: { oldPassword: string; newPassword
   request('/admin/admin-user/change-password', { method: 'POST', data });
 export const updateAdminUserSelf = (data: { username?: string }) =>
   request('/admin/admin-user/self', { method: 'PUT', data });
+export const setAdminUserPassword = (id: number, data: { newPassword: string }) =>
+  request(`/admin/admin-user/${id}/change-password`, { method: 'POST', data });

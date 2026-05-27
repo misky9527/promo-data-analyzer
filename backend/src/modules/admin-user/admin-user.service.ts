@@ -7,6 +7,7 @@ import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { AdminUserPageQueryDto } from './dto/admin-user-page-query.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { SetPasswordDto } from './dto/set-password.dto';
 import { UpdateSelfDto } from './dto/update-self.dto';
 import { RoleType } from '../../common/constants/business.constants';
 
@@ -44,11 +45,14 @@ export class AdminUserService {
     }
 
     const passwordHash = await bcrypt.hash(dto.password, 10);
+    // super_admin 不需要存储 permissions（null = 全部权限）
+    const permissions = dto.roleType === RoleType.SUPER_ADMIN ? null : (dto.permissions ?? null);
     const entity = this.userRepo.create({
       username: dto.username,
       passwordHash,
       roleType: dto.roleType,
       status: dto.status ?? 1,
+      permissions,
     });
     const saved = await this.userRepo.save(entity);
     const { passwordHash: _, ...rest } = saved;
@@ -59,7 +63,23 @@ export class AdminUserService {
     const entity = await this.userRepo.findOne({ where: { id } });
     if (!entity) throw new NotFoundException('用户不存在');
 
-    Object.assign(entity, dto);
+    // 处理 permissions：如果修改了角色为 super_admin，清除 permissions
+    if (dto.roleType !== undefined) {
+      entity.roleType = dto.roleType;
+      if (dto.roleType === RoleType.SUPER_ADMIN) {
+        entity.permissions = null;
+      }
+    }
+    if (dto.status !== undefined) {
+      entity.status = dto.status;
+    }
+    if (dto.permissions !== undefined) {
+      // 只有 admin 才存储 permissions
+      if (entity.roleType === RoleType.ADMIN) {
+        entity.permissions = dto.permissions;
+      }
+    }
+
     const saved = await this.userRepo.save(entity);
     const { passwordHash: _, ...rest } = saved;
     return rest;
@@ -91,6 +111,22 @@ export class AdminUserService {
     await this.userRepo.save(entity);
 
     return { message: '密码已重置为 admin123' };
+  }
+
+  /**
+   * 管理员设置任意用户的密码（不需要旧密码）
+   */
+  async setPassword(id: number, dto: SetPasswordDto) {
+    const entity = await this.userRepo.findOne({ where: { id } });
+    if (!entity) throw new NotFoundException('用户不存在');
+
+    const passwordHash = await bcrypt.hash(dto.newPassword, 10);
+    entity.passwordHash = passwordHash;
+    // 使所有旧 JWT 失效
+    entity.jwtVersion = (entity.jwtVersion || 0) + 1;
+    await this.userRepo.save(entity);
+
+    return { message: '密码修改成功' };
   }
 
   async changePassword(userId: number, dto: ChangePasswordDto) {

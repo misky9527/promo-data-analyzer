@@ -99,5 +99,6 @@ declare namespace API {
     lastLoginAt: string | null;
     createdAt: string;
     updatedAt: string;
+    permissions: string[] | null;
   }
 }

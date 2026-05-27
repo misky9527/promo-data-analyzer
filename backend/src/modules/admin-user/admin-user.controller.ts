@@ -6,6 +6,7 @@ import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { AdminUserPageQueryDto } from './dto/admin-user-page-query.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { SetPasswordDto } from './dto/set-password.dto';
 import { UpdateSelfDto } from './dto/update-self.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RoleType } from '../../common/constants/business.constants';
@@ -51,5 +52,10 @@ export class AdminUserController {
   @Post(':id/reset-password')
   resetPassword(@Param('id', ParseIntPipe) id: number) {
     return this.adminUserService.resetPassword(id);
+  }
+
+  @Post(':id/change-password')
+  setPassword(@Param('id', ParseIntPipe) id: number, @Body() dto: SetPasswordDto) {
+    return this.adminUserService.setPassword(id, dto);
   }
 }

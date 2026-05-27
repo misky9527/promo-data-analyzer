@@ -9,8 +9,7 @@ RUN npm run build
 # Stage 2: 运行
 FROM node:22-slim
 WORKDIR /app
-COPY package*.json ./
-RUN npm install --production --legacy-peer-deps
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 EXPOSE 3003
 CMD ["node", "dist/main.js"]

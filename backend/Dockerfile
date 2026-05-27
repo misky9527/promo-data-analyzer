@@ -1,7 +1,7 @@
 # Stage 1: 构建
 FROM node:22-slim AS builder
 WORKDIR /app
-RUN npm install -g npm@latest
+RUN npm config set registry https://registry.npmjs.org/ && npm install -g npm@latest
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .

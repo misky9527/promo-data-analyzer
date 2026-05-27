@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ***
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: promo_data
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -25,10 +25,10 @@ services:
       DB_HOST: db
       DB_PORT: 5432
       DB_USERNAME: ${DB_USER:-postgres}
-      DB_PASSWORD: ***
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: promo_data
-      JWT_SECRET: ***
-      OPEN_API_TOKEN: ${OPEN…ult}
+      JWT_SECRET: ${JWT_SECRET}
+      OPEN_API_TOKEN: ${OPEN_API_TOKEN}
     depends_on:
       db:
         condition: service_healthy

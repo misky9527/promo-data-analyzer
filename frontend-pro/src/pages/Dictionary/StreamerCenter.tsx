@@ -14,6 +14,7 @@ import {
   createStreamer,
   updateStreamer,
   deleteStreamer,
+  getSites,
 } from '@/services/api';
 
 const LEVEL_OPTIONS = ['普通', '优质', '高级', '头部'];
@@ -107,7 +108,14 @@ const StreamerCenterPage = () => {
         }}
       >
         <ProFormText name="name" label="主播名称" rules={[{ required: true }]} />
-        <ProFormText name="affiliation" label="主播归属" />
+        <ProFormSelect
+          name="affiliation"
+          label="主播归属"
+          request={async () => {
+            const res = await getSites({ page: 1, pageSize: 999 });
+            return (res.list || []).map((s: any) => ({ label: s.name, value: s.name }));
+          }}
+        />
         <ProFormDigit name="baseSalary" label="基础工资" fieldProps={{ precision: 2, prefix: '¥' }} />
         <ProFormSelect
           name="level"

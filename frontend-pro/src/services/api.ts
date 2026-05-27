@@ -331,3 +331,11 @@ export const updateAdminUserSelf = (data: { username?: string }) =>
   request('/admin/admin-user/self', { method: 'PUT', data });
 export const setAdminUserPassword = (id: number, data: { newPassword: string }) =>
   request(`/admin/admin-user/${id}/change-password`, { method: 'POST', data });
+
+// === 主播中心 ===
+export const getStreamers = (params: Record<string, unknown>) => request<any>(`/admin/streamer${toQuery(params)}`);
+export const createStreamer = (data: Record<string, unknown>) =>
+  request<any>('/admin/streamer', { method: 'POST', data });
+export const updateStreamer = (id: number, data: Record<string, unknown>) =>
+  request<any>(`/admin/streamer/${id}`, { method: 'PATCH', data });
+export const deleteStreamer = (id: number) => request<any>(`/admin/streamer/${id}`, { method: 'DELETE' });

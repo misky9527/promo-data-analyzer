@@ -69,6 +69,7 @@ export default [
     routes: [
       { path: 'live-site', name: '直播站点', component: './LiveSitePage' },
       { path: 'live-stream', name: '直播数据', component: './LiveStreamPage' },
+      { path: 'streamer', name: '主播中心', component: './Dictionary/StreamerCenter' },
     ],
   },
 

@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ***
+      POSTGRES_DB: promo_data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/src/database/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: ***
+      DB_NAME: promo_data
+      JWT_SECRET: ***
+      OPEN_API_TOKEN: ***
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend-pro
+    restart: unless-stopped
+    ports:
+      - "5166:5166"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

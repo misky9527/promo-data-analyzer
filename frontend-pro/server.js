@@ -20,14 +20,16 @@ const MIME = {
 };
 
 function proxyAPI(req, res) {
+  const apiHost = process.env.BACKEND_HOST || 'localhost';
+  const apiPort = process.env.BACKEND_PORT || 3003;
   const options = {
-    hostname: 'localhost',
-    port: 3003,
+    hostname: apiHost,
+    port: apiPort,
     path: req.url,
     method: req.method,
     headers: {
       ...req.headers,
-      host: 'localhost:3003',
+      host: `${apiHost}:${apiPort}`,
       'x-forwarded-for': req.socket.remoteAddress || req.headers['x-forwarded-for'] || '',
       'x-real-ip': req.socket.remoteAddress || '',
     },
@@ -77,5 +79,5 @@ http.createServer((req, res) => {
     serveStatic(req, res);
   }
 }).listen(PORT, '0.0.0.0', () => {
-  console.log(`Serving dist/ on 0.0.0.0:${PORT} (API → localhost:3003)`);
+  console.log(`Serving dist/ on 0.0.0.0:${PORT} (API → ${process.env.BACKEND_HOST || 'localhost'}:${process.env.BACKEND_PORT || 3003})`);
 });

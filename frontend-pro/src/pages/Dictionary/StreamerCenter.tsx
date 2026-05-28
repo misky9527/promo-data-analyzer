@@ -25,8 +25,12 @@ const StreamerCenterPage = () => {
 
   const columns: ProColumns<any>[] = [
     { title: '主播名称', dataIndex: 'name' },
-    { title: '主播归属', dataIndex: ['liveSite', 'name'], search: false },
     { title: '主播归属', dataIndex: 'liveSiteId', hideInTable: true, search: false },
+    {
+      title: '主播归属',
+      search: false,
+      render: (_, row) => row.liveSite?.name || '-',
+    },
     {
       title: '基础工资',
       dataIndex: 'baseSalary',

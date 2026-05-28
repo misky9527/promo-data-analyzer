@@ -37,6 +37,10 @@ export class StreamerService {
   async update(id: number, dto: UpdateStreamerDto): Promise<Streamer> {
     const entity = await this.findOne(id);
     if (!entity) throw new NotFoundException('主播不存在');
+    // 如果改变了归属，先清掉旧关系，让 liveSiteId 生效
+    if (dto.liveSiteId !== undefined) {
+      entity.liveSite = null;
+    }
     Object.assign(entity, dto);
     return this.streamerRepo.save(entity);
   }

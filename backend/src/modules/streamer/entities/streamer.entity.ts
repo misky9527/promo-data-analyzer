@@ -10,12 +10,12 @@ export class Streamer extends BaseTimeEntity {
   @Column({ type: 'varchar', length: 100 })
   name: string;
 
+  @Column({ type: 'bigint', nullable: true, name: 'live_site_id' })
+  liveSiteId: number | null;
+
   @ManyToOne(() => LiveSite, { nullable: true })
   @JoinColumn({ name: 'live_site_id' })
   liveSite: LiveSite | null;
-
-  @Column({ type: 'bigint', nullable: true })
-  liveSiteId: number | null;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   baseSalary: number | null;

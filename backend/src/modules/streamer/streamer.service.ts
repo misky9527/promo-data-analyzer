@@ -17,7 +17,7 @@ export class StreamerService {
   async list(query: QueryStreamerDto) {
     const { page = 1, pageSize = 10, name } = query;
     const qb = this.streamerRepo.createQueryBuilder('s')
-      .leftJoinAndSelect('s.site', 'site');
+      .leftJoinAndSelect('s.liveSite', 'liveSite');
     if (name) {
       qb.andWhere('s.name ILIKE :name', { name: `%${name}%` });
     }
@@ -27,7 +27,7 @@ export class StreamerService {
   }
 
   async findOne(id: number): Promise<Streamer | null> {
-    return this.streamerRepo.findOne({ where: { id }, relations: ['site'] });
+    return this.streamerRepo.findOne({ where: { id }, relations: ['liveSite'] });
   }
 
   async create(dto: CreateStreamerDto): Promise<Streamer> {

@@ -16,7 +16,7 @@ export class CreateStreamer1719600000000 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           { name: 'name', type: 'varchar', length: '100', isNullable: false },
-          { name: 'site_id', type: 'bigint', isNullable: true },
+          { name: 'live_site_id', type: 'bigint', isNullable: true },
           { name: 'baseSalary', type: 'decimal', precision: 10, scale: 2, isNullable: true },
           { name: 'level', type: 'varchar', length: '20', default: "'普通'" },
           { name: 'remark', type: 'varchar', length: '500', isNullable: true },

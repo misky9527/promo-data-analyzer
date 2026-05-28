@@ -10,7 +10,7 @@ export class CreateStreamerDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  siteId?: number;
+  liveSiteId?: number;
 
   @IsOptional()
   @Type(() => Number)

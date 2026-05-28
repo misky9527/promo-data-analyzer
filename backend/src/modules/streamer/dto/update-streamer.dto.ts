@@ -10,7 +10,7 @@ export class UpdateStreamerDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  siteId?: number;
+  liveSiteId?: number;
 
   @IsOptional()
   @Type(() => Number)

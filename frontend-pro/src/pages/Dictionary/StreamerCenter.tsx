@@ -14,7 +14,7 @@ import {
   createStreamer,
   updateStreamer,
   deleteStreamer,
-  getSites,
+  fetchLiveSiteList,
 } from '@/services/api';
 
 const LEVEL_OPTIONS = ['普通', '优质', '高级', '头部'];
@@ -25,8 +25,8 @@ const StreamerCenterPage = () => {
 
   const columns: ProColumns<any>[] = [
     { title: '主播名称', dataIndex: 'name' },
-    { title: '主播归属', dataIndex: ['site', 'name'], search: false },
-    { title: '主播归属', dataIndex: 'siteId', hideInTable: true, search: false },
+    { title: '主播归属', dataIndex: ['liveSite', 'name'], search: false },
+    { title: '主播归属', dataIndex: 'liveSiteId', hideInTable: true, search: false },
     {
       title: '基础工资',
       dataIndex: 'baseSalary',
@@ -99,7 +99,7 @@ const StreamerCenterPage = () => {
         onFinish={async (values) => {
           const payload = {
             ...values,
-            siteId: values.siteId || null,
+            liveSiteId: values.liveSiteId || null,
           };
           if (editing?.id) {
             await updateStreamer(editing.id, payload);
@@ -113,11 +113,11 @@ const StreamerCenterPage = () => {
       >
         <ProFormText name="name" label="主播名称" rules={[{ required: true }]} />
         <ProFormSelect
-          name="siteId"
+          name="liveSiteId"
           label="主播归属"
           request={async () => {
-            const res = await getSites({ page: 1, pageSize: 999 });
-            return (res.list || []).map((s: any) => ({ label: s.name, value: s.id }));
+            const res = await fetchLiveSiteList();
+            return (res || []).map((s: any) => ({ label: s.name, value: s.id }));
           }}
         />
         <ProFormDigit name="baseSalary" label="基础工资" fieldProps={{ precision: 2, prefix: '¥' }} />

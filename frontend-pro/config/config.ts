@@ -13,7 +13,7 @@ export default defineConfig({
   fastRefresh: true,
   model: {},
   initialState: {},
-  request: { prefix: '/api' },
+  request: {},
   access: {},
   layout: {
     locale: false,

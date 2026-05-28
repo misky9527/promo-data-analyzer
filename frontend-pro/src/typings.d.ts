@@ -10,6 +10,8 @@ declare namespace API {
     username?: string;
     token?: string;
     name?: string;
+    roleType?: 'super_admin' | 'admin';
+    permissions?: string[] | null;
   }
 
   interface PageResult<T> {

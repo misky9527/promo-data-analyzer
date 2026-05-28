@@ -3,4 +3,5 @@ export interface RequestUser {
   username: string;
   roleType: string;
   jwtVersion: number;
+  permissions: string[] | null;
 }

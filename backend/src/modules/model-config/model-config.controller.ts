@@ -5,9 +5,13 @@ import { QueryModelConfigDto } from './dto/query-model-config.dto';
 import { CreateModelConfigDto } from './dto/create-model-config.dto';
 import { UpdateModelConfigDto } from './dto/update-model-config.dto';
 import { FetchModelsDto } from './dto/fetch-models.dto';
+import { RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
 
 @Controller('model-configs')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.ai.key)
 export class ModelConfigController {
   constructor(private readonly modelConfigService: ModelConfigService) {}
 

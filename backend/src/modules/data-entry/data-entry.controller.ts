@@ -21,20 +21,21 @@ import { CreateEntryDto } from './dto/create-entry.dto';
 import { UpdateEntryDto } from './dto/update-entry.dto';
 import { QueryEntryDto } from './dto/query-entry.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { ImportMode } from '../../common/constants/business.constants';
+import { ImportMode, RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
 
 @Controller('data-entries')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.core.key)
 export class DataEntryController {
   constructor(private readonly entryService: DataEntryService) {}
 
-  /** 分页列表 */
   @Get()
   list(@Query() query: QueryEntryDto) {
     return this.entryService.list(query);
   }
 
-  /** 下载 Excel 模板 */
   @Get('template')
   async downloadTemplate(@Res() res: Response) {
     const buffer = await this.entryService.generateTemplate();
@@ -45,31 +46,26 @@ export class DataEntryController {
     res.send(buffer);
   }
 
-  /** 详情 */
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.entryService.findOne(id);
   }
 
-  /** 逐条录入 */
   @Post()
   create(@Body() dto: CreateEntryDto) {
     return this.entryService.create(dto);
   }
 
-  /** 编辑 */
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateEntryDto) {
     return this.entryService.update(id, dto);
   }
 
-  /** 删除 */
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.entryService.remove(id);
   }
 
-  /** Excel 批量导入 */
   @Post('import')
   @UseInterceptors(FileInterceptor('file'))
   import(

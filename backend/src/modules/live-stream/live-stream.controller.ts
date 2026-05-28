@@ -19,13 +19,16 @@ import { QueryEventSummaryDto } from './dto/query-event-summary.dto';
 import { QueryHostSummaryDto } from './dto/query-host-summary.dto';
 import { QueryEventHostSummaryDto } from './dto/query-event-host-summary.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
 
 @Controller('admin/live-stream')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.monitor.key)
 export class LiveStreamController {
   constructor(private readonly liveStreamService: LiveStreamService) {}
 
-  /** CSV 多文件导入 */
   @Post('import')
   @UseInterceptors(FilesInterceptor('files', 20))
   async import(
@@ -47,43 +50,36 @@ export class LiveStreamController {
     );
   }
 
-  /** 分页列表 */
   @Get('list')
   list(@Query() query: QueryLiveDataDto) {
     return this.liveStreamService.list(query);
   }
 
-  /** 删除单条 */
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.liveStreamService.remove(id);
   }
 
-  /** 每日汇总 */
   @Get('daily-summary')
   dailySummary(@Query() query: QueryDailySummaryDto) {
     return this.liveStreamService.dailySummary(query);
   }
 
-  /** 赛事汇总 */
   @Get('event-summary')
   eventSummary(@Query() query: QueryEventSummaryDto) {
     return this.liveStreamService.eventSummary(query);
   }
 
-  /** 同赛事主播汇总（查看明细） */
   @Get('host-summary')
   hostSummary(@Query() query: QueryHostSummaryDto) {
     return this.liveStreamService.hostSummary(query);
   }
 
-  /** 赛事主播汇总（赛事+日期维度，按主播聚合） */
   @Get('event-host-summary')
   eventHostSummary(@Query() query: QueryEventHostSummaryDto) {
     return this.liveStreamService.eventHostSummary(query);
   }
 
-  /** 批量删除 */
   @Post('batch-delete')
   batchRemove(@Body('ids') ids: number[]) {
     if (!ids || !ids.length) {

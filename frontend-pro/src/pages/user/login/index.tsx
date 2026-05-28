@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { Helmet, history } from '@umijs/max';
+import { Helmet } from '@umijs/max';
 import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { login } from '@/services/api';
@@ -68,7 +68,7 @@ const LoginPage = () => {
               localStorage.setItem('promo_token', result.token);
               localStorage.setItem('promo_user', JSON.stringify(result.user));
               message.success('登录成功');
-              history.push('/dashboard');
+              window.location.href = '/dashboard';
               return true;
             } catch {
               return false;

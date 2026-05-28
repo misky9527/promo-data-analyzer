@@ -8,9 +8,13 @@ import { QuerySiteDto } from './dto/query-site.dto';
 import { CreateDailyDataDto } from './dto/create-daily-data.dto';
 import { QueryDailyDataDto } from './dto/query-daily-data.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
 
 @Controller('sites')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.core.key)
 export class SiteController {
   constructor(private readonly siteService: SiteService) {}
 
@@ -32,7 +36,8 @@ export class SiteController {
 }
 
 @Controller('site-daily-data')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.core.key)
 export class SiteDailyDataController {
   constructor(private readonly siteService: SiteService) {}
 

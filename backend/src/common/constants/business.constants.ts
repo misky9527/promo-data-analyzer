@@ -22,13 +22,3 @@ export enum ImportMode {
   OVERWRITE = 'overwrite',
 }
 
-export enum UserPermission {
-  DASHBOARD = 'dashboard',
-  CORE_DATA = 'core_data',
-  REPORTS = 'reports',
-  AI = 'ai',
-  SITES = 'sites',
-  DICT = 'dict',
-  LIVE = 'live',
-  SYSTEM = 'system',
-}

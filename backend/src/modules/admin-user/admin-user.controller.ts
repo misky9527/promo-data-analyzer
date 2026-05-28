@@ -10,52 +10,58 @@ import { SetPasswordDto } from './dto/set-password.dto';
 import { UpdateSelfDto } from './dto/update-self.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
+import { RequestUser } from '../../common/interfaces/request-user.interface';
 
 @Controller('admin/admin-user')
-@Roles(RoleType.SUPER_ADMIN)
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
 export class AdminUserController {
   constructor(private readonly adminUserService: AdminUserService) {}
 
   @Get('list')
+  @RequiredPermission(PERMISSION_MENUS.dict.children[2].key)
   list(@Query() query: AdminUserPageQueryDto) {
     return this.adminUserService.list(query);
   }
 
   @Post()
-  create(@Body() dto: CreateAdminUserDto) {
-    return this.adminUserService.create(dto);
+  @RequiredPermission(PERMISSION_MENUS.dict.children[2].key)
+  create(@Body() dto: CreateAdminUserDto, @Req() req: { user: RequestUser }) {
+    return this.adminUserService.create(dto, req.user);
   }
 
-  // 精确路由必须放在 :id 动态路由之前，否则会被 ParseIntPipe 拦截
   @Put('self')
-  @Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
-  updateSelf(@Req() req: any, @Body() dto: UpdateSelfDto) {
+  updateSelf(@Req() req: { user: RequestUser }, @Body() dto: UpdateSelfDto) {
     return this.adminUserService.updateSelf(req.user.id, dto);
   }
 
   @Post('change-password')
-  @Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
-  changePassword(@Req() req: any, @Body() dto: ChangePasswordDto) {
+  changePassword(@Req() req: { user: RequestUser }, @Body() dto: ChangePasswordDto) {
     return this.adminUserService.changePassword(req.user.id, dto);
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateAdminUserDto, @Req() req: any) {
-    return this.adminUserService.update(id, dto, req.user?.id);
+  @RequiredPermission(PERMISSION_MENUS.dict.children[2].key)
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateAdminUserDto, @Req() req: { user: RequestUser }) {
+    return this.adminUserService.update(id, dto, req.user);
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number, @Req() req: any) {
-    return this.adminUserService.delete(id, req.user?.id);
+  @RequiredPermission(PERMISSION_MENUS.dict.children[2].key)
+  delete(@Param('id', ParseIntPipe) id: number, @Req() req: { user: RequestUser }) {
+    return this.adminUserService.delete(id, req.user);
   }
 
   @Post(':id/reset-password')
-  resetPassword(@Param('id', ParseIntPipe) id: number) {
-    return this.adminUserService.resetPassword(id);
+  @RequiredPermission(PERMISSION_MENUS.dict.children[2].key)
+  resetPassword(@Param('id', ParseIntPipe) id: number, @Req() req: { user: RequestUser }) {
+    return this.adminUserService.resetPassword(id, req.user);
   }
 
   @Post(':id/change-password')
-  setPassword(@Param('id', ParseIntPipe) id: number, @Body() dto: SetPasswordDto) {
-    return this.adminUserService.setPassword(id, dto);
+  @RequiredPermission(PERMISSION_MENUS.dict.children[2].key)
+  setPassword(@Param('id', ParseIntPipe) id: number, @Body() dto: SetPasswordDto, @Req() req: { user: RequestUser }) {
+    return this.adminUserService.setPassword(id, dto, req.user);
   }
 }

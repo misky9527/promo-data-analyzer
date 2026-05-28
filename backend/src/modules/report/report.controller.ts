@@ -14,73 +14,67 @@ import { DailyDimensionDto } from './dto/daily-dimension.dto';
 import { ProductSummaryDto } from './dto/product-summary.dto';
 import { SummaryDimensionDto } from './dto/summary-dimension.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
 
 @Controller('reports')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.reports.key)
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  /** 概览仪表盘 */
   @Get('overview')
+  @RequiredPermission(PERMISSION_MENUS.dashboard.key, PERMISSION_MENUS.reports.key)
   getOverview(@Query() dto: OverviewDto) {
     return this.reportService.getOverview(dto);
   }
 
-  /** 交叉分析 */
   @Get('cross-analysis')
   getCrossAnalysis(@Query() dto: CrossAnalysisDto) {
     return this.reportService.getCrossAnalysis(dto);
   }
 
-  /** 产品明细 */
   @Get('product-detail')
   getProductDetail(@Query() dto: ProductDetailDto) {
     return this.reportService.getProductDetail(dto);
   }
 
-  /** 产品汇总 */
   @Get('product-summary')
   getProductSummary(@Query() dto: ProductSummaryDto) {
     return this.reportService.getProductSummary(dto);
   }
 
-  /** 渠道汇总 */
   @Get('channel-summary')
   getChannelSummary(@Query() dto: SummaryDimensionDto) {
     return this.reportService.getSummaryByDimension('channel', dto);
   }
 
-  /** 按渠道日维度 */
   @Get('channel-daily')
   getChannelDaily(@Query() dto: DailyDimensionDto) {
     return this.reportService.getDailyByDimension('channel', dto);
   }
 
-  /** 地区汇总 */
   @Get('region-summary')
   getRegionSummary(@Query() dto: SummaryDimensionDto) {
     return this.reportService.getSummaryByDimension('region', dto);
   }
 
-  /** 按地区日维度 */
   @Get('region-daily')
   getRegionDaily(@Query() dto: DailyDimensionDto) {
     return this.reportService.getDailyByDimension('region', dto);
   }
 
-  /** 站点汇总 */
   @Get('site-summary')
   getSiteSummary(@Query() dto: SummaryDimensionDto) {
     return this.reportService.getSummaryByDimension('site', dto);
   }
 
-  /** 按站点日维度 */
   @Get('site-daily')
   getSiteDaily(@Query() dto: DailyDimensionDto) {
     return this.reportService.getDailyByDimension('site', dto);
   }
 
-  /** Excel 导出 */
   @Get('export')
   async exportData(
     @Query() dto: CrossAnalysisDto,

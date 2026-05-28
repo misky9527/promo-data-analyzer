@@ -1,15 +1,14 @@
 import {
   ModalForm,
   PageContainer,
-  ProFormCheckbox,
   ProFormDependency,
   ProFormSelect,
   ProFormSwitch,
   ProFormText,
   ProTable,
 } from '@ant-design/pro-components';
-import { Tag, Button, Popconfirm, message, Modal, Form, Input } from 'antd';
-import { useRef, useState } from 'react';
+import { Tag, Button, Popconfirm, message, Modal, Form, Input, Checkbox, Card, Space, Typography } from 'antd';
+import { useMemo, useRef, useState } from 'react';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import {
   fetchAdminUserList,
@@ -21,11 +20,9 @@ import {
   updateAdminUserSelf,
   setAdminUserPassword,
 } from '@/services/api';
+import { DEFAULT_ADMIN_PERMISSIONS, PERMISSION_MENUS } from '@/constants/permissions';
 
-const roleOptions = [
-  { label: '超级管理员', value: 'super_admin' },
-  { label: '管理员', value: 'admin' },
-];
+const { Text } = Typography;
 
 const ROLE_LABELS: Record<string, string> = {
   super_admin: '超级管理员',
@@ -37,30 +34,103 @@ const ROLE_COLORS: Record<string, string> = {
   admin: 'green',
 };
 
-const PERMISSION_OPTIONS = [
-  { label: '仪表盘', value: 'dashboard' },
-  { label: '核心数据', value: 'core_data' },
-  { label: '分析报表', value: 'reports' },
-  { label: 'AI 总结', value: 'ai' },
-  { label: '站点管理', value: 'sites' },
-  { label: '字典管理', value: 'dict' },
-  { label: '直播数据', value: 'live' },
-  { label: '系统配置', value: 'system' },
+const PERMISSION_SECTIONS = [
+  {
+    title: PERMISSION_MENUS.dashboard.label,
+    options: [{ label: PERMISSION_MENUS.dashboard.label, value: PERMISSION_MENUS.dashboard.key }],
+    description: '首页仪表盘',
+  },
+  {
+    title: PERMISSION_MENUS.core.label,
+    options: [{ label: PERMISSION_MENUS.core.label, value: PERMISSION_MENUS.core.key }],
+    description: (PERMISSION_MENUS.core.children || []).map((item) => item.label).join(' / '),
+  },
+  {
+    title: PERMISSION_MENUS.reports.label,
+    options: [{ label: PERMISSION_MENUS.reports.label, value: PERMISSION_MENUS.reports.key }],
+    description: (PERMISSION_MENUS.reports.children || []).map((item) => item.label).join(' / '),
+  },
+  {
+    title: PERMISSION_MENUS.ai.label,
+    options: [{ label: PERMISSION_MENUS.ai.label, value: PERMISSION_MENUS.ai.key }],
+    description: (PERMISSION_MENUS.ai.children || []).map((item) => item.label).join(' / '),
+  },
+  {
+    title: PERMISSION_MENUS.monitor.label,
+    options: [{ label: PERMISSION_MENUS.monitor.label, value: PERMISSION_MENUS.monitor.key }],
+    description: (PERMISSION_MENUS.monitor.children || []).map((item) => item.label).join(' / '),
+  },
+  {
+    title: PERMISSION_MENUS.dict.label,
+    options: PERMISSION_MENUS.dict.children.map((item) => ({ label: item.label, value: item.key })),
+    description: '按子菜单独立授权',
+  },
 ];
 
-function getCurrentUserId(): number | null {
+function getCurrentUser(): API.CurrentUser | undefined {
   try {
     const raw = localStorage.getItem('promo_user');
-    const user = raw ? JSON.parse(raw) : null;
-    return user?.id ?? null;
+    return raw ? JSON.parse(raw) : undefined;
   }
   catch {
-    return null;
+    return undefined;
   }
 }
 
+function buildFormValues(record?: Partial<API.AdminUserRecord>) {
+  if (!record) {
+    return {
+      roleType: 'admin',
+      status: true,
+      permissions: [...DEFAULT_ADMIN_PERMISSIONS],
+    };
+  }
+
+  return {
+    ...record,
+    status: record.status === 1,
+    permissions: record.permissions || [],
+  };
+}
+
+const PermissionSelector = ({ value = [], onChange }: { value?: string[]; onChange?: (value: string[]) => void }) => {
+  const normalizedValue = Array.isArray(value) ? value : [];
+
+  const togglePermission = (permission: string, checked: boolean) => {
+    const nextValue = checked
+      ? Array.from(new Set([...normalizedValue, permission]))
+      : normalizedValue.filter((item) => item !== permission);
+    onChange?.(nextValue);
+  };
+
+  return (
+    <Space direction="vertical" size={12} style={{ width: '100%' }}>
+      {PERMISSION_SECTIONS.map((section) => (
+        <Card key={section.title} size="small" title={section.title}>
+          <Space direction="vertical" size={8} style={{ width: '100%' }}>
+            {section.options.map((option) => (
+              <Checkbox
+                key={option.value}
+                checked={normalizedValue.includes(option.value)}
+                onChange={(event) => togglePermission(option.value, event.target.checked)}
+              >
+                {option.label}
+              </Checkbox>
+            ))}
+            <Text type="secondary">{section.description}</Text>
+          </Space>
+        </Card>
+      ))}
+    </Space>
+  );
+};
+
 const UserManagementPage = () => {
   const actionRef = useRef<ActionType>();
+  const currentUser = getCurrentUser();
+  const currentUserId = currentUser?.id ?? null;
+  const currentUserRole = currentUser?.roleType;
+
   const [editing, setEditing] = useState<any>();
   const [editingSelf, setEditingSelf] = useState<any>();
   const [changePwdOpen, setChangePwdOpen] = useState(false);
@@ -69,8 +139,31 @@ const UserManagementPage = () => {
   const [changeOtherPwdOpen, setChangeOtherPwdOpen] = useState(false);
   const [changeOtherPwdLoading, setChangeOtherPwdLoading] = useState(false);
   const [changeOtherPwdForm] = Form.useForm();
+  const [editForm] = Form.useForm();
   const [selectedUser, setSelectedUser] = useState<API.AdminUserRecord | null>(null);
-  const currentUserId = getCurrentUserId();
+
+  const roleOptions = useMemo(
+    () => currentUserRole === 'admin'
+      ? [{ label: '管理员', value: 'admin' }]
+      : [
+          { label: '超级管理员', value: 'super_admin' },
+          { label: '管理员', value: 'admin' },
+        ],
+    [currentUserRole],
+  );
+
+  const openCreateModal = () => {
+    const defaultRoleType = currentUserRole === 'admin' ? 'admin' : 'super_admin';
+    setEditing({
+      roleType: defaultRoleType,
+      status: 1,
+      permissions: defaultRoleType === 'admin' ? [...DEFAULT_ADMIN_PERMISSIONS] : [],
+    });
+  };
+
+  const openEditModal = (row: API.AdminUserRecord) => {
+    setEditing(buildFormValues(row));
+  };
 
   const openChangeOtherPassword = (row: API.AdminUserRecord) => {
     setSelectedUser(row);
@@ -128,6 +221,20 @@ const UserManagementPage = () => {
       ),
     },
     {
+      title: '权限',
+      dataIndex: 'permissions',
+      search: false,
+      render: (_, row) => {
+        if (row.roleType === 'super_admin') {
+          return <Tag color="blue">全部权限</Tag>;
+        }
+        if (!row.permissions?.length) {
+          return <Text type="secondary">未设置</Text>;
+        }
+        return <Text>{`${row.permissions.length} 项权限`}</Text>;
+      },
+    },
+    {
       title: '最后登录',
       dataIndex: 'lastLoginAt',
       valueType: 'dateTime',
@@ -145,31 +252,40 @@ const UserManagementPage = () => {
       render: (_, row) => {
         const isSuperAdmin = row.roleType === 'super_admin';
         const isSelf = row.id === currentUserId;
+        const canManageRow = currentUserRole !== 'admin' || row.roleType !== 'super_admin';
+
+        if (!canManageRow && !isSelf) {
+          return [<Text key="readonly" type="secondary">仅查看</Text>];
+        }
 
         return [
           isSelf ? (
-            <a key="edit-self" onClick={() => setEditingSelf(row)}>
+            <a key="edit-self" onClick={() => setEditingSelf(buildFormValues(row))}>
               修改信息
             </a>
           ) : (
-            <a key="edit" onClick={() => setEditing(row)}>
+            <a key="edit" onClick={() => openEditModal(row)}>
               编辑
             </a>
           ),
-          <a key="change-pwd" onClick={() => openChangeOtherPassword(row)}>
-            修改密码
-          </a>,
-          <Popconfirm
-            key="reset-pwd"
-            title={`确认重置 ${row.username} 的密码为 admin123？`}
-            onConfirm={async () => {
-              await resetAdminUserPassword(row.id);
-              message.success('密码已重置');
-            }}
-          >
-            <a>重置密码</a>
-          </Popconfirm>,
-          !isSuperAdmin && (
+          canManageRow && (
+            <a key="change-pwd" onClick={() => openChangeOtherPassword(row)}>
+              修改密码
+            </a>
+          ),
+          canManageRow && (
+            <Popconfirm
+              key="reset-pwd"
+              title={`确认重置 ${row.username} 的密码为 admin123？`}
+              onConfirm={async () => {
+                await resetAdminUserPassword(row.id);
+                message.success('密码已重置');
+              }}
+            >
+              <a>重置密码</a>
+            </Popconfirm>
+          ),
+          canManageRow && !isSuperAdmin && !isSelf && (
             <Popconfirm
               key="delete"
               title={`确认删除用户 ${row.username}？`}
@@ -181,7 +297,7 @@ const UserManagementPage = () => {
               <a style={{ color: 'red' }}>删除</a>
             </Popconfirm>
           ),
-        ];
+        ].filter(Boolean);
       },
     },
   ];
@@ -200,7 +316,6 @@ const UserManagementPage = () => {
       message.success('密码修改成功，请重新登录');
       setChangePwdOpen(false);
       changePwdForm.resetFields();
-      // 清除登录状态，跳转到登录页
       localStorage.removeItem('promo_token');
       localStorage.removeItem('promo_user');
       setTimeout(() => {
@@ -236,35 +351,47 @@ const UserManagementPage = () => {
           <Button key="change-pwd" onClick={() => setChangePwdOpen(true)}>
             修改密码
           </Button>,
-          <Button key="add" type="primary" onClick={() => setEditing({})}>
+          <Button key="add" type="primary" onClick={openCreateModal}>
             新建用户
           </Button>,
         ]}
       />
 
-      {/* 普通编辑 / 新建 Modal */}
       <ModalForm
         title={editing?.id ? '编辑用户' : '新建用户'}
         open={editing !== undefined}
-        initialValues={editing}
-        modalProps={{ destroyOnClose: true, onCancel: () => setEditing(undefined) }}
+        form={editForm}
+        initialValues={buildFormValues(editing)}
+        modalProps={{
+          destroyOnClose: true,
+          onCancel: () => {
+            setEditing(undefined);
+            editForm.resetFields();
+          },
+        }}
+        onOpenChange={(open) => {
+          if (open && editing !== undefined) {
+            editForm.setFieldsValue(buildFormValues(editing));
+          }
+        }}
         onFinish={async (values) => {
+          const payload = {
+            roleType: values.roleType,
+            status: values.status ? 1 : 0,
+            permissions: values.roleType === 'admin' ? (values.permissions || []) : undefined,
+          };
+
           if (editing?.id) {
-            await updateAdminUser(editing.id, {
-              roleType: values.roleType,
-              status: values.status ? 1 : 0,
-              permissions: values.permissions || [],
-            });
+            await updateAdminUser(editing.id, payload);
           } else {
             await createAdminUser({
               username: values.username,
               password: values.password,
-              roleType: values.roleType,
-              status: values.status ? 1 : 0,
-              permissions: values.permissions || [],
+              ...payload,
             });
           }
           setEditing(undefined);
+          editForm.resetFields();
           actionRef.current?.reload();
           return true;
         }}
@@ -289,28 +416,45 @@ const UserManagementPage = () => {
           label="角色"
           options={roleOptions}
           rules={[{ required: true, message: '请选择角色' }]}
+          fieldProps={{
+            onChange: (value) => {
+              if (value === 'admin') {
+                const currentPermissions = editForm.getFieldValue('permissions');
+                editForm.setFieldsValue({
+                  permissions: currentPermissions?.length ? currentPermissions : [...DEFAULT_ADMIN_PERMISSIONS],
+                });
+              } else {
+                editForm.setFieldsValue({ permissions: [] });
+              }
+            },
+          }}
         />
-        <ProFormSwitch name="status" label="启用" />
-        {/* 仅 admin 角色显示权限选择，super_admin 自动拥有全部权限 */}
+        <ProFormSwitch name="status" label="启用" initialValue />
         <ProFormDependency name={['roleType']}>
           {({ roleType }) => {
-            // For new users, only show when roleType is 'admin'
-            // For editing, show when original role is 'admin' (roleType might not be set if unchanged)
-            const isAdmin = roleType === 'admin' || (!editing?.id && roleType === 'admin') || (editing?.roleType === 'admin' && roleType !== 'super_admin');
-            if (!isAdmin) return null;
+            if (roleType !== 'admin') return null;
             return (
-              <ProFormCheckbox.Group
+              <Form.Item
                 name="permissions"
-                label="模块权限"
-                layout="horizontal"
-                options={PERMISSION_OPTIONS}
-              />
+                label="菜单权限"
+                rules={[
+                  {
+                    validator: async (_, value) => {
+                      if (Array.isArray(value) && value.length > 0) {
+                        return;
+                      }
+                      throw new Error('请至少选择一个权限');
+                    },
+                  },
+                ]}
+              >
+                <PermissionSelector />
+              </Form.Item>
             );
           }}
         </ProFormDependency>
       </ModalForm>
 
-      {/* 修改自己的信息 Modal - 只允许改用户名 */}
       <ModalForm
         title="修改个人信息"
         open={editingSelf !== undefined}
@@ -319,7 +463,6 @@ const UserManagementPage = () => {
         onFinish={async (values) => {
           await updateAdminUserSelf({ username: values.username });
           message.success('信息修改成功');
-          // 更新 localStorage 中的用户名
           try {
             const raw = localStorage.getItem('promo_user');
             if (raw) {
@@ -348,7 +491,6 @@ const UserManagementPage = () => {
         <ProFormSwitch name="status" label="启用" disabled />
       </ModalForm>
 
-      {/* 修改自己密码 Modal */}
       <Modal
         title="修改密码"
         open={changePwdOpen}
@@ -403,7 +545,6 @@ const UserManagementPage = () => {
         </Form>
       </Modal>
 
-      {/* 修改他人密码 Modal */}
       <Modal
         title={`修改用户密码 - ${selectedUser?.username || ''}`}
         open={changeOtherPwdOpen}

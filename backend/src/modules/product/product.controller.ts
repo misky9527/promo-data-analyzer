@@ -15,19 +15,21 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
 
 @Controller('products')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.core.key)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  /** 列表 */
   @Get()
   list(@Query() query: QueryProductDto) {
     return this.productService.list(query);
   }
 
-  /** Apple API 预查询（不保存，供前端预览） */
   @Get('apple-lookup')
   async lookupApple(
     @Query('appId') appId: string,
@@ -43,25 +45,21 @@ export class ProductController {
     return info;
   }
 
-  /** 详情 */
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productService.findOne(id);
   }
 
-  /** 创建 */
   @Post()
   create(@Body() dto: CreateProductDto) {
     return this.productService.create(dto);
   }
 
-  /** 编辑 */
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductDto) {
     return this.productService.update(id, dto);
   }
 
-  /** 删除（软删除） */
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productService.remove(id);

@@ -17,7 +17,7 @@ import { StreamerModule } from './modules/streamer/streamer.module';
 import { AdminUserModule } from './modules/admin-user/admin-user.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
-import { AuthService } from './modules/auth/auth.service';
+import { PermissionsGuard } from './common/guards/permissions.guard';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -68,6 +68,7 @@ import { AdminUser } from './modules/auth/entities/admin-user.entity';
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: PermissionsGuard },
   ],
 })
 export class AppModule implements OnModuleInit {

@@ -18,9 +18,13 @@ import { AiSummaryService } from './ai-summary.service';
 import { GenerateSummaryDto } from './dto/generate-summary.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RequestUser } from '../../common/interfaces/request-user.interface';
+import { RoleType } from '../../common/constants/business.constants';
+import { RequiredPermission } from '../../common/decorators/required-permission.decorator';
+import { PERMISSION_MENUS } from '../../common/constants/permission.constants';
 
 @Controller('ai-summary')
-@Roles('super_admin')
+@Roles(RoleType.SUPER_ADMIN, RoleType.ADMIN)
+@RequiredPermission(PERMISSION_MENUS.ai.key)
 export class AiSummaryController {
   constructor(private readonly aiSummaryService: AiSummaryService) {}
 

@@ -17,7 +17,7 @@ export class RolesGuard implements CanActivate {
     if (!user) throw new ForbiddenException('未认证');
 
     const hasRole = requiredRoles.some((role) => user.roleType === role);
-    if (!hasRole) throw new ForbiddenException('权限不足，仅超级管理员可操作');
+    if (!hasRole) throw new ForbiddenException('角色权限不足');
     return true;
   }
 }

@@ -2,8 +2,8 @@ import { Injectable, ForbiddenException, BadRequestException, Logger } from '@ne
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
-const FORBIDDEN_KEYWORDS = ['DROP', 'TRUNCATE', 'ALTER', 'CREATE', 'DELETE'];
-const ALLOWED_KEYWORDS = ['SELECT', 'EXPLAIN', 'SHOW', 'DESCRIBE', 'DESC', 'WITH', 'INSERT', 'UPDATE'];
+const FORBIDDEN_KEYWORDS = ['DROP', 'TRUNCATE', 'ALTER', 'CREATE'];
+const ALLOWED_KEYWORDS = ['SELECT', 'EXPLAIN', 'SHOW', 'DESCRIBE', 'DESC', 'WITH', 'INSERT', 'UPDATE', 'DELETE'];
 const SQL_TIMEOUT_MS = 30_000;
 
 @Injectable()
@@ -27,7 +27,15 @@ export class OpsService {
     }
 
     if (!ALLOWED_KEYWORDS.includes(firstWord)) {
-      throw new ForbiddenException(`不允许的 SQL 类型: ${firstWord}，仅支持 SELECT / EXPLAIN / SHOW / DESCRIBE / WITH 查询`);
+      throw new ForbiddenException(`不允许的 SQL 类型: ${firstWord}，仅支持 SELECT / EXPLAIN / SHOW / DESCRIBE / WITH / INSERT / UPDATE / DELETE`);
+    }
+
+    // DELETE 必须带 WHERE 条件，防止误清全表
+    if (firstWord === 'DELETE') {
+      const upperSql = trimmed.toUpperCase();
+      if (!/\bWHERE\b/.test(upperSql)) {
+        throw new ForbiddenException('DELETE 语句必须包含 WHERE 条件，不允许清空整表');
+      }
     }
 
     this.logger.log(`执行 SQL: ${trimmed.substring(0, 200)}`);

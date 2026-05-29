@@ -349,3 +349,10 @@ export const createStreamer = (data: Record<string, unknown>) =>
 export const updateStreamer = (id: number, data: Record<string, unknown>) =>
   request<any>(`/admin/streamer/${id}`, { method: 'PATCH', data });
 export const deleteStreamer = (id: number) => request<any>(`/admin/streamer/${id}`, { method: 'DELETE' });
+
+// === 运维中心 ===
+export const executeSql = (sql: string) =>
+  request<{ columns: string[]; rows: any[] }>('/admin/ops/execute', {
+    method: 'POST',
+    data: { sql },
+  });

@@ -240,13 +240,13 @@ export class LiveStreamService {
   }
 
   // ═══════════════════════════════════════════════════════════
-  // 同赛事主播汇总（查看明细，不分页）
+  // 同赛事主播汇总（查看明细）
   // ═══════════════════════════════════════════════════════════
 
   async hostSummary(query: QueryHostSummaryDto) {
-    const { eventName, liveDate } = query;
+    const { eventName, liveDate, page = 1, pageSize = 100 } = query;
 
-    const qb = this.repo
+    const baseQb = this.repo
       .createQueryBuilder('ls')
       .leftJoin('ls.site', 'site')
       .select('ls.host', 'host')
@@ -262,12 +262,21 @@ export class LiveStreamService {
       .andWhere('ls.liveDate = :liveDate', { liveDate })
       .groupBy('ls.host')
       .addGroupBy('ls.siteCode')
-      .addGroupBy('site.name')
-      .orderBy('host', 'ASC');
+      .addGroupBy('site.name');
 
-    const rawList: any[] = await qb.getRawMany();
+    // 总数
+    const countResult = await baseQb.clone().getRawMany();
+    const total = countResult.length;
 
-    return rawList.map((r) => ({
+    // 分页数据
+    const dataQb = baseQb
+      .clone()
+      .orderBy('host', 'ASC')
+      .offset((page - 1) * pageSize)
+      .limit(pageSize);
+    const rawList: any[] = await dataQb.getRawMany();
+
+    const list = rawList.map((r) => ({
       host: r.host,
       siteCode: r.siteCode,
       siteName: r.siteName ?? r.siteCode,
@@ -277,6 +286,8 @@ export class LiveStreamService {
       avgStayPerson: r.avgStayPerson ? Math.round(parseFloat(r.avgStayPerson)) : 0,
       avgPeakOnline: r.avgPeakOnline ? Math.round(parseFloat(r.avgPeakOnline)) : 0,
     }));
+
+    return { list, total, page, pageSize };
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -284,9 +295,9 @@ export class LiveStreamService {
   // ═══════════════════════════════════════════════════════════
 
   async eventHostSummary(query: QueryEventHostSummaryDto) {
-    const { eventName, host } = query;
+    const { eventName, host, liveDate, page = 1, pageSize = 20 } = query;
 
-    const qb = this.repo
+    const baseQb = this.repo
       .createQueryBuilder('ls')
       .select('ls.eventName', 'eventName')
       .addSelect('ls.liveDate', 'liveDate')
@@ -305,26 +316,39 @@ export class LiveStreamService {
       .andWhere("ls.eventName != ''")
       .groupBy('ls.eventName')
       .addGroupBy('ls.liveDate')
-      .addGroupBy('ls.host')
-      .orderBy('ls.eventName', 'ASC')
-      .addOrderBy('ls.liveDate', 'DESC')
-      .addOrderBy('ls.host', 'ASC');
+      .addGroupBy('ls.host');
 
     if (eventName) {
-      qb.andWhere('ls.eventName ILIKE :eventName', {
+      baseQb.andWhere('ls.eventName ILIKE :eventName', {
         eventName: `%${eventName}%`,
       });
     }
 
     if (host) {
-      qb.andWhere('ls.host ILIKE :host', {
+      baseQb.andWhere('ls.host ILIKE :host', {
         host: `%${host}%`,
       });
     }
 
-    const rawList: any[] = await qb.getRawMany();
+    if (liveDate) {
+      baseQb.andWhere('ls.liveDate = :liveDate', { liveDate });
+    }
 
-    return rawList.map((r) => ({
+    // 总数
+    const countResult = await baseQb.clone().getRawMany();
+    const total = countResult.length;
+
+    // 分页数据
+    const dataQb = baseQb
+      .clone()
+      .orderBy('ls.eventName', 'ASC')
+      .addOrderBy('ls.liveDate', 'DESC')
+      .addOrderBy('ls.host', 'ASC')
+      .offset((page - 1) * pageSize)
+      .limit(pageSize);
+    const rawList: any[] = await dataQb.getRawMany();
+
+    const list = rawList.map((r) => ({
       eventName: r.eventName,
       liveDate: r.liveDate,
       host: r.host,
@@ -335,6 +359,8 @@ export class LiveStreamService {
       avgStayPerson: r.avgStayPerson ? Math.round(parseFloat(r.avgStayPerson)) : 0,
       avgPeakOnline: r.avgPeakOnline ? Math.round(parseFloat(r.avgPeakOnline)) : 0,
     }));
+
+    return { list, total, page, pageSize };
   }
 
   // ═══════════════════════════════════════════════════════════

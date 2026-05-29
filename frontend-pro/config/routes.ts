@@ -75,6 +75,16 @@ export default [
   },
 
   {
+    path: '/system',
+    name: '系统管理',
+    icon: 'control',
+    access: 'isSuperAdmin',
+    routes: [
+      { path: 'ops-center', name: '运维中心', component: './OpsCenter', access: 'isSuperAdmin' },
+    ],
+  },
+
+  {
     path: '/dict',
     name: '系统配置',
     icon: 'setting',

@@ -1,6 +1,19 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class QueryEventHostSummaryDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  pageSize?: number = 20;
+
   @IsOptional()
   @IsString()
   eventName?: string;
@@ -8,4 +21,8 @@ export class QueryEventHostSummaryDto {
   @IsOptional()
   @IsString()
   host?: string;
+
+  @IsOptional()
+  @IsString()
+  liveDate?: string;
 }

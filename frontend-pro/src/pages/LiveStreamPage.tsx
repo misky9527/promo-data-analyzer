@@ -1,5 +1,5 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin, Input, AutoComplete, Space } from 'antd';
+import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin, Input, AutoComplete, Space, DatePicker } from 'antd';
 import { UploadOutlined, InboxOutlined, SearchOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
@@ -1125,6 +1125,7 @@ const EventHostSummaryTab = () => {
   const [loading, setLoading] = useState(false);
   const [eventSearchText, setEventSearchText] = useState('');
   const [hostSearchText, setHostSearchText] = useState('');
+  const [dateSearchText, setDateSearchText] = useState<string | undefined>();
   const [hostOptions, setHostOptions] = useState<{ value: string; label: string }[]>([]);
 
   // 加载主播中心列表给 AutoComplete 做下拉
@@ -1145,34 +1146,18 @@ const EventHostSummaryTab = () => {
       .catch(() => {});
   }, []);
 
-  const loadData = useCallback(async (eventName?: string, host?: string) => {
-    setLoading(true);
-    try {
-      const params: Record<string, unknown> = {};
-      if (eventName) params.eventName = eventName;
-      if (host) params.host = host;
-      const res = await getEventHostSummary(params);
-      setRawData(Array.isArray(res) ? res : res.list || []);
-    } catch {
-      msg.error('加载赛事主播汇总失败');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   const handleEventSearch = useCallback((value: string) => {
     setEventSearchText(value);
-    loadData(value || undefined, hostSearchText || undefined);
-  }, [loadData, hostSearchText]);
+  }, []);
 
   const handleHostSearch = useCallback((value: string) => {
     setHostSearchText(value);
-    loadData(eventSearchText || undefined, value || undefined);
-  }, [loadData, eventSearchText]);
+  }, []);
+
+  const handleDateChange = useCallback((date: any) => {
+    const dateStr = date ? dayjs(date).format('YYYY-MM-DD') : undefined;
+    setDateSearchText(dateStr);
+  }, []);
 
   // 全 host 行:仅首行显示日期/赛事
   const dataSource = useMemo(() => {
@@ -1227,6 +1212,12 @@ const EventHostSummaryTab = () => {
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <h4 style={{ margin: 0 }}>赛事主播汇总</h4>
         <div style={{ display: 'flex', gap: 8 }}>
+          <DatePicker
+            placeholder="选择日期"
+            allowClear
+            onChange={handleDateChange}
+            style={{ width: 160 }}
+          />
           <Input.Search
             placeholder="搜索赛事名"
             allowClear
@@ -1251,16 +1242,29 @@ const EventHostSummaryTab = () => {
         </div>
       </div>
       <ProTable
-        dataSource={dataSource}
-        columns={columns}
         rowKey="_key"
         loading={loading}
-        pagination={false}
         search={false}
         options={{ reload: false, density: false, setting: true }}
         columnsState={{
           persistenceKey: 'event-host-summary-columns',
         }}
+        pagination={{ defaultPageSize: 20, showSizeChanger: true }}
+        request={async (params: any) => {
+          const { pageSize, current } = params;
+          const res = await getEventHostSummary({
+            page: current,
+            pageSize,
+            ...(eventSearchText ? { eventName: eventSearchText } : {}),
+            ...(hostSearchText ? { host: hostSearchText } : {}),
+            ...(dateSearchText ? { liveDate: dateSearchText } : {}),
+          });
+          const list = Array.isArray(res) ? res : res.list || [];
+          const total = res.total || 0;
+          setRawData(list);
+          return { data: dataSource, total, success: true };
+        }}
+        columns={columns}
       />
     </div>
   );

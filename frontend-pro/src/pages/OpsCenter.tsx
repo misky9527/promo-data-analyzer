@@ -1,11 +1,19 @@
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { PageContainer, ProCard, ProTable } from '@ant-design/pro-components';
-import { Button, Input, message, Space, Typography } from 'antd';
-import { useState, useRef } from 'react';
-import { executeSql } from '@/services/api';
+import { Button, Input, message, Space, Table, Tag, Typography } from 'antd';
+import { useState, useRef, useEffect } from 'react';
+import { executeSql, getRecentLogs } from '@/services/api';
 
 const { TextArea } = Input;
 const { Text } = Typography;
+
+interface SqlHistoryItem {
+  id: number;
+  description: string;
+  operator: string;
+  recordCount: number;
+  createdAt: string;
+}
 
 const OpsCenterPage = () => {
   const [sql, setSql] = useState('');
@@ -13,7 +21,27 @@ const OpsCenterPage = () => {
   const [columns, setColumns] = useState<any[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [executed, setExecuted] = useState(false);
+  const [history, setHistory] = useState<SqlHistoryItem[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const editorRef = useRef<any>(null);
+
+  // 加载最近 SQL 执行记录
+  const loadHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      // getRecentLogs 返回所有类型的最近日志，前端过滤 sql 类型
+      const logs = await getRecentLogs();
+      setHistory(Array.isArray(logs) ? logs.filter((l: any) => l.operationType === 'sql') : []);
+    } catch {
+      // 静默失败
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadHistory();
+  }, []);
 
   const handleExecute = async () => {
     const trimmed = sql.trim();
@@ -37,11 +65,15 @@ const OpsCenterPage = () => {
       setDataSource(res.rows || []);
       setExecuted(true);
       message.success(`查询成功，返回 ${res.rows?.length ?? 0} 行`);
+      // 执行成功后刷新历史
+      loadHistory();
     } catch (err: any) {
       message.error(err?.message || '执行失败');
       setColumns([]);
       setDataSource([]);
       setExecuted(true);
+      // 即使失败也刷新历史
+      loadHistory();
     } finally {
       setLoading(false);
     }
@@ -54,6 +86,15 @@ const OpsCenterPage = () => {
       handleExecute();
     }
   };
+
+  const historyColumns = [
+    { title: '时间', dataIndex: 'createdAt', key: 'createdAt', width: 180,
+      render: (v: string) => v ? new Date(v).toLocaleString('zh-CN') : '-' },
+    { title: 'SQL 语句', dataIndex: 'description', key: 'description', ellipsis: true },
+    { title: '操作人', dataIndex: 'operator', key: 'operator', width: 100 },
+    { title: '影响行数', dataIndex: 'recordCount', key: 'recordCount', width: 100,
+      render: (v: number) => v != null ? v : '-' },
+  ];
 
   return (
     <PageContainer header={{ title: '运维中心' }}>
@@ -82,6 +123,17 @@ const OpsCenterPage = () => {
           </Button>
           <Text type="secondary">提示：Ctrl+Enter 快速执行，超时限制 30 秒</Text>
         </Space>
+      </ProCard>
+
+      <ProCard title="最近执行记录" style={{ marginBottom: 16 }}>
+        <Table
+          columns={historyColumns}
+          dataSource={history}
+          rowKey="id"
+          loading={historyLoading}
+          pagination={false}
+          size="small"
+        />
       </ProCard>
 
       {executed && (

@@ -7,11 +7,13 @@ import { ImportRecord } from './entities/import-record.entity';
 import { ImportRecordService } from './import-record.service';
 import { ImportRecordController } from './import-record.controller';
 import { LiveSite } from '../live-site/entities/live-site.entity';
+import { LogModule } from '../log/log.module';
 import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([LiveStreamData, ImportRecord, LiveSite]),
+    LogModule,
     MulterModule.register({ limits: { fileSize: 50 * 1024 * 1024 } }),
   ],
   controllers: [LiveStreamController, ImportRecordController],

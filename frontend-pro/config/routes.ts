@@ -78,9 +78,10 @@ export default [
     path: '/system',
     name: '系统管理',
     icon: 'control',
-    access: 'isSuperAdmin',
+    access: 'isAdmin',
     routes: [
       { path: 'ops-center', name: '运维中心', component: './OpsCenter', access: 'isSuperAdmin' },
+      { path: 'log-center', name: '日志中心', component: './LogCenter', access: 'isAdmin' },
     ],
   },
 

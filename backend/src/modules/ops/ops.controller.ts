@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
 import { IsString, IsNotEmpty } from 'class-validator';
 import { OpsService } from './ops.service';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -16,7 +16,8 @@ export class OpsController {
   constructor(private readonly opsService: OpsService) {}
 
   @Post('execute')
-  execute(@Body() dto: ExecuteSqlDto): Promise<{ columns: string[]; rows: any[] }> {
-    return this.opsService.execute(dto.sql);
+  execute(@Body() dto: ExecuteSqlDto, @Req() req?: any): Promise<{ columns: string[]; rows: any[] }> {
+    const operator = req?.user?.username ?? 'system';
+    return this.opsService.execute(dto.sql, operator);
   }
 }

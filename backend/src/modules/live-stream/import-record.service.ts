@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImportRecord } from './entities/import-record.entity';
 import { LiveStreamData } from './entities/live-stream-data.entity';
+import { LogService } from '../log/log.service';
 
 @Injectable()
 export class ImportRecordService {
@@ -13,6 +14,7 @@ export class ImportRecordService {
     private readonly repo: Repository<ImportRecord>,
     @InjectRepository(LiveStreamData)
     private readonly liveStreamRepo: Repository<LiveStreamData>,
+    private readonly logService: LogService,
   ) {}
 
   async list(page: number = 1, pageSize: number = 10, deleted: boolean = false) {
@@ -50,7 +52,7 @@ export class ImportRecordService {
   }
 
   /** 软删除：将导入记录和对应的直播数据移入回收站 */
-  async delete(id: number): Promise<void> {
+  async delete(id: number, operator: string = 'system'): Promise<void> {
     const record = await this.repo.findOne({ where: { id } });
     if (!record) {
       throw new NotFoundException('导入记录不存在');
@@ -73,10 +75,19 @@ export class ImportRecordService {
       `软删除导入记录 id=${id}，同时软删除 live_stream_data ${updateResult.affected ?? 0} 条 ` +
         `(siteCode=${record.siteCode}, liveDate=${record.liveDate})`,
     );
+
+    // 写入操作日志
+    this.logService.create({
+      operationType: 'delete',
+      description: `软删除导入记录 id=${id}，站点 ${record.siteCode}，日期 ${record.liveDate}`,
+      operator,
+      targetTable: 'import_record',
+      recordCount: updateResult.affected ?? 0,
+    }).catch((err: any) => this.logger.error(`删除日志写入失败: ${err.message}`));
   }
 
   /** 还原：将导入记录和对应的直播数据从回收站恢复 */
-  async restore(id: number): Promise<void> {
+  async restore(id: number, operator: string = 'system'): Promise<void> {
     const record = await this.repo.findOne({ where: { id }, withDeleted: true });
     if (!record) {
       throw new NotFoundException('导入记录不存在');
@@ -99,10 +110,19 @@ export class ImportRecordService {
       `还原导入记录 id=${id}，同时还原 live_stream_data ${updateResult.affected ?? 0} 条 ` +
         `(siteCode=${record.siteCode}, liveDate=${record.liveDate})`,
     );
+
+    // 写入操作日志
+    this.logService.create({
+      operationType: 'restore',
+      description: `还原导入记录 id=${id}，站点 ${record.siteCode}，日期 ${record.liveDate}`,
+      operator,
+      targetTable: 'import_record',
+      recordCount: updateResult.affected ?? 0,
+    }).catch((err: any) => this.logger.error(`还原日志写入失败: ${err.message}`));
   }
 
   /** 清空回收站：物理删除所有已软删除的导入记录和直播数据 */
-  async emptyRecycleBin(): Promise<{ importRecords: number; liveStreamData: number }> {
+  async emptyRecycleBin(operator: string = 'system'): Promise<{ importRecords: number; liveStreamData: number }> {
     // 物理删除已软删除的导入记录
     const importResult = await this.repo
       .createQueryBuilder()
@@ -123,6 +143,15 @@ export class ImportRecordService {
     this.logger.log(
       `清空回收站：删除 import_record ${importCount} 条，live_stream_data ${liveCount} 条`,
     );
+
+    // 写入操作日志
+    this.logService.create({
+      operationType: 'clear_recycle',
+      description: `清空回收站，删除 ${importCount} 条导入记录 + ${liveCount} 条直播数据`,
+      operator,
+      targetTable: 'import_record',
+      recordCount: importCount + liveCount,
+    }).catch((err: any) => this.logger.error(`清空回收站日志写入失败: ${err.message}`));
 
     return { importRecords: importCount, liveStreamData: liveCount };
   }

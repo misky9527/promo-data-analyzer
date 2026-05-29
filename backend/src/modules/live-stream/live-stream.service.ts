@@ -5,6 +5,7 @@ import { Repository, DataSource, In } from 'typeorm';
 import { LiveStreamData } from './entities/live-stream-data.entity';
 import { LiveSite } from '../live-site/entities/live-site.entity';
 import { ImportRecordService } from './import-record.service';
+import { LogService } from '../log/log.service';
 import { QueryLiveDataDto } from './dto/query-live-data.dto';
 import { QueryDailySummaryDto } from './dto/query-daily-summary.dto';
 import { QueryEventSummaryDto } from './dto/query-event-summary.dto';
@@ -41,6 +42,7 @@ export class LiveStreamService {
     @InjectDataSource()
     private readonly dataSource: DataSource,
     private readonly importRecordService: ImportRecordService,
+    private readonly logService: LogService,
   ) {}
 
   // ═══════════════════════════════════════════════════════════
@@ -387,7 +389,7 @@ export class LiveStreamService {
     for (const file of files) {
       const fileName = file.originalname;
       try {
-        const fileResult = await this.processOneFile(file, siteCodeSet, existingKeys, dedupMode);
+        const fileResult = await this.processOneFile(file, siteCodeSet, existingKeys, dedupMode, operator);
         results.push(fileResult);
 
         // 导入成功后写入导入记录
@@ -431,6 +433,7 @@ export class LiveStreamService {
     siteCodeSet: Set<string>,
     existingKeys: Set<string>,
     dedupMode?: 'overwrite' | 'ignore',
+    operator?: string,
   ): Promise<FileImportResult> {
     const fileName = file.originalname;
 
@@ -664,6 +667,17 @@ export class LiveStreamService {
           await manager.save(entities, { chunk: 200 });
         });
         this.logger.log(`文件 ${fileName}: 覆盖导入 ${success} 条 (站点 ${siteCode} 日期 ${liveDate} 已覆盖)`);
+
+        // 写入操作日志（事务外）
+        const op = operator ?? 'system';
+        this.logService.create({
+          operationType: 'import',
+          description: `导入文件 ${fileName}，站点 ${siteCode}，日期 ${liveDate}，${entities.length} 条`,
+          operator: op,
+          targetTable: 'live_stream_data',
+          recordCount: entities.length,
+        }).catch((err: any) => this.logger.error(`导入日志写入失败: ${err.message}`));
+
         return {
           fileName,
           success: entities.length,
@@ -692,6 +706,16 @@ export class LiveStreamService {
       });
       this.logger.log(`文件 ${fileName}: 成功导入 ${success} 条`);
     }
+
+    // 写入操作日志（事务外）
+    const op = operator ?? 'system';
+    this.logService.create({
+      operationType: 'import',
+      description: `导入文件 ${fileName}，站点 ${siteCode}，日期 ${liveDate}，${entities.length} 条`,
+      operator: op,
+      targetTable: 'live_stream_data',
+      recordCount: entities.length,
+    }).catch((err: any) => this.logger.error(`导入日志写入失败: ${err.message}`));
 
     return { fileName, success, failed: 0, siteCode, liveDate, recordCount: entities.length };
   }

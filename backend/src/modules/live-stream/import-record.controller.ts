@@ -6,6 +6,7 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  Req,
 } from '@nestjs/common';
 import { ImportRecordService } from './import-record.service';
 import { QueryImportRecordDto } from './dto/query-import-record.dto';
@@ -27,20 +28,23 @@ export class ImportRecordController {
 
   /** 软删除：移入回收站 */
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.importRecordService.delete(id);
+  remove(@Param('id', ParseIntPipe) id: number, @Req() req?: any) {
+    const operator = req?.user?.username ?? 'system';
+    return this.importRecordService.delete(id, operator);
   }
 
   /** 还原：从回收站恢复 */
   @Patch(':id/restore')
-  restore(@Param('id', ParseIntPipe) id: number) {
-    return this.importRecordService.restore(id);
+  restore(@Param('id', ParseIntPipe) id: number, @Req() req?: any) {
+    const operator = req?.user?.username ?? 'system';
+    return this.importRecordService.restore(id, operator);
   }
 
   /** 清空回收站（仅超级管理员） */
   @Delete('recycle-bin')
   @Roles(RoleType.SUPER_ADMIN)
-  emptyRecycleBin() {
-    return this.importRecordService.emptyRecycleBin();
+  emptyRecycleBin(@Req() req?: any) {
+    const operator = req?.user?.username ?? 'system';
+    return this.importRecordService.emptyRecycleBin(operator);
   }
 }

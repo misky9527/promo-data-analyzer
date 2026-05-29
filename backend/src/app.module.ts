@@ -16,6 +16,7 @@ import { LiveSiteModule } from './modules/live-site/live-site.module';
 import { StreamerModule } from './modules/streamer/streamer.module';
 import { AdminUserModule } from './modules/admin-user/admin-user.module';
 import { OpsModule } from './modules/ops/ops.module';
+import { LogModule } from './modules/log/log.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { PermissionsGuard } from './common/guards/permissions.guard';
@@ -66,6 +67,7 @@ import { AdminUser } from './modules/auth/entities/admin-user.entity';
     StreamerModule,
     AdminUserModule,
     OpsModule,
+    LogModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

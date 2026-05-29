@@ -1,6 +1,7 @@
 import { Injectable, ForbiddenException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { LogService } from '../log/log.service';
 
 const FORBIDDEN_KEYWORDS = ['DROP', 'TRUNCATE', 'ALTER', 'CREATE'];
 const ALLOWED_KEYWORDS = ['SELECT', 'EXPLAIN', 'SHOW', 'DESCRIBE', 'DESC', 'WITH', 'INSERT', 'UPDATE', 'DELETE'];
@@ -12,9 +13,10 @@ export class OpsService {
 
   constructor(
     @InjectDataSource() private readonly dataSource: DataSource,
+    private readonly logService: LogService,
   ) {}
 
-  async execute(sql: string): Promise<{ columns: string[]; rows: any[] }> {
+  async execute(sql: string, operator: string = 'system'): Promise<{ columns: string[]; rows: any[] }> {
     const trimmed = (sql ?? '').trim();
     if (!trimmed) {
       throw new BadRequestException('SQL 语句不能为空');
@@ -40,13 +42,33 @@ export class OpsService {
 
     this.logger.log(`执行 SQL: ${trimmed.substring(0, 200)}`);
 
+    // 写入操作日志
+    const logDescription = `执行 SQL: ${trimmed.length > 200 ? trimmed.substring(0, 200) + '...' : trimmed}`;
+
     try {
       const result = await this.executeWithTimeout(trimmed);
       const columns = Array.isArray(result) && result.length > 0
         ? Object.keys(result[0])
         : [];
+      const rowCount = Array.isArray(result) ? result.length : 0;
+
+      // 异步写日志，不阻塞返回
+      this.logService.create({
+        operationType: 'sql',
+        description: logDescription,
+        operator,
+        recordCount: rowCount,
+      }).catch((err: any) => this.logger.error(`SQL 日志写入失败: ${err.message}`));
+
       return { columns, rows: result ?? [] };
     } catch (error: any) {
+      // 执行失败也记录日志
+      this.logService.create({
+        operationType: 'sql',
+        description: `${logDescription} (执行失败: ${error?.message ?? error})`,
+        operator,
+      }).catch((err: any) => this.logger.error(`SQL 日志写入失败: ${err.message}`));
+
       this.logger.error(`SQL 执行失败: ${error?.message ?? error}`);
       throw new BadRequestException(error?.message ?? 'SQL 执行失败');
     }

@@ -1121,7 +1121,6 @@ const LiveStreamPage = () => {
 
 const EventHostSummaryTab = () => {
   const { message: msg } = App.useApp();
-  const [rawData, setRawData] = useState<API.EventHostSummaryRecord[]>([]);
   const [loading, setLoading] = useState(false);
   const [eventSearchText, setEventSearchText] = useState('');
   const [hostSearchText, setHostSearchText] = useState('');
@@ -1159,11 +1158,17 @@ const EventHostSummaryTab = () => {
     setDateSearchText(dateStr);
   }, []);
 
-  // 全 host 行:仅首行显示日期/赛事
-  const dataSource = useMemo(() => {
+  const actionRef = useRef<ActionType>();
+
+  const handleQuery = useCallback(() => {
+    actionRef.current?.reload();
+  }, []);
+
+  // 将后端原始数据转为表格行（按赛事+日期分组）
+  const processRows = (list: API.EventHostSummaryRecord[]) => {
     const rows: any[] = [];
     const map = new Map<string, API.EventHostSummaryRecord[]>();
-    rawData.forEach((r) => {
+    list.forEach((r) => {
       const key = `${r.eventName}|${r.liveDate}`;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(r);
@@ -1188,7 +1193,7 @@ const EventHostSummaryTab = () => {
       });
     });
     return rows;
-  }, [rawData]);
+  };
 
   // antd sorter:按字段值排序
   const makeSorter = (field: string) => (a: any, b: any) => {
@@ -1215,33 +1220,37 @@ const EventHostSummaryTab = () => {
           <DatePicker
             placeholder="选择日期"
             allowClear
+            value={dateSearchText ? dayjs(dateSearchText) : undefined}
             onChange={handleDateChange}
             style={{ width: 160 }}
           />
-          <Input.Search
+          <Input
             placeholder="搜索赛事名"
             allowClear
             value={eventSearchText}
             onChange={(e) => setEventSearchText(e.target.value)}
-            onSearch={handleEventSearch}
-            style={{ width: 260 }}
+            onPressEnter={handleQuery}
+            style={{ width: 200 }}
           />
           <AutoComplete
             options={hostOptions}
             value={hostSearchText}
             onChange={(val) => setHostSearchText(val)}
-            onSelect={handleHostSearch}
-            style={{ width: 220 }}
+            style={{ width: 180 }}
           >
-            <Input.Search
-              placeholder="搜索主播名(输入匹配)"
+            <Input
+              placeholder="搜索主播名"
               allowClear
-              onSearch={handleHostSearch}
+              onPressEnter={handleQuery}
             />
           </AutoComplete>
+          <Button type="primary" icon={<SearchOutlined />} onClick={handleQuery}>
+            查询
+          </Button>
         </div>
       </div>
       <ProTable
+        actionRef={actionRef}
         rowKey="_key"
         loading={loading}
         search={false}
@@ -1252,17 +1261,24 @@ const EventHostSummaryTab = () => {
         pagination={{ defaultPageSize: 20, showSizeChanger: true }}
         request={async (params: any) => {
           const { pageSize, current } = params;
-          const res = await getEventHostSummary({
-            page: current,
-            pageSize,
-            ...(eventSearchText ? { eventName: eventSearchText } : {}),
-            ...(hostSearchText ? { host: hostSearchText } : {}),
-            ...(dateSearchText ? { liveDate: dateSearchText } : {}),
-          });
-          const list = Array.isArray(res) ? res : res.list || [];
-          const total = res.total || 0;
-          setRawData(list);
-          return { data: dataSource, total, success: true };
+          setLoading(true);
+          try {
+            const res = await getEventHostSummary({
+              page: current,
+              pageSize,
+              ...(eventSearchText ? { eventName: eventSearchText } : {}),
+              ...(hostSearchText ? { host: hostSearchText } : {}),
+              ...(dateSearchText ? { liveDate: dateSearchText } : {}),
+            });
+            const list = Array.isArray(res) ? res : res.list || [];
+            const total = res.total || 0;
+            return { data: processRows(list), total, success: true };
+          } catch {
+            msg.error('加载赛事主播汇总失败');
+            return { data: [], total: 0, success: false };
+          } finally {
+            setLoading(false);
+          }
         }}
         columns={columns}
       />

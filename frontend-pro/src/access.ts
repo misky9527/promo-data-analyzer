@@ -28,5 +28,6 @@ export default function access(initialState?: { currentUser?: API.CurrentUser })
       roleType === 'super_admin'
       || DICT_PERMISSION_KEYS.some((permission) => Array.isArray(permissions) && permissions.includes(permission)),
     isSuperAdmin: roleType === 'super_admin',
+    isAdmin: roleType === 'super_admin' || roleType === 'admin',
   };
 }

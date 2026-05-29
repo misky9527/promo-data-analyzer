@@ -356,3 +356,9 @@ export const executeSql = (sql: string) =>
     method: 'POST',
     data: { sql },
   });
+
+// === 操作日志 ===
+export const getOperationLogs = (params: Record<string, unknown>) =>
+  request<any>(`/admin/log${toQuery(params)}`);
+export const getRecentLogs = () =>
+  request<any[]>('/admin/log/recent');

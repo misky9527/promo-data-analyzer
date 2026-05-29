@@ -92,6 +92,16 @@ declare namespace API {
     name: string;
   }
 
+  interface ImportRecordItem {
+    id: number;
+    fileName: string;
+    siteCode: string;
+    liveDate: string;
+    recordCount: number;
+    operator: string;
+    createdAt: string;
+  }
+
   interface AdminUserRecord {
     id: number;
     username: string;

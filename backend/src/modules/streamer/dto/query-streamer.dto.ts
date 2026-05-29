@@ -18,4 +18,8 @@ export class QueryStreamerDto {
   @IsString()
   @MaxLength(100)
   name?: string;
+
+  @IsOptional()
+  @IsString()
+  level?: string;
 }

@@ -15,11 +15,14 @@ export class StreamerService {
   ) {}
 
   async list(query: QueryStreamerDto) {
-    const { page = 1, pageSize = 10, name } = query;
+    const { page = 1, pageSize = 10, name, level } = query;
     const qb = this.streamerRepo.createQueryBuilder('s')
       .leftJoinAndSelect('s.liveSite', 'liveSite');
     if (name) {
       qb.andWhere('s.name ILIKE :name', { name: `%${name}%` });
+    }
+    if (level) {
+      qb.andWhere('s.level = :level', { level });
     }
     qb.orderBy('s.id', 'ASC').skip((page - 1) * pageSize).take(pageSize);
     const [list, total] = await qb.getManyAndCount();

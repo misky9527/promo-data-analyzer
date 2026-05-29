@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, DeleteDateColumn } from 'typeorm';
 import { BaseTimeEntity } from '../../../common/entities/base-time.entity';
 import { LiveSite } from '../../live-site/entities/live-site.entity';
 
@@ -58,4 +58,7 @@ export class LiveStreamData extends BaseTimeEntity {
 
   @Column({ type: 'int', nullable: true, name: 'peak_online' })
   peakOnline: number | null;
+
+  @DeleteDateColumn({ type: 'timestamptz', name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
 }

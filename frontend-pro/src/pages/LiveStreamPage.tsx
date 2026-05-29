@@ -1,8 +1,9 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin, Input } from 'antd';
+import { App, Button, Popconfirm, Upload, Progress, Modal, Table, Tabs, Spin, Input, AutoComplete, Space } from 'antd';
 import { UploadOutlined, InboxOutlined, SearchOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
+import { useModel } from '@umijs/max';
 import dayjs from 'dayjs';
 import type { ActionType, ProColumns, ProFormInstance } from '@ant-design/pro-components';
 import {
@@ -15,6 +16,11 @@ import {
   importLiveStreamData,
   batchDeleteLiveStreamRecords,
   fetchLiveSiteList,
+  getStreamers,
+  getImportRecords,
+  deleteImportRecord,
+  emptyImportRecycleBin,
+  restoreImportRecord,
 } from '@/services/api';
 
 /** 秒数转为可读时长字符串 "X小时X分X秒" */
@@ -50,18 +56,25 @@ const LiveStreamPage = () => {
   const [importResults, setImportResults] = useState<ImportResultItem[]>([]);
   const [siteOptions, setSiteOptions] = useState<{ label: string; value: string }[]>([]);
   const { message: msg } = App.useApp();
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser;
+  const isAdmin = currentUser?.roleType === 'super_admin';
 
-  /** 点击每日汇总「查看明细」时，切换到直播数据并预设筛选 */
+  // 回收站弹窗
+  const [recycleVisible, setRecycleVisible] = useState(false);
+  const recycleActionRef = useRef<ActionType>();
+
+  /** 点击每日汇总「查看明细」时,切换到直播数据并预设筛选 */
   const jumpToDetail = (siteCode: string, liveDate: any) => {
     setActiveTab('detail');
-    // JSON序列化后 Date 变成 "2026-05-23T16:00:00.000Z"，需按本地时间解析
+    // JSON序列化后 Date 变成 "2026-05-23T16:00:00.000Z",需按本地时间解析
     let dateStr: string;
     if (liveDate?.$d instanceof Date) {
       dateStr = dayjs(liveDate).format('YYYY-MM-DD');
     } else if (liveDate instanceof Date) {
       dateStr = `${liveDate.getFullYear()}-${String(liveDate.getMonth() + 1).padStart(2, '0')}-${String(liveDate.getDate()).padStart(2, '0')}`;
     } else if (typeof liveDate === 'string') {
-      // JSON 序列化后的 ISO 字符串，用 dayjs 按本地时区解析
+      // JSON 序列化后的 ISO 字符串,用 dayjs 按本地时区解析
       dateStr = dayjs(liveDate).format('YYYY-MM-DD');
     } else {
       dateStr = dayjs(liveDate).format('YYYY-MM-DD');
@@ -72,7 +85,7 @@ const LiveStreamPage = () => {
     }, 200);
   };
 
-  // 加载站点列表（用于搜索下拉）
+  // 加载站点列表(用于搜索下拉)
   useEffect(() => {
     fetchLiveSiteList()
       .then((list: any) => {
@@ -192,7 +205,7 @@ const LiveStreamPage = () => {
       render: (_, row) => [
         <Popconfirm
           key="delete"
-          title="确认删除？"
+          title="确认删除?"
           onConfirm={async () => {
             await deleteLiveStreamRecord(row.id);
             msg.success('已删除');
@@ -357,7 +370,7 @@ const LiveStreamPage = () => {
     },
   ];
 
-  // L1：按主播聚合（去重站点，汇总指标）
+  // L1:按主播聚合(去重站点,汇总指标)
   const aggregateByHost = (data: API.HostSummaryRecord[]) => {
     const map = new Map<string, {
       siteCodes: Set<string>;
@@ -460,7 +473,7 @@ const LiveStreamPage = () => {
 
       const res: any = await doImport(rawFiles);
 
-      // 检测重复数据，弹窗让用户选择
+      // 检测重复数据,弹窗让用户选择
       const files = res.files || [];
       const hasDupError = files.some((f: any) => f.duplicates > 0 && !f.error);
       const hasRealDup = files.some((f: any) => f.duplicates > 0 && f.error);
@@ -638,7 +651,7 @@ const LiveStreamPage = () => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">点击或拖拽 CSV 文件到此区域上传</p>
-          <p className="ant-upload-hint">支持批量上传，文件名格式: {"{code}-{date}.csv 或 .xlsx"}</p>
+          <p className="ant-upload-hint">支持批量上传,文件名格式: {"{code}-{date}.csv 或 .xlsx"}</p>
         </Upload.Dragger>
 
         {fileList.length > 0 && (
@@ -707,7 +720,7 @@ const LiveStreamPage = () => {
                       selectedRowKeys.length > 0 && (
                         <Popconfirm
                           key="batchDelete"
-                          title="确认批量删除？"
+                          title="确认批量删除?"
                           onConfirm={async () => {
                             await batchDeleteLiveStreamRecords(selectedRowKeys as number[]);
                             msg.success('已批量删除');
@@ -786,10 +799,179 @@ const LiveStreamPage = () => {
                   ]}
                 >
                   <p>当前日期已有 {dedupCount} 条导入数据。</p>
-                  <p><strong>覆盖：</strong>删除该站点+该日期的全部旧数据，写入新数据。</p>
-                  <p><strong>取消：</strong>跳过该文件，不导入。</p>
+                  <p><strong>覆盖:</strong>删除该站点+该日期的全部旧数据,写入新数据。</p>
+                  <p><strong>取消:</strong>跳过该文件,不导入。</p>
                 </Modal>
               </div>
+            ),      
+          },
+          {
+            key: 'import-records',
+            label: '导入记录',
+            children: (
+              <>
+                <ProTable<API.ImportRecordItem>
+                  headerTitle="导入记录"
+                  rowKey="id"
+                  search={false}
+                  toolBarRender={() => [
+                    <Button key="recycle" onClick={() => setRecycleVisible(true)}>
+                      回收站
+                    </Button>,
+                  ]}
+                  request={async (params: any) => {
+                    const { current, pageSize } = params;
+                    const res = await getImportRecords({ page: current, pageSize });
+                    return { data: res.list, total: res.total, success: true };
+                  }}
+                  columns={[
+                    {
+                      title: '文件名',
+                      dataIndex: 'fileName',
+                      width: 220,
+                      ellipsis: true,
+                    },
+                    {
+                      title: '站点',
+                      dataIndex: 'siteCode',
+                      width: 100,
+                    },
+                    {
+                      title: '直播日期',
+                      dataIndex: 'liveDate',
+                      width: 120,
+                    },
+                    {
+                      title: '导入条数',
+                      dataIndex: 'recordCount',
+                      width: 100,
+                      render: (_, r) => r.recordCount?.toLocaleString(),
+                    },
+                    {
+                      title: '操作人',
+                      dataIndex: 'operator',
+                      width: 120,
+                    },
+                    {
+                      title: '导入时间',
+                      dataIndex: 'createdAt',
+                      width: 180,
+                      valueType: 'dateTime',
+                    },
+                    {
+                      title: '操作',
+                      valueType: 'option',
+                      width: 80,
+                      render: (_, row) => [
+                        <Popconfirm
+                          key="delete"
+                          title="确认删除？该导入记录及对应直播数据将移入回收站"
+                          onConfirm={async () => {
+                            await deleteImportRecord(row.id);
+                            msg.success('已移入回收站');
+                            actionRef.current?.reload();
+                          }}
+                        >
+                          <a style={{ color: '#ff4d4f' }}>删除</a>
+                        </Popconfirm>,
+                      ],
+                    },
+                  ]}
+                  pagination={{ defaultPageSize: 20 }}
+                />
+
+                {/* 回收站弹窗 */}
+                <Modal
+                  title="回收站"
+                  open={recycleVisible}
+                  onCancel={() => setRecycleVisible(false)}
+                  width={900}
+                  footer={null}
+                  destroyOnClose
+                >
+                  <ProTable<API.ImportRecordItem>
+                    actionRef={recycleActionRef}
+                    headerTitle={
+                      <Space>
+                        <span>已删除的导入记录</span>
+                        {isAdmin && (
+                          <Popconfirm
+                            title="确认清空回收站？所有软删除的记录将被永久删除，不可恢复！"
+                            onConfirm={async () => {
+                              await emptyImportRecycleBin();
+                              msg.success('回收站已清空');
+                              recycleActionRef.current?.reload();
+                            }}
+                          >
+                            <Button danger size="small">清空回收站</Button>
+                          </Popconfirm>
+                        )}
+                      </Space>
+                    }
+                    rowKey="id"
+                    search={false}
+                    request={async (params: any) => {
+                      const { current, pageSize } = params;
+                      const res = await getImportRecords({ page: current, pageSize, deleted: true });
+                      return { data: res.list, total: res.total, success: true };
+                    }}
+                    columns={[
+                      {
+                        title: '文件名',
+                        dataIndex: 'fileName',
+                        width: 200,
+                        ellipsis: true,
+                      },
+                      {
+                        title: '站点',
+                        dataIndex: 'siteCode',
+                        width: 80,
+                      },
+                      {
+                        title: '直播日期',
+                        dataIndex: 'liveDate',
+                        width: 120,
+                      },
+                      {
+                        title: '导入条数',
+                        dataIndex: 'recordCount',
+                        width: 100,
+                        render: (_, r) => r.recordCount?.toLocaleString(),
+                      },
+                      {
+                        title: '操作人',
+                        dataIndex: 'operator',
+                        width: 100,
+                      },
+                      {
+                        title: '删除时间',
+                        dataIndex: 'deletedAt',
+                        width: 180,
+                        valueType: 'dateTime',
+                      },
+                      {
+                        title: '操作',
+                        valueType: 'option',
+                        width: 80,
+                        render: (_, row) => [
+                          <Popconfirm
+                            key="restore"
+                            title="确认还原？将恢复该导入记录及对应直播数据"
+                            onConfirm={async () => {
+                              await restoreImportRecord(row.id);
+                              msg.success('已还原');
+                              recycleActionRef.current?.reload();
+                            }}
+                          >
+                            <a>还原</a>
+                          </Popconfirm>,
+                        ],
+                      },
+                    ]}
+                    pagination={{ defaultPageSize: 20 }}
+                  />
+                </Modal>
+              </>
             ),
           },
           {
@@ -934,20 +1116,41 @@ const LiveStreamPage = () => {
 };
 
 // ═══════════════════════════════════════════════════════════
-// 赛事主播汇总 Tab（自包含组件）
+// 赛事主播汇总 Tab(自包含组件)
 // ═══════════════════════════════════════════════════════════
 
 const EventHostSummaryTab = () => {
   const { message: msg } = App.useApp();
   const [rawData, setRawData] = useState<API.EventHostSummaryRecord[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState('');
+  const [eventSearchText, setEventSearchText] = useState('');
+  const [hostSearchText, setHostSearchText] = useState('');
+  const [hostOptions, setHostOptions] = useState<{ value: string; label: string }[]>([]);
 
-  const loadData = useCallback(async (eventName?: string) => {
+  // 加载主播中心列表给 AutoComplete 做下拉
+  useEffect(() => {
+    getStreamers({ page: 1, pageSize: 200 })
+      .then((res: any) => {
+        const list = res.list || [];
+        const seen = new Set<string>();
+        const opts: { value: string; label: string }[] = [];
+        list.forEach((s: any) => {
+          if (!seen.has(s.name)) {
+            seen.add(s.name);
+            opts.push({ value: s.name, label: s.name });
+          }
+        });
+        setHostOptions(opts);
+      })
+      .catch(() => {});
+  }, []);
+
+  const loadData = useCallback(async (eventName?: string, host?: string) => {
     setLoading(true);
     try {
       const params: Record<string, unknown> = {};
       if (eventName) params.eventName = eventName;
+      if (host) params.host = host;
       const res = await getEventHostSummary(params);
       setRawData(Array.isArray(res) ? res : res.list || []);
     } catch {
@@ -961,12 +1164,17 @@ const EventHostSummaryTab = () => {
     loadData();
   }, [loadData]);
 
-  const handleSearch = useCallback((value: string) => {
-    setSearchText(value);
-    loadData(value || undefined);
-  }, [loadData]);
+  const handleEventSearch = useCallback((value: string) => {
+    setEventSearchText(value);
+    loadData(value || undefined, hostSearchText || undefined);
+  }, [loadData, hostSearchText]);
 
-  // 全 host 行：仅首行显示日期/赛事
+  const handleHostSearch = useCallback((value: string) => {
+    setHostSearchText(value);
+    loadData(eventSearchText || undefined, value || undefined);
+  }, [loadData, eventSearchText]);
+
+  // 全 host 行:仅首行显示日期/赛事
   const dataSource = useMemo(() => {
     const rows: any[] = [];
     const map = new Map<string, API.EventHostSummaryRecord[]>();
@@ -997,7 +1205,7 @@ const EventHostSummaryTab = () => {
     return rows;
   }, [rawData]);
 
-  // antd sorter：按字段值排序
+  // antd sorter:按字段值排序
   const makeSorter = (field: string) => (a: any, b: any) => {
     return (a[field] ?? 0) - (b[field] ?? 0);
   };
@@ -1016,16 +1224,31 @@ const EventHostSummaryTab = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <h4 style={{ margin: 0 }}>赛事主播汇总</h4>
-        <Input.Search
-          placeholder="搜索赛事名"
-          allowClear
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          onSearch={handleSearch}
-          style={{ width: 300 }}
-        />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Input.Search
+            placeholder="搜索赛事名"
+            allowClear
+            value={eventSearchText}
+            onChange={(e) => setEventSearchText(e.target.value)}
+            onSearch={handleEventSearch}
+            style={{ width: 260 }}
+          />
+          <AutoComplete
+            options={hostOptions}
+            value={hostSearchText}
+            onChange={(val) => setHostSearchText(val)}
+            onSelect={handleHostSearch}
+            style={{ width: 220 }}
+          >
+            <Input.Search
+              placeholder="搜索主播名(输入匹配)"
+              allowClear
+              onSearch={handleHostSearch}
+            />
+          </AutoComplete>
+        </div>
       </div>
       <ProTable
         dataSource={dataSource}

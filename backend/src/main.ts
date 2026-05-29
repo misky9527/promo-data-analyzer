@@ -1,3 +1,6 @@
+// 全站北京时间，必须在所有 import 之前
+process.env.TZ = 'Asia/Shanghai';
+
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';

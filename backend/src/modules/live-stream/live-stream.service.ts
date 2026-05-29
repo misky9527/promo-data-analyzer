@@ -4,6 +4,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { Repository, DataSource, In } from 'typeorm';
 import { LiveStreamData } from './entities/live-stream-data.entity';
 import { LiveSite } from '../live-site/entities/live-site.entity';
+import { ImportRecordService } from './import-record.service';
 import { QueryLiveDataDto } from './dto/query-live-data.dto';
 import { QueryDailySummaryDto } from './dto/query-daily-summary.dto';
 import { QueryEventSummaryDto } from './dto/query-event-summary.dto';
@@ -17,6 +18,9 @@ export interface FileImportResult {
   failed: number;
   error?: string;
   duplicates?: number;
+  siteCode?: string;
+  liveDate?: string;
+  recordCount?: number;
 }
 
 export interface MultiImportResult {
@@ -36,6 +40,7 @@ export class LiveStreamService {
     private readonly siteRepo: Repository<LiveSite>,
     @InjectDataSource()
     private readonly dataSource: DataSource,
+    private readonly importRecordService: ImportRecordService,
   ) {}
 
   // ═══════════════════════════════════════════════════════════
@@ -46,7 +51,8 @@ export class LiveStreamService {
     const { page = 1, pageSize = 10, siteCode, category, host, league, liveInfo, liveDate, sortField, sortOrder } = query;
     const qb = this.repo
       .createQueryBuilder('ls')
-      .leftJoinAndSelect('ls.site', 'site');
+      .leftJoinAndSelect('ls.site', 'site')
+      .where('ls.deletedAt IS NULL');
 
     if (siteCode) {
       qb.andWhere('UPPER(ls.siteCode) = UPPER(:siteCode)', { siteCode });
@@ -105,6 +111,7 @@ export class LiveStreamService {
       .addSelect('SUM(ls.avgStayPerson)', 'totalStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
       .addSelect('COUNT(*)', 'streamCount')
+      .where('ls.deletedAt IS NULL')
       .groupBy('ls.siteCode')
       .addGroupBy('site.name')
       .addGroupBy('ls.liveDate')
@@ -125,7 +132,8 @@ export class LiveStreamService {
     const countQb = this.repo
       .createQueryBuilder('ls')
       .leftJoin('ls.site', 'site')
-      .select('COUNT(DISTINCT CONCAT(ls.siteCode, ls.liveDate))', 'total');
+      .select('COUNT(DISTINCT CONCAT(ls.siteCode, ls.liveDate))', 'total')
+      .where('ls.deletedAt IS NULL');
 
     if (siteCode) {
       countQb.andWhere('UPPER(ls.siteCode) = UPPER(:siteCode)', { siteCode });
@@ -176,7 +184,8 @@ export class LiveStreamService {
       .addGroupBy('ls.eventName')
       .addGroupBy('ls.liveDate')
       .addGroupBy('ls.league')
-      .addGroupBy('ls.category');
+      .addGroupBy('ls.category')
+      .where('ls.deletedAt IS NULL');
 
     if (liveDate) {
       qb.andWhere('ls.liveDate = :liveDate', { liveDate });
@@ -203,7 +212,8 @@ export class LiveStreamService {
       .select(
         'COUNT(DISTINCT CONCAT(ls.eventTime, ls.eventName, ls.liveDate, ls.league, ls.category))',
         'total',
-      );
+      )
+      .where('ls.deletedAt IS NULL');
     if (liveDate) {
       countQb.andWhere('ls.liveDate = :liveDate', { liveDate });
     }
@@ -247,7 +257,8 @@ export class LiveStreamService {
       .addSelect('AVG(ls.avgStayVisit)', 'avgStayVisit')
       .addSelect('AVG(ls.avgStayPerson)', 'avgStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
-      .where('ls.eventName = :eventName', { eventName })
+      .where('ls.deletedAt IS NULL')
+      .andWhere('ls.eventName = :eventName', { eventName })
       .andWhere('ls.liveDate = :liveDate', { liveDate })
       .groupBy('ls.host')
       .addGroupBy('ls.siteCode')
@@ -273,7 +284,7 @@ export class LiveStreamService {
   // ═══════════════════════════════════════════════════════════
 
   async eventHostSummary(query: QueryEventHostSummaryDto) {
-    const { eventName } = query;
+    const { eventName, host } = query;
 
     const qb = this.repo
       .createQueryBuilder('ls')
@@ -289,7 +300,8 @@ export class LiveStreamService {
       .addSelect('AVG(ls.avgStayVisit)', 'avgStayVisit')
       .addSelect('AVG(ls.avgStayPerson)', 'avgStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
-      .where('ls.eventName IS NOT NULL')
+      .where('ls.deletedAt IS NULL')
+      .andWhere('ls.eventName IS NOT NULL')
       .andWhere("ls.eventName != ''")
       .groupBy('ls.eventName')
       .addGroupBy('ls.liveDate')
@@ -301,6 +313,12 @@ export class LiveStreamService {
     if (eventName) {
       qb.andWhere('ls.eventName ILIKE :eventName', {
         eventName: `%${eventName}%`,
+      });
+    }
+
+    if (host) {
+      qb.andWhere('ls.host ILIKE :host', {
+        host: `%${host}%`,
       });
     }
 
@@ -323,7 +341,11 @@ export class LiveStreamService {
   // 多文件 CSV 导入
   // ═══════════════════════════════════════════════════════════
 
-  async importCsv(files: Array<{ originalname: string; buffer: Buffer }>, dedupMode?: 'overwrite' | 'ignore'): Promise<MultiImportResult> {
+  async importCsv(
+    files: Array<{ originalname: string; buffer: Buffer }>,
+    dedupMode?: 'overwrite' | 'ignore',
+    operator?: string,
+  ): Promise<MultiImportResult> {
     const results: FileImportResult[] = [];
 
     // 预加载所有站点 code
@@ -341,6 +363,21 @@ export class LiveStreamService {
       try {
         const fileResult = await this.processOneFile(file, siteCodeSet, existingKeys, dedupMode);
         results.push(fileResult);
+
+        // 导入成功后写入导入记录
+        if (fileResult.success > 0 && fileResult.siteCode && fileResult.liveDate) {
+          try {
+            await this.importRecordService.create({
+              fileName: fileResult.fileName,
+              siteCode: fileResult.siteCode,
+              liveDate: fileResult.liveDate,
+              recordCount: fileResult.recordCount ?? fileResult.success,
+              operator: operator ?? 'system',
+            });
+          } catch (err: any) {
+            this.logger.error(`创建导入记录失败 (${fileName}): ${err.message}`);
+          }
+        }
       } catch (err: any) {
         this.logger.error(`文件 ${fileName} 导入失败: ${err.message}`);
         results.push({
@@ -471,7 +508,7 @@ export class LiveStreamService {
           failed++;
           continue;
         }
-        const startTime = new Date(startTimeStr.replace(' ', 'T'));
+        const startTime = new Date(startTimeStr.replace(' ', 'T') + '+08:00');
         if (isNaN(startTime.getTime())) {
           errors.push(`第 ${i + 2} 行: 无法解析开播时间 "${startTimeStr}"`);
           failed++;
@@ -606,6 +643,9 @@ export class LiveStreamService {
           success: entities.length,
           failed: 0,
           duplicates: entities.length,
+          siteCode,
+          liveDate,
+          recordCount: entities.length,
         } as any;
       }
 
@@ -627,7 +667,7 @@ export class LiveStreamService {
       this.logger.log(`文件 ${fileName}: 成功导入 ${success} 条`);
     }
 
-    return { fileName, success, failed: 0 };
+    return { fileName, success, failed: 0, siteCode, liveDate, recordCount: entities.length };
   }
 
   // ═══════════════════════════════════════════════════════════

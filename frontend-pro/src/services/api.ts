@@ -286,6 +286,16 @@ export const createLiveSite = (data: { code: string; name: string }) =>
 export const deleteLiveSite = (id: number) =>
   request<any>(`/admin/live-site/${id}`, { method: 'DELETE' });
 
+// === 导入记录 ===
+export const getImportRecords = (params: Record<string, unknown>) =>
+  request<any>(`/admin/import-record${toQuery(params)}`);
+export const deleteImportRecord = (id: number) =>
+  request<any>(`/admin/import-record/${id}`, { method: 'DELETE' });
+export const emptyImportRecycleBin = () =>
+  request<any>('/admin/import-record/recycle-bin', { method: 'DELETE' });
+export const restoreImportRecord = (id: number) =>
+  request<any>(`/admin/import-record/${id}/restore`, { method: 'PATCH' });
+
 // === 直播数据 ===
 export const importLiveStreamData = async (files: File[], dedupMode?: string) => {
   const formData = new FormData();

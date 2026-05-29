@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { LiveStreamService } from './live-stream.service';
@@ -34,6 +35,7 @@ export class LiveStreamController {
   async import(
     @UploadedFiles() files: Express.Multer.File[],
     @Query('dedupMode') dedupMode?: 'overwrite' | 'ignore',
+    @Req() req?: any,
   ) {
     if (!files || files.length === 0) {
       throw new BadRequestException('请上传 CSV 文件');
@@ -44,9 +46,11 @@ export class LiveStreamController {
         throw new BadRequestException(`文件 ${file.originalname} 不是 CSV 格式`);
       }
     }
+    const operator = req?.user?.username ?? 'system';
     return this.liveStreamService.importCsv(
       files.map((f) => ({ originalname: f.originalname, buffer: f.buffer })),
       dedupMode,
+      operator,
     );
   }
 

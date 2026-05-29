@@ -20,6 +20,7 @@ import {
   getImportRecords,
   deleteImportRecord,
   emptyImportRecycleBin,
+  hardDeleteImportRecord,
   restoreImportRecord,
 } from '@/services/api';
 
@@ -952,7 +953,7 @@ const LiveStreamPage = () => {
                       {
                         title: '操作',
                         valueType: 'option',
-                        width: 80,
+                        width: 140,
                         render: (_, row) => [
                           <Popconfirm
                             key="restore"
@@ -964,6 +965,17 @@ const LiveStreamPage = () => {
                             }}
                           >
                             <a>还原</a>
+                          </Popconfirm>,
+                          <Popconfirm
+                            key="hardDelete"
+                            title="确认彻底删除？该记录及对应直播数据将被永久删除，不可恢复！"
+                            onConfirm={async () => {
+                              await hardDeleteImportRecord(row.id);
+                              msg.success('已彻底删除');
+                              recycleActionRef.current?.reload();
+                            }}
+                          >
+                            <a style={{ color: '#ff4d4f' }}>彻底删除</a>
                           </Popconfirm>,
                         ],
                       },

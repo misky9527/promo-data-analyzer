@@ -26,6 +26,21 @@ export class ImportRecordController {
     return this.importRecordService.list(query.page, query.pageSize, query.deleted);
   }
 
+  /** 清空回收站（仅超级管理员）— 必须在 :id 之前 */
+  @Delete('recycle-bin')
+  @Roles(RoleType.SUPER_ADMIN)
+  emptyRecycleBin(@Req() req?: any) {
+    const operator = req?.user?.username ?? 'system';
+    return this.importRecordService.emptyRecycleBin(operator);
+  }
+
+  /** 彻底删除单条 */
+  @Delete(':id/permanent')
+  hardDelete(@Param('id', ParseIntPipe) id: number, @Req() req?: any) {
+    const operator = req?.user?.username ?? 'system';
+    return this.importRecordService.hardDelete(id, operator);
+  }
+
   /** 软删除：移入回收站 */
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number, @Req() req?: any) {
@@ -38,13 +53,5 @@ export class ImportRecordController {
   restore(@Param('id', ParseIntPipe) id: number, @Req() req?: any) {
     const operator = req?.user?.username ?? 'system';
     return this.importRecordService.restore(id, operator);
-  }
-
-  /** 清空回收站（仅超级管理员） */
-  @Delete('recycle-bin')
-  @Roles(RoleType.SUPER_ADMIN)
-  emptyRecycleBin(@Req() req?: any) {
-    const operator = req?.user?.username ?? 'system';
-    return this.importRecordService.emptyRecycleBin(operator);
   }
 }

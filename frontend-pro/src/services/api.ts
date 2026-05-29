@@ -291,6 +291,8 @@ export const getImportRecords = (params: Record<string, unknown>) =>
   request<any>(`/admin/import-record${toQuery(params)}`);
 export const deleteImportRecord = (id: number) =>
   request<any>(`/admin/import-record/${id}`, { method: 'DELETE' });
+export const hardDeleteImportRecord = (id: number) =>
+  request<any>(`/admin/import-record/${id}/permanent`, { method: 'DELETE' });
 export const emptyImportRecycleBin = () =>
   request<any>('/admin/import-record/recycle-bin', { method: 'DELETE' });
 export const restoreImportRecord = (id: number) =>

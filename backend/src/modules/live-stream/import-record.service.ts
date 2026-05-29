@@ -121,6 +121,38 @@ export class ImportRecordService {
     }).catch((err: any) => this.logger.error(`还原日志写入失败: ${err.message}`));
   }
 
+  /** 彻底删除单条：物理删除该导入记录和对应的直播数据 */
+  async hardDelete(id: number, operator: string = 'system'): Promise<void> {
+    const record = await this.repo.findOne({ where: { id }, withDeleted: true });
+    if (!record) {
+      throw new NotFoundException('导入记录不存在');
+    }
+
+    // 物理删除对应的直播数据
+    const liveResult = await this.liveStreamRepo
+      .createQueryBuilder()
+      .delete()
+      .where('siteCode = :siteCode', { siteCode: record.siteCode })
+      .andWhere('liveDate = :liveDate', { liveDate: record.liveDate })
+      .andWhere('deletedAt IS NOT NULL')
+      .execute();
+
+    // 物理删除导入记录
+    await this.repo.delete(id);
+
+    this.logger.log(
+      `彻底删除导入记录 id=${id}，物理删除 live_stream_data ${liveResult.affected ?? 0} 条`,
+    );
+
+    this.logService.create({
+      operationType: 'delete',
+      description: `彻底删除导入记录 id=${id}，站点 ${record.siteCode}，日期 ${record.liveDate}`,
+      operator,
+      targetTable: 'import_record',
+      recordCount: liveResult.affected ?? 0,
+    }).catch((err: any) => this.logger.error(`硬删除日志写入失败: ${err.message}`));
+  }
+
   /** 清空回收站：物理删除所有已软删除的导入记录和直播数据 */
   async emptyRecycleBin(operator: string = 'system'): Promise<{ importRecords: number; liveStreamData: number }> {
     // 物理删除已软删除的导入记录

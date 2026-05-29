@@ -46,6 +46,7 @@ interface ImportResultItem {
 
 const LiveStreamPage = () => {
   const actionRef = useRef<ActionType>();
+  const importActionRef = useRef<ActionType>();
   const detailFormRef = useRef<ProFormInstance>();
   const summaryRef = useRef<ActionType>();
   const [activeTab, setActiveTab] = useState('detail');
@@ -812,6 +813,7 @@ const LiveStreamPage = () => {
             children: (
               <>
                 <ProTable<API.ImportRecordItem>
+                  actionRef={importActionRef}
                   headerTitle="导入记录"
                   rowKey="id"
                   search={false}
@@ -870,7 +872,7 @@ const LiveStreamPage = () => {
                           onConfirm={async () => {
                             await deleteImportRecord(row.id);
                             msg.success('已移入回收站');
-                            actionRef.current?.reload();
+                            importActionRef.current?.reload();
                           }}
                         >
                           <a style={{ color: '#ff4d4f' }}>删除</a>

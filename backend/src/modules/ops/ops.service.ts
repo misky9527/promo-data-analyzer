@@ -2,8 +2,8 @@ import { Injectable, ForbiddenException, BadRequestException, Logger } from '@ne
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 
-const FORBIDDEN_KEYWORDS = ['DROP', 'TRUNCATE', 'ALTER', 'CREATE', 'INSERT', 'UPDATE', 'DELETE'];
-const ALLOWED_KEYWORDS = ['SELECT', 'EXPLAIN', 'SHOW', 'DESCRIBE', 'DESC', 'WITH'];
+const FORBIDDEN_KEYWORDS = ['DROP', 'TRUNCATE', 'ALTER', 'CREATE', 'DELETE'];
+const ALLOWED_KEYWORDS = ['SELECT', 'EXPLAIN', 'SHOW', 'DESCRIBE', 'DESC', 'WITH', 'INSERT', 'UPDATE'];
 const SQL_TIMEOUT_MS = 30_000;
 
 @Injectable()

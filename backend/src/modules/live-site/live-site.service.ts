@@ -17,11 +17,12 @@ export class LiveSiteService {
 
   /** 新增站点 */
   async create(dto: { code: string; name: string }): Promise<LiveSite> {
-    const exists = await this.repo.findOne({ where: { code: dto.code } });
+    const code = dto.code.toUpperCase();
+    const exists = await this.repo.findOne({ where: { code } });
     if (exists) {
-      throw new ConflictException(`站点 code "${dto.code}" 已存在`);
+      throw new ConflictException(`站点 code "${code}" 已存在`);
     }
-    return this.repo.save(this.repo.create(dto));
+    return this.repo.save(this.repo.create({ ...dto, code }));
   }
 
   /** 删除站点 */

@@ -49,7 +49,7 @@ export class LiveStreamService {
       .leftJoinAndSelect('ls.site', 'site');
 
     if (siteCode) {
-      qb.andWhere('ls.siteCode = :siteCode', { siteCode });
+      qb.andWhere('UPPER(ls.siteCode) = UPPER(:siteCode)', { siteCode });
     }
     if (category) {
       qb.andWhere('ls.category LIKE :category', { category: `%${category}%` });
@@ -112,7 +112,7 @@ export class LiveStreamService {
       .addOrderBy('ls.siteCode', 'ASC');
 
     if (siteCode) {
-      qb.andWhere('ls.siteCode = :siteCode', { siteCode });
+      qb.andWhere('UPPER(ls.siteCode) = UPPER(:siteCode)', { siteCode });
     }
     if (liveDate) {
       qb.andWhere('ls.liveDate = :liveDate', { liveDate });
@@ -128,7 +128,7 @@ export class LiveStreamService {
       .select('COUNT(DISTINCT CONCAT(ls.siteCode, ls.liveDate))', 'total');
 
     if (siteCode) {
-      countQb.andWhere('ls.siteCode = :siteCode', { siteCode });
+      countQb.andWhere('UPPER(ls.siteCode) = UPPER(:siteCode)', { siteCode });
     }
     if (liveDate) {
       countQb.andWhere('ls.liveDate = :liveDate', { liveDate });
@@ -328,7 +328,7 @@ export class LiveStreamService {
 
     // 预加载所有站点 code
     const sites = await this.siteRepo.find();
-    const siteCodeSet = new Set(sites.map((s) => s.code));
+    const siteCodeSet = new Set(sites.map((s) => s.code?.toUpperCase()));
 
     // 预加载现有记录的去重键（siteCode + liveDate）
     const existingRows = await this.repo.find({ select: ['siteCode', 'liveDate'] });
@@ -380,16 +380,16 @@ export class LiveStreamService {
     let liveDate: string;
 
     if (m) {
-      siteCode = m[1];
+      siteCode = m[1].toUpperCase();
       liveDate = m[2].replace(/\./g, '-');
     } else if (mChinese) {
-      siteCode = mChinese[1];
+      siteCode = mChinese[1].toUpperCase();
       liveDate = `${mChinese[2]}-${mChinese[3].padStart(2, '0')}-${mChinese[4].padStart(2, '0')}`;
     } else {
       // 再尝试宽松匹配
       const looseM = nameWithoutExt.match(/^([a-zA-Z0-9_-]+?)-(.+)/);
       if (looseM) {
-        siteCode = looseM[1];
+        siteCode = looseM[1].toUpperCase();
         const datePart = looseM[2];
         // 尝试用 dayjs 类解析
         const parsedDate = this.parseDateString(datePart);

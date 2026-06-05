@@ -77,6 +77,7 @@ declare namespace API {
   }
 
   interface EventSummaryRecord {
+    eventId: string;
     eventTime: string;
     eventName: string;
     liveDate: string;
@@ -85,8 +86,17 @@ declare namespace API {
     category: string;
     hostCount: number;
     totalComments: number;
+    totalPlatformComments: number;
+    totalExternalComments: number;
+    totalHostComments: number;
+    totalStayVisit: number;
     totalStayPerson: number;
     avgPeakOnline: number;
+    totalUv: number;
+    totalUnlockCount: number;
+    totalUnlockAmount: number;
+    totalTipCount: number;
+    totalTipAmount: number;
   }
 
   interface HostSummaryRecord {

@@ -24,6 +24,10 @@ export class QueryEventSummaryDto {
 
   @IsOptional()
   @IsString()
+  eventId?: string;
+
+  @IsOptional()
+  @IsString()
   sortField?: string;
 
   @IsOptional()

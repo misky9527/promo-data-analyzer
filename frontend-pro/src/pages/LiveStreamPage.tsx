@@ -616,6 +616,13 @@ const LiveStreamPage = () => {
 
   const eventSummaryColumns: ProColumns<API.EventSummaryRecord>[] = [
     {
+      title: '赛事ID',
+      dataIndex: 'eventId',
+      width: 110,
+      search: false,
+      render: (_, r) => r.eventId || '-',
+    },
+    {
       title: '赛事时间',
       dataIndex: 'eventTime',
       width: 80,
@@ -684,11 +691,39 @@ const LiveStreamPage = () => {
       render: (_, r) => r.avgPeakOnline.toLocaleString(),
     },
     {
+      title: '总UV',
+      dataIndex: 'totalUv',
+      width: 90,
+      search: false,
+      render: (_, r) => (r.totalUv ?? 0).toLocaleString(),
+    },
+    {
+      title: '解锁人数',
+      dataIndex: 'totalUnlockCount',
+      width: 90,
+      search: false,
+      render: (_, r) => (r.totalUnlockCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '打赏人数',
+      dataIndex: 'totalTipCount',
+      width: 90,
+      search: false,
+      render: (_, r) => (r.totalTipCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '打赏金额',
+      dataIndex: 'totalTipAmount',
+      width: 100,
+      search: false,
+      render: (_, r) => (r.totalTipAmount ?? 0).toLocaleString(),
+    },
+    {
       title: '操作',
       valueType: 'option',
       width: 100,
       render: (_, r) => {
-        const key = `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`;
+        const key = r.eventId || `${r.eventTime}-${r.eventName}-${r.liveDate}`;
         return [
           <a
             key="hostDetail"

@@ -189,12 +189,13 @@ export class LiveStreamService {
   // ═══════════════════════════════════════════════════════════
 
   async eventSummary(query: QueryEventSummaryDto) {
-    const { page = 1, pageSize = 10, liveDate, eventName, sortField, sortOrder } = query;
+    const { page = 1, pageSize = 10, liveDate, eventName, eventId, sortField, sortOrder } = query;
 
     const qb = this.repo
       .createQueryBuilder('ls')
       .leftJoin('ls.site', 'site')
-      .select('ls.eventTime', 'eventTime')
+      .select('ls.eventId', 'eventId')
+      .addSelect('ls.eventTime', 'eventTime')
       .addSelect('ls.eventName', 'eventName')
       .addSelect('ls.liveDate', 'liveDate')
       .addSelect('COUNT(DISTINCT ls.roomId)', 'roomCount')
@@ -202,9 +203,19 @@ export class LiveStreamService {
       .addSelect('ls.category', 'category')
       .addSelect('COUNT(DISTINCT ls.host)', 'hostCount')
       .addSelect('SUM(ls.totalComments)', 'totalComments')
+      .addSelect('SUM(ls.platformComments)', 'totalPlatformComments')
+      .addSelect('SUM(ls.externalComments)', 'totalExternalComments')
+      .addSelect('SUM(ls.hostComments)', 'totalHostComments')
       .addSelect('SUM(ls.avgStayPerson)', 'totalStayPerson')
+      .addSelect('SUM(ls.avgStayVisit)', 'totalStayVisit')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
-      .groupBy('ls.eventTime')
+      .addSelect('SUM(ls.uv)', 'totalUv')
+      .addSelect('SUM(ls.unlockCount)', 'totalUnlockCount')
+      .addSelect('SUM(ls.unlockAmount)', 'totalUnlockAmount')
+      .addSelect('SUM(ls.tipCount)', 'totalTipCount')
+      .addSelect('SUM(ls.tipAmount)', 'totalTipAmount')
+      .groupBy('ls.eventId')
+      .addGroupBy('ls.eventTime')
       .addGroupBy('ls.eventName')
       .addGroupBy('ls.liveDate')
       .addGroupBy('ls.league')
@@ -216,6 +227,9 @@ export class LiveStreamService {
     }
     if (eventName) {
       qb.andWhere('ls.eventName LIKE :eventName', { eventName: `%${eventName}%` });
+    }
+    if (eventId) {
+      qb.andWhere('ls.eventId = :eventId', { eventId });
     }
 
     // 排序：支持按 totalComments / totalStayPerson / avgPeakOnline 排序
@@ -234,7 +248,7 @@ export class LiveStreamService {
     const countQb = this.repo
       .createQueryBuilder('ls')
       .select(
-        'COUNT(DISTINCT CONCAT(ls.eventTime, ls.eventName, ls.liveDate, ls.league, ls.category))',
+        'COUNT(DISTINCT CONCAT(COALESCE(ls.eventId, \'\'), ls.eventTime, ls.eventName, ls.liveDate, ls.league, ls.category))',
         'total',
       )
       .where('ls.deletedAt IS NULL');
@@ -244,10 +258,14 @@ export class LiveStreamService {
     if (eventName) {
       countQb.andWhere('ls.eventName LIKE :eventName', { eventName: `%${eventName}%` });
     }
+    if (eventId) {
+      countQb.andWhere('ls.eventId = :eventId', { eventId });
+    }
     const countResult = await countQb.getRawOne();
     const total = parseInt(countResult?.total || '0', 10);
 
     const list = rawList.map((r) => ({
+      eventId: r.eventId,
       eventTime: r.eventTime,
       eventName: r.eventName,
       liveDate: r.liveDate,
@@ -256,8 +274,17 @@ export class LiveStreamService {
       category: r.category,
       hostCount: parseInt(r.hostCount, 10),
       totalComments: parseInt(r.totalComments, 10),
+      totalPlatformComments: r.totalPlatformComments ? parseInt(r.totalPlatformComments, 10) : 0,
+      totalExternalComments: r.totalExternalComments ? parseInt(r.totalExternalComments, 10) : 0,
+      totalHostComments: r.totalHostComments ? parseInt(r.totalHostComments, 10) : 0,
+      totalStayVisit: r.totalStayVisit ? Math.round(parseFloat(r.totalStayVisit)) : 0,
       totalStayPerson: r.totalStayPerson ? Math.round(parseFloat(r.totalStayPerson)) : 0,
       avgPeakOnline: r.avgPeakOnline ? Math.round(parseFloat(r.avgPeakOnline)) : 0,
+      totalUv: r.totalUv ? parseInt(r.totalUv, 10) : 0,
+      totalUnlockCount: r.totalUnlockCount ? parseInt(r.totalUnlockCount, 10) : 0,
+      totalUnlockAmount: r.totalUnlockAmount ? parseFloat(r.totalUnlockAmount) : 0,
+      totalTipCount: r.totalTipCount ? parseInt(r.totalTipCount, 10) : 0,
+      totalTipAmount: r.totalTipAmount ? parseFloat(r.totalTipAmount) : 0,
     }));
 
     return { list, total, page, pageSize };

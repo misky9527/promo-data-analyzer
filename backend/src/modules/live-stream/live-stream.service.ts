@@ -50,7 +50,7 @@ export class LiveStreamService {
   // ═══════════════════════════════════════════════════════════
 
   async list(query: QueryLiveDataDto) {
-    const { page = 1, pageSize = 10, siteCode, category, host, league, liveInfo, liveDate, sortField, sortOrder } = query;
+    const { page = 1, pageSize = 10, siteCode, category, host, league, leagueId, liveInfo, liveDate, isPaid, sortField, sortOrder } = query;
     const qb = this.repo
       .createQueryBuilder('ls')
       .leftJoinAndSelect('ls.site', 'site')
@@ -68,11 +68,17 @@ export class LiveStreamService {
     if (league) {
       qb.andWhere('ls.league LIKE :league', { league: `%${league}%` });
     }
+    if (leagueId) {
+      qb.andWhere('ls.leagueId = :leagueId', { leagueId });
+    }
     if (liveInfo) {
       qb.andWhere('ls.liveInfo LIKE :liveInfo', { liveInfo: `%${liveInfo}%` });
     }
     if (liveDate) {
       qb.andWhere('ls.liveDate = :liveDate', { liveDate });
+    }
+    if (isPaid) {
+      qb.andWhere('ls.isPaid = :isPaid', { isPaid });
     }
 
     // 动态排序：指定字段按指定顺序，默认按开播时间倒序
@@ -108,10 +114,18 @@ export class LiveStreamService {
       .addSelect('site.name', 'siteName')
       .addSelect('ls.liveDate', 'liveDate')
       .addSelect('COUNT(DISTINCT ls.host)', 'hostCount')
-      .addSelect('SUM(ls.commentCount)', 'totalComments')
+      .addSelect('SUM(ls.totalComments)', 'totalComments')
+      .addSelect('SUM(ls.platformComments)', 'totalPlatformComments')
+      .addSelect('SUM(ls.externalComments)', 'totalExternalComments')
+      .addSelect('SUM(ls.hostComments)', 'totalHostComments')
       .addSelect('SUM(ls.avgStayVisit)', 'totalStayVisit')
       .addSelect('SUM(ls.avgStayPerson)', 'totalStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
+      .addSelect('SUM(ls.uv)', 'totalUv')
+      .addSelect('SUM(ls.unlockCount)', 'totalUnlockCount')
+      .addSelect('SUM(ls.unlockAmount)', 'totalUnlockAmount')
+      .addSelect('SUM(ls.tipCount)', 'totalTipCount')
+      .addSelect('SUM(ls.tipAmount)', 'totalTipAmount')
       .addSelect('COUNT(*)', 'streamCount')
       .where('ls.deletedAt IS NULL')
       .groupBy('ls.siteCode')
@@ -153,9 +167,17 @@ export class LiveStreamService {
       liveDate: r.liveDate,
       hostCount: parseInt(r.hostCount, 10),
       totalComments: parseInt(r.totalComments, 10),
+      totalPlatformComments: parseInt(r.totalPlatformComments, 10),
+      totalExternalComments: parseInt(r.totalExternalComments, 10),
+      totalHostComments: parseInt(r.totalHostComments, 10),
       totalStayVisit: r.totalStayVisit ? parseInt(r.totalStayVisit, 10) : 0,
       totalStayPerson: r.totalStayPerson ? parseInt(r.totalStayPerson, 10) : 0,
       avgPeakOnline: r.avgPeakOnline ? Math.round(parseFloat(r.avgPeakOnline)) : 0,
+      totalUv: r.totalUv ? parseInt(r.totalUv, 10) : 0,
+      totalUnlockCount: r.totalUnlockCount ? parseInt(r.totalUnlockCount, 10) : 0,
+      totalUnlockAmount: r.totalUnlockAmount ? parseFloat(r.totalUnlockAmount) : 0,
+      totalTipCount: r.totalTipCount ? parseInt(r.totalTipCount, 10) : 0,
+      totalTipAmount: r.totalTipAmount ? parseFloat(r.totalTipAmount) : 0,
       streamCount: parseInt(r.streamCount, 10),
     }));
 
@@ -179,7 +201,7 @@ export class LiveStreamService {
       .addSelect('ls.league', 'league')
       .addSelect('ls.category', 'category')
       .addSelect('COUNT(DISTINCT ls.host)', 'hostCount')
-      .addSelect('SUM(ls.commentCount)', 'totalComments')
+      .addSelect('SUM(ls.totalComments)', 'totalComments')
       .addSelect('SUM(ls.avgStayPerson)', 'totalStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
       .groupBy('ls.eventTime')
@@ -255,7 +277,7 @@ export class LiveStreamService {
       .addSelect('ls.siteCode', 'siteCode')
       .addSelect('site.name', 'siteName')
       .addSelect('SUM(ls.duration)', 'totalDuration')
-      .addSelect('SUM(ls.commentCount)', 'totalComments')
+      .addSelect('SUM(ls.totalComments)', 'totalComments')
       .addSelect('AVG(ls.avgStayVisit)', 'avgStayVisit')
       .addSelect('AVG(ls.avgStayPerson)', 'avgStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
@@ -309,7 +331,7 @@ export class LiveStreamService {
         'CAST(SUM(ls.duration) / COUNT(DISTINCT ls.siteCode) AS INTEGER)',
         'avgDuration',
       )
-      .addSelect('SUM(ls.commentCount)', 'totalComments')
+      .addSelect('SUM(ls.totalComments)', 'totalComments')
       .addSelect('AVG(ls.avgStayVisit)', 'avgStayVisit')
       .addSelect('AVG(ls.avgStayPerson)', 'avgStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
@@ -425,7 +447,7 @@ export class LiveStreamService {
   }
 
   // ═══════════════════════════════════════════════════════════
-  // 单文件处理（事务：全成功才入库）
+  // 单文件处理（事务：全成功才入库）— 25 列 XLSX 格式
   // ═══════════════════════════════════════════════════════════
 
   private async processOneFile(
@@ -437,35 +459,25 @@ export class LiveStreamService {
   ): Promise<FileImportResult> {
     const fileName = file.originalname;
 
-    // 解析文件名: {code}-{date}.csv
+    // 解析文件名: DJ-2026-06-03_2---c333f603-408d-4533-b8a1-5904415f559b.xlsx
+    // siteCode = 第一个 _ 前的部分, liveDate = 从 _ 前提取 YYYY-MM-DD
     const nameWithoutExt = fileName.replace(/\.(csv|xlsx)$/i, '');
-    const m = nameWithoutExt.match(/^([a-zA-Z0-9_-]+?)-(\d{4}-\d{1,2}-\d{1,2})$/);
-    const mChinese = nameWithoutExt.match(/^([a-zA-Z0-9_-]+?)-(\d{4})年(\d{1,2})月(\d{1,2})号?$/);
+    const fileNameMatch = nameWithoutExt.match(/^([a-zA-Z0-9]+)-(\d{4}-\d{2}-\d{2})_/);
 
     let siteCode: string;
     let liveDate: string;
 
-    if (m) {
-      siteCode = m[1].toUpperCase();
-      liveDate = m[2].replace(/\./g, '-');
-    } else if (mChinese) {
-      siteCode = mChinese[1].toUpperCase();
-      liveDate = `${mChinese[2]}-${mChinese[3].padStart(2, '0')}-${mChinese[4].padStart(2, '0')}`;
+    if (fileNameMatch) {
+      siteCode = fileNameMatch[1].toUpperCase();
+      liveDate = fileNameMatch[2];
     } else {
-      // 再尝试宽松匹配
-      const looseM = nameWithoutExt.match(/^([a-zA-Z0-9_-]+?)-(.+)/);
-      if (looseM) {
-        siteCode = looseM[1].toUpperCase();
-        const datePart = looseM[2];
-        // 尝试用 dayjs 类解析
-        const parsedDate = this.parseDateString(datePart);
-        if (parsedDate) {
-          liveDate = parsedDate;
-        } else {
-          return { fileName, success: 0, failed: 1, error: `文件名格式不匹配: 期望 {code}-{date}.csv` };
-        }
+      // 兼容旧格式（无 UUID 后缀）: {code}-{date}
+      const mOld = nameWithoutExt.match(/^([a-zA-Z0-9_-]+?)-(\d{4}-\d{1,2}-\d{1,2})$/);
+      if (mOld) {
+        siteCode = mOld[1].toUpperCase();
+        liveDate = mOld[2].replace(/\./g, '-');
       } else {
-        return { fileName, success: 0, failed: 1, error: `文件名格式不匹配: 期望 {code}-{date}.csv` };
+        return { fileName, success: 0, failed: 1, error: `文件名格式不匹配: 期望 {code}-YYYY-MM-DD_N---uuid.xlsx` };
       }
     }
 
@@ -474,66 +486,50 @@ export class LiveStreamService {
       return { fileName, success: 0, failed: 1, error: `站点 code "${siteCode}" 在 live_site 表中不存在` };
     }
 
-    // 解析文件内容（支持 CSV 和 XLSX）
-    const isXlsx = /\.xlsx$/i.test(fileName);
-    let lines: string[];
-
-    if (isXlsx) {
-      const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-      const sheetName = workbook.SheetNames[0];
-      if (!sheetName) {
-        return { fileName, success: 0, failed: 1, error: 'XLSX 文件中无工作表' };
-      }
-      const sheet = workbook.Sheets[sheetName];
-      const rows = XLSX.utils.sheet_to_csv(sheet).split('\n')
-        .map((line: string) => line.trim())
-        .filter((line: string) => line.length > 0);
-      lines = rows;
-    } else {
-      const content = file.buffer.toString('utf-8').trim();
-      if (!content) {
-        return { fileName, success: 0, failed: 1, error: 'CSV 文件为空' };
-      }
-      lines = content
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0);
+    // XLSX 列号方式读取（列序号从 1 开始）
+    const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    if (!sheetName) {
+      return { fileName, success: 0, failed: 1, error: 'XLSX 文件中无工作表' };
     }
+    const sheet = workbook.Sheets[sheetName];
+    const rawRows: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
 
-    if (!lines || lines.length === 0) {
+    // 第 1 行: 表头（跳过），第 2 行起: 数据
+    const dataRows = rawRows.slice(1).filter((row: any[]) => row.some((c: any) => c !== ''));
+
+    if (dataRows.length === 0) {
       return { fileName, success: 0, failed: 1, error: '文件内容为空' };
     }
 
-    // 第 1 行: 表头（跳过），第 2 行起: 数据
-    const dataLines = lines.slice(1);
     const entities: LiveStreamData[] = [];
     const errors: string[] = [];
     let success = 0;
     let failed = 0;
 
-    for (let i = 0; i < dataLines.length; i++) {
+    for (let i = 0; i < dataRows.length; i++) {
       try {
-        const cols = this.parseCsvLine(dataLines[i]);
+        const row = dataRows[i];
 
-        // CSV 共 10 列: room_id, live_info, category, host, start_time, duration, comment_count, avg_stay_visit, avg_stay_person, peak_online
-        if (cols.length < 10) {
-          errors.push(`第 ${i + 2} 行: 列数不足 (需要 10 列，实际 ${cols.length} 列)`);
+        // 25 列校验（列号 1~25，数组索引 0~24）
+        if (row.length < 25) {
+          errors.push(`第 ${i + 2} 行: 列数不足 (需要 ≥25 列，实际 ${row.length} 列)`);
           failed++;
           continue;
         }
 
-        // 1. room_id (cols[0])
-        const roomId = cols[0]?.trim();
+        // 列1: 直播间ID (索引0)
+        const roomId = String(row[0]).trim();
         if (!roomId) {
-          errors.push(`第 ${i + 2} 行: room_id 为空`);
+          errors.push(`第 ${i + 2} 行: 直播间ID 为空`);
           failed++;
           continue;
         }
 
-        // 5. start_time (cols[4])
-        const startTimeStr = cols[4]?.trim();
+        // 列9: 开播时间 (索引8)
+        const startTimeStr = String(row[8]).trim();
         if (!startTimeStr) {
-          errors.push(`第 ${i + 2} 行: start_time 为空`);
+          errors.push(`第 ${i + 2} 行: 开播时间 为空`);
           failed++;
           continue;
         }
@@ -544,8 +540,11 @@ export class LiveStreamService {
           continue;
         }
 
-        // 2. live_info → 拆分为 event_time, league, event_name
-        const rawLiveInfo = cols[1]?.trim() || '';
+        // 列2: 联赛ID (索引1)
+        const leagueId = String(row[1]).trim() || null;
+
+        // 列5: 直播信息 (索引4) → 拆分为 eventTime, league, eventName
+        const rawLiveInfo = String(row[4]).trim();
         let eventTime: string | null = null;
         let league: string | null = null;
         let eventName: string | null = null;
@@ -559,7 +558,6 @@ export class LiveStreamService {
               league = afterFirst.slice(0, secondSpace).trim() || null;
               eventName = afterFirst.slice(secondSpace + 1).trim() || null;
             } else {
-              // 只有一个空格，全作为事件名
               eventName = afterFirst.trim() || null;
             }
           } else {
@@ -567,47 +565,146 @@ export class LiveStreamService {
           }
         }
 
-        // 3. category (cols[2])
-        const category = cols[2]?.trim() || null;
+        // 列3: 联赛名称 (索引2) — 如果直播信息未解析出 league，回退到列3
+        if (!league) {
+          league = String(row[2]).trim() || null;
+        }
 
-        // 4. host (cols[3])
-        const host = cols[3]?.trim() || null;
+        // 列4: 赛事ID (索引3) — 不再写null，存实际值
+        const eventId = String(row[3]).trim() || null;
 
-        // 6. duration (cols[5]) — "2小时11分3秒" → 秒
+        // 列6: 直播类型 (索引5)
+        const category = String(row[5]).trim() || null;
+
+        // 列7: 主播 (索引6)
+        const host = String(row[6]).trim() || null;
+
+        // 列8: 是否付费 (索引7)
+        const isPaid = String(row[7]).trim() || null;
+
+        // 列10: 开播时长 (索引9) — "1小时39分0秒" → 秒
         let duration: number | null = null;
-        const durStr = cols[5]?.trim();
+        const durStr = String(row[9]).trim();
         if (durStr) {
           duration = this.parseDuration(durStr);
         }
 
-        // 7. comment_count (cols[6])
-        let commentCount = 0;
-        const ccStr = cols[6]?.trim();
-        if (ccStr) {
-          const n = parseInt(ccStr.replace(/,/g, ''), 10);
-          if (!isNaN(n)) commentCount = n;
+        // 列11: 用户评论数(总) (索引10)
+        let totalComments = 0;
+        const tcStr = String(row[10]).trim();
+        if (tcStr) {
+          const n = parseInt(tcStr.replace(/,/g, ''), 10);
+          if (!isNaN(n)) totalComments = n;
         }
 
-        // 8. avg_stay_visit (cols[7]) — "3分22秒" → 秒
+        // 列12: 用户评论数(自平台) (索引11)
+        let platformComments = 0;
+        const pcStr = String(row[11]).trim();
+        if (pcStr) {
+          const n = parseInt(pcStr.replace(/,/g, ''), 10);
+          if (!isNaN(n)) platformComments = n;
+        }
+
+        // 列13: 用户评论数(他平台) (索引12)
+        let externalComments = 0;
+        const ecStr = String(row[12]).trim();
+        if (ecStr) {
+          const n = parseInt(ecStr.replace(/,/g, ''), 10);
+          if (!isNaN(n)) externalComments = n;
+        }
+
+        // 列14: 主播评论数 (索引13)
+        let hostComments = 0;
+        const hcStr = String(row[13]).trim();
+        if (hcStr) {
+          const n = parseInt(hcStr.replace(/,/g, ''), 10);
+          if (!isNaN(n)) hostComments = n;
+        }
+
+        // 列15: 次均停留时长 (索引14) — "3分22秒" → 秒
         let avgStayVisit: number | null = null;
-        const asvStr = cols[7]?.trim();
+        const asvStr = String(row[14]).trim();
         if (asvStr) {
           avgStayVisit = this.parseDuration(asvStr);
         }
 
-        // 9. avg_stay_person (cols[8]) — "2分33秒" → 秒
+        // 列16: 人均停留时长 (索引15) — "2分33秒" → 秒
         let avgStayPerson: number | null = null;
-        const aspStr = cols[8]?.trim();
+        const aspStr = String(row[15]).trim();
         if (aspStr) {
           avgStayPerson = this.parseDuration(aspStr);
         }
 
-        // 10. peak_online (cols[9])
+        // 列17: 峰值同时在线人数 (索引16)
         let peakOnline: number | null = null;
-        const poStr = cols[9]?.trim();
+        const poStr = String(row[16]).trim();
         if (poStr) {
           const n = parseInt(poStr.replace(/,/g, ''), 10);
           if (!isNaN(n)) peakOnline = n;
+        }
+
+        // 列18: 直播间UV (索引17)
+        let uv = 0;
+        const uvStr = String(row[17]).trim();
+        if (uvStr) {
+          const n = parseInt(uvStr.replace(/,/g, ''), 10);
+          if (!isNaN(n)) uv = n;
+        }
+
+        // 列19: 解锁直播人数 (索引18)
+        let unlockCount = 0;
+        const uccStr = String(row[18]).trim();
+        if (uccStr) {
+          const n = parseInt(uccStr.replace(/,/g, ''), 10);
+          if (!isNaN(n)) unlockCount = n;
+        }
+
+        // 列20: 解锁直播金额 (索引19)
+        let unlockAmount = 0;
+        const uaStr = String(row[19]).trim();
+        if (uaStr) {
+          const n = parseFloat(uaStr.replace(/,/g, ''));
+          if (!isNaN(n)) unlockAmount = n;
+        }
+
+        // 列21: 打赏人数 (索引20)
+        let tipCount = 0;
+        const tpcStr = String(row[20]).trim();
+        if (tpcStr) {
+          const n = parseInt(tpcStr.replace(/,/g, ''), 10);
+          if (!isNaN(n)) tipCount = n;
+        }
+
+        // 列22: 打赏金额 (索引21)
+        let tipAmount = 0;
+        const taStr = String(row[21]).trim();
+        if (taStr) {
+          const n = parseFloat(taStr.replace(/,/g, ''));
+          if (!isNaN(n)) tipAmount = n;
+        }
+
+        // 列23: 收券人数 (索引22)
+        let couponCount = 0;
+        const ccStr2 = String(row[22]).trim();
+        if (ccStr2) {
+          const n = parseInt(ccStr2.replace(/,/g, ''), 10);
+          if (!isNaN(n)) couponCount = n;
+        }
+
+        // 列24: 解锁方案金额 (索引23)
+        let planAmount = 0;
+        const paStr = String(row[23]).trim();
+        if (paStr) {
+          const n = parseFloat(paStr.replace(/,/g, ''));
+          if (!isNaN(n)) planAmount = n;
+        }
+
+        // 列25: 解锁套餐金额 (索引24)
+        let packageAmount = 0;
+        const pkaStr = String(row[24]).trim();
+        if (pkaStr) {
+          const n = parseFloat(pkaStr.replace(/,/g, ''));
+          if (!isNaN(n)) packageAmount = n;
         }
 
         entities.push(
@@ -615,19 +712,33 @@ export class LiveStreamService {
             siteCode,
             liveDate,
             roomId,
+            leagueId,
             liveInfo: rawLiveInfo || null,
             eventTime,
             league,
             eventName,
-            eventId: null,
+            eventId,
             category,
             host,
+            isPaid,
             startTime,
             duration,
-            commentCount,
+            commentCount: totalComments,
+            totalComments,
+            platformComments,
+            externalComments,
+            hostComments,
             avgStayVisit,
             avgStayPerson,
             peakOnline,
+            uv,
+            unlockCount,
+            unlockAmount,
+            tipCount,
+            tipAmount,
+            couponCount,
+            planAmount,
+            packageAmount,
           }),
         );
         success++;

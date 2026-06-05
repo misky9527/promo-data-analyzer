@@ -201,6 +201,60 @@ const LiveStreamPage = () => {
       render: (_, row) => (row.peakOnline ?? 0).toLocaleString(),
     },
     {
+      title: 'UV',
+      dataIndex: 'uv',
+      width: 80,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.uv ?? 0).toLocaleString(),
+    },
+    {
+      title: '付费',
+      dataIndex: 'isPaid',
+      width: 60,
+      search: false,
+    },
+    {
+      title: '总评论',
+      dataIndex: 'totalComments',
+      width: 90,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.totalComments ?? 0).toLocaleString(),
+    },
+    {
+      title: '解锁人数',
+      dataIndex: 'unlockCount',
+      width: 90,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.unlockCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '解锁金额',
+      dataIndex: 'unlockAmount',
+      width: 100,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.unlockAmount ?? 0).toLocaleString(),
+    },
+    {
+      title: '打赏人数',
+      dataIndex: 'tipCount',
+      width: 90,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.tipCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '打赏金额',
+      dataIndex: 'tipAmount',
+      width: 100,
+      sorter: true,
+      search: false,
+      render: (_, row) => (row.tipAmount ?? 0).toLocaleString(),
+    },
+    {
       title: '操作',
       valueType: 'option',
       width: 80,
@@ -273,6 +327,41 @@ const LiveStreamPage = () => {
       width: 120,
       search: false,
       render: (_, r) => r.avgPeakOnline.toLocaleString(),
+    },
+    {
+      title: '总UV',
+      dataIndex: 'totalUv',
+      width: 80,
+      search: false,
+      render: (_, r) => (r.totalUv ?? 0).toLocaleString(),
+    },
+    {
+      title: '解锁人数',
+      dataIndex: 'totalUnlockCount',
+      width: 90,
+      search: false,
+      render: (_, r) => (r.totalUnlockCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '解锁金额',
+      dataIndex: 'totalUnlockAmount',
+      width: 100,
+      search: false,
+      render: (_, r) => (r.totalUnlockAmount ?? 0).toLocaleString(),
+    },
+    {
+      title: '打赏人数',
+      dataIndex: 'totalTipCount',
+      width: 90,
+      search: false,
+      render: (_, r) => (r.totalTipCount ?? 0).toLocaleString(),
+    },
+    {
+      title: '打赏金额',
+      dataIndex: 'totalTipAmount',
+      width: 100,
+      search: false,
+      render: (_, r) => (r.totalTipAmount ?? 0).toLocaleString(),
     },
     {
       title: '直播场次',
@@ -462,7 +551,7 @@ const LiveStreamPage = () => {
 
   const handleImport = async () => {
     if (fileList.length === 0) {
-      msg.warning('请先选择 CSV 文件');
+      msg.warning('请先选择 XLSX 文件');
       return;
     }
     setImporting(true);
@@ -629,14 +718,14 @@ const LiveStreamPage = () => {
     <PageContainer>
       <div style={{ marginBottom: 24 }}>
         <Upload.Dragger
-          accept=".csv,.xlsx"
+          accept=".xlsx"
           multiple
           fileList={fileList}
           beforeUpload={(file) => {
             const name = file.name.toLowerCase();
-            const isCSV = name.endsWith('.csv') || name.endsWith('.xlsx');
-            if (!isCSV) {
-              msg.error(`${file.name} 不是 CSV/XLSX 文件`);
+            const isXlsx = name.endsWith('.xlsx');
+            if (!isXlsx) {
+              msg.error(`${file.name} 不是 XLSX 文件`);
               return Upload.LIST_IGNORE;
             }
             setFileList((prev) => [...prev, { uid: file.name + Date.now(), name: file.name, originFileObj: file } as any]);
@@ -653,7 +742,7 @@ const LiveStreamPage = () => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">点击或拖拽 CSV 文件到此区域上传</p>
-          <p className="ant-upload-hint">支持批量上传,文件名格式: {"{code}-{date}.csv 或 .xlsx"}</p>
+          <p className="ant-upload-hint">支持批量上传 XLSX 文件,文件名格式: {"{code}-YYYY-MM-DD_N---uuid.xlsx"}</p>
         </Upload.Dragger>
 
         {fileList.length > 0 && (

@@ -32,11 +32,19 @@ export class QueryLiveDataDto {
 
   @IsOptional()
   @IsString()
+  leagueId?: string;
+
+  @IsOptional()
+  @IsString()
   liveInfo?: string;
 
   @IsOptional()
   @IsString()
   liveDate?: string;
+
+  @IsOptional()
+  @IsString()
+  isPaid?: string;
 
   @IsOptional()
   @IsString()

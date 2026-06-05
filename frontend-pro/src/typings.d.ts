@@ -27,15 +27,33 @@ declare namespace API {
     siteName?: string;
     liveDate: string;
     roomId: string;
+    leagueId?: string;
     liveInfo?: string;
+    eventTime?: string;
+    league?: string;
+    eventName?: string;
+    eventId?: string;
     category?: string;
     host?: string;
+    isPaid?: string;
     startTime: string;
     duration?: number;
     commentCount: number;
+    totalComments: number;
+    platformComments: number;
+    externalComments: number;
+    hostComments: number;
     avgStayVisit?: number;
     avgStayPerson?: number;
     peakOnline?: number;
+    uv: number;
+    unlockCount: number;
+    unlockAmount: number;
+    tipCount: number;
+    tipAmount: number;
+    couponCount: number;
+    planAmount: number;
+    packageAmount: number;
   }
 
   interface DailySummaryRecord {
@@ -44,9 +62,17 @@ declare namespace API {
     liveDate: string;
     hostCount: number;
     totalComments: number;
+    totalPlatformComments: number;
+    totalExternalComments: number;
+    totalHostComments: number;
     totalStayVisit: number;
     totalStayPerson: number;
     avgPeakOnline: number;
+    totalUv: number;
+    totalUnlockCount: number;
+    totalUnlockAmount: number;
+    totalTipCount: number;
+    totalTipAmount: number;
     streamCount: number;
   }
 

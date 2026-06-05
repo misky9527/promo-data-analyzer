@@ -38,12 +38,12 @@ export class LiveStreamController {
     @Req() req?: any,
   ) {
     if (!files || files.length === 0) {
-      throw new BadRequestException('请上传 CSV 文件');
+      throw new BadRequestException('请上传 XLSX 文件');
     }
     for (const file of files) {
       const ext = file.originalname?.split('.').pop()?.toLowerCase();
-      if (ext !== 'csv' && ext !== 'xlsx') {
-        throw new BadRequestException(`文件 ${file.originalname} 不是 CSV 格式`);
+      if (ext !== 'xlsx') {
+        throw new BadRequestException(`文件 ${file.originalname} 不是 XLSX 格式`);
       }
     }
     const operator = req?.user?.username ?? 'system';

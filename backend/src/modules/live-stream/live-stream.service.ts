@@ -114,7 +114,7 @@ export class LiveStreamService {
       .addSelect('site.name', 'siteName')
       .addSelect('ls.liveDate', 'liveDate')
       .addSelect('COUNT(DISTINCT ls.host)', 'hostCount')
-      .addSelect('SUM(ls.totalComments)', 'totalComments')
+      .addSelect('SUM(ls.platformComments)', 'totalComments')
       .addSelect('SUM(ls.platformComments)', 'totalPlatformComments')
       .addSelect('SUM(ls.externalComments)', 'totalExternalComments')
       .addSelect('SUM(ls.hostComments)', 'totalHostComments')
@@ -202,7 +202,7 @@ export class LiveStreamService {
       .addSelect('ls.league', 'league')
       .addSelect('ls.category', 'category')
       .addSelect('COUNT(DISTINCT ls.host)', 'hostCount')
-      .addSelect('SUM(ls.totalComments)', 'totalComments')
+      .addSelect('SUM(ls.platformComments)', 'totalComments')
       .addSelect('SUM(ls.platformComments)', 'totalPlatformComments')
       .addSelect('SUM(ls.externalComments)', 'totalExternalComments')
       .addSelect('SUM(ls.hostComments)', 'totalHostComments')
@@ -304,7 +304,7 @@ export class LiveStreamService {
       .addSelect('ls.siteCode', 'siteCode')
       .addSelect('site.name', 'siteName')
       .addSelect('SUM(ls.duration)', 'totalDuration')
-      .addSelect('SUM(ls.totalComments)', 'totalComments')
+      .addSelect('SUM(ls.platformComments)', 'totalComments')
       .addSelect('AVG(ls.avgStayVisit)', 'avgStayVisit')
       .addSelect('AVG(ls.avgStayPerson)', 'avgStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
@@ -358,7 +358,7 @@ export class LiveStreamService {
         'CAST(SUM(ls.duration) / COUNT(DISTINCT ls.siteCode) AS INTEGER)',
         'avgDuration',
       )
-      .addSelect('SUM(ls.totalComments)', 'totalComments')
+      .addSelect('SUM(ls.platformComments)', 'totalComments')
       .addSelect('AVG(ls.avgStayVisit)', 'avgStayVisit')
       .addSelect('AVG(ls.avgStayPerson)', 'avgStayPerson')
       .addSelect('AVG(ls.peakOnline)', 'avgPeakOnline')
@@ -750,7 +750,7 @@ export class LiveStreamService {
             isPaid,
             startTime,
             duration,
-            commentCount: totalComments,
+            commentCount: platformComments,
             totalComments,
             platformComments,
             externalComments,

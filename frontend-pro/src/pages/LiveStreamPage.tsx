@@ -169,12 +169,12 @@ const LiveStreamPage = () => {
       render: (_, row) => formatDuration(row.duration),
     },
     {
-      title: '评论数',
-      dataIndex: 'commentCount',
+      title: '自评论',
+      dataIndex: 'platformComments',
       width: 90,
       sorter: true,
       search: false,
-      render: (_, row) => (row.commentCount ?? 0).toLocaleString(),
+      render: (_, row) => (row.platformComments ?? 0).toLocaleString(),
     },
     {
       title: '次均停留',
@@ -215,12 +215,12 @@ const LiveStreamPage = () => {
       search: false,
     },
     {
-      title: '总评论',
-      dataIndex: 'totalComments',
-      width: 90,
+      title: '他平台评论',
+      dataIndex: 'externalComments',
+      width: 100,
       sorter: true,
       search: false,
-      render: (_, row) => (row.totalComments ?? 0).toLocaleString(),
+      render: (_, row) => (row.externalComments ?? 0).toLocaleString(),
     },
     {
       title: '解锁人数',
@@ -301,7 +301,7 @@ const LiveStreamPage = () => {
       search: false,
     },
     {
-      title: '评论总数',
+      title: '自评论总数',
       dataIndex: 'totalComments',
       width: 100,
       search: false,
@@ -432,7 +432,7 @@ const LiveStreamPage = () => {
       render: (_: any, r: any) => formatDuration(r.duration),
     },
     {
-      title: '评论数',
+      title: '自评论',
       dataIndex: 'commentCount',
       key: 'commentCount',
       width: 90,
@@ -515,7 +515,7 @@ const LiveStreamPage = () => {
       render: (_: any, r: any) => formatDuration(r.avgDuration),
     },
     {
-      title: '评论总数',
+      title: '自评论总数',
       dataIndex: 'totalComments',
       width: 100,
       render: (_: any, r: any) => r.totalComments.toLocaleString(),
@@ -667,7 +667,7 @@ const LiveStreamPage = () => {
       search: false,
     },
     {
-      title: '评论总数',
+      title: '自评论总数',
       dataIndex: 'totalComments',
       width: 100,
       sorter: true,
@@ -1344,7 +1344,7 @@ const EventHostSummaryTab = () => {
     { title: '主播', dataIndex: 'host', width: 120 },
     { title: '站点数', dataIndex: 'siteCount', width: 80 },
     { title: '均时长', dataIndex: 'avgDuration', width: 100, render: (_: any, r: any) => formatDuration(r.avgDuration) },
-    { title: '评论', dataIndex: 'totalComments', width: 80, sorter: makeSorter('totalComments'), render: (_: any, r: any) => (r.totalComments ?? 0).toLocaleString() },
+    { title: '自评论', dataIndex: 'totalComments', width: 80, sorter: makeSorter('totalComments'), render: (_: any, r: any) => (r.totalComments ?? 0).toLocaleString() },
     { title: '均次均', dataIndex: 'avgStayVisit', width: 110, sorter: makeSorter('avgStayVisit'), render: (_: any, r: any) => formatDuration(r.avgStayVisit) },
     { title: '均人均', dataIndex: 'avgStayPerson', width: 110, sorter: makeSorter('avgStayPerson'), render: (_: any, r: any) => formatDuration(r.avgStayPerson) },
     { title: '均峰值', dataIndex: 'avgPeakOnline', width: 80, sorter: makeSorter('avgPeakOnline'), render: (_: any, r: any) => (r.avgPeakOnline ?? 0).toLocaleString() },

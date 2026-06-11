@@ -395,6 +395,15 @@ const LiveStreamPage = () => {
   const [expandedDataCache, setExpandedDataCache] = useState<Record<string, API.HostSummaryRecord[]>>({});
   const [expandingRow, setExpandingRow] = useState<string | null>(null);
 
+  const getEventSummaryRowKey = (record: API.EventSummaryRecord) => [
+    record.eventId || '',
+    record.eventTime || '',
+    record.eventName || '',
+    record.liveDate ? dayjs(record.liveDate).format('YYYY-MM-DD') : '',
+    record.league || '',
+    record.category || '',
+  ].join('|');
+
   const toggleEventDetail = async (rowKey: string, eventName: string, liveDate: any) => {
     // 已展开 → 收起
     if (expandedRowKeys.includes(rowKey)) {
@@ -723,7 +732,7 @@ const LiveStreamPage = () => {
       valueType: 'option',
       width: 100,
       render: (_, r) => {
-        const key = r.eventId || `${r.eventTime}-${r.eventName}-${r.liveDate}`;
+        const key = getEventSummaryRowKey(r);
         return [
           <a
             key="hostDetail"
@@ -1143,7 +1152,7 @@ const LiveStreamPage = () => {
               <div>
                 <ProTable<API.EventSummaryRecord>
                   headerTitle="赛事汇总"
-                  rowKey={(r) => `${r.eventTime}-${r.eventName}-${r.liveDate}-${r.league}-${r.category}`}
+                  rowKey={getEventSummaryRowKey}
                   search={{ labelWidth: 80 }}
                   onChange={(_, __, sorter: any) => {
                     if (sorter && !Array.isArray(sorter)) {
@@ -1178,7 +1187,7 @@ const LiveStreamPage = () => {
                     expandedRowKeys,
                     onExpandedRowsChange: (keys) => setExpandedRowKeys([...keys]),
                     expandedRowRender: (record) => {
-                      const key = `${record.eventTime}-${record.eventName}-${record.liveDate}-${record.league}-${record.category}`;
+                      const key = getEventSummaryRowKey(record);
                       const detailData = expandedDataCache[key] || [];
                       if (expandingRow === key) {
                         return (

@@ -404,30 +404,45 @@ const LiveStreamPage = () => {
     record.category || '',
   ].join('|');
 
+  const openEventDetail = async (rowKey: string, eventName: string, liveDate: any) => {
+    if (expandedDataCache[rowKey]) {
+      setExpandedRowKeys((prev) => (prev.includes(rowKey) ? prev : [...prev, rowKey]));
+      return;
+    }
+
+    const dateStr = dayjs(liveDate).format('YYYY-MM-DD');
+    setExpandedRowKeys((prev) => (prev.includes(rowKey) ? prev : [...prev, rowKey]));
+    setExpandingRow(rowKey);
+    try {
+      const data = await getHostSummary({ eventName, liveDate: dateStr });
+      const list = Array.isArray(data) ? data : data.list || [];
+      setExpandedDataCache((prev) => ({ ...prev, [rowKey]: list }));
+    } catch {
+      setExpandedRowKeys((prev) => prev.filter((k) => k !== rowKey));
+      msg.error('加载明细失败');
+    } finally {
+      setExpandingRow(null);
+    }
+  };
+
   const toggleEventDetail = async (rowKey: string, eventName: string, liveDate: any) => {
     // 已展开 → 收起
     if (expandedRowKeys.includes(rowKey)) {
       setExpandedRowKeys((prev) => prev.filter((k) => k !== rowKey));
       return;
     }
-    // 已缓存 → 直接展开
-    if (expandedDataCache[rowKey]) {
-      setExpandedRowKeys((prev) => [...prev, rowKey]);
+
+    await openEventDetail(rowKey, eventName, liveDate);
+  };
+
+  const handleEventRowExpand = async (expanded: boolean, record: API.EventSummaryRecord) => {
+    const key = getEventSummaryRowKey(record);
+    if (!expanded) {
+      setExpandedRowKeys((prev) => prev.filter((k) => k !== key));
       return;
     }
-    // 请求数据后展开
-    const dateStr = dayjs(liveDate).format('YYYY-MM-DD');
-    setExpandingRow(rowKey);
-    try {
-      const data = await getHostSummary({ eventName, liveDate: dateStr });
-      const list = Array.isArray(data) ? data : data.list || [];
-      setExpandedDataCache((prev) => ({ ...prev, [rowKey]: list }));
-      setExpandedRowKeys((prev) => [...prev, rowKey]);
-    } catch {
-      msg.error('加载明细失败');
-    } finally {
-      setExpandingRow(null);
-    }
+
+    await openEventDetail(key, record.eventName, record.liveDate);
   };
 
   const hostDetailColumns = [
@@ -1185,7 +1200,7 @@ const LiveStreamPage = () => {
                   columns={eventSummaryColumns}
                   expandable={{
                     expandedRowKeys,
-                    onExpandedRowsChange: (keys) => setExpandedRowKeys([...keys]),
+                    onExpand: handleEventRowExpand,
                     expandedRowRender: (record) => {
                       const key = getEventSummaryRowKey(record);
                       const detailData = expandedDataCache[key] || [];
